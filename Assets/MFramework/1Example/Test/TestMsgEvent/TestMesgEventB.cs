@@ -9,15 +9,22 @@ using UnityEngine;
 /// 时间：2022.
 /// 版本：1.0
 /// </summary>
-public class TestMesgEventB : AbMFrameworkBase
+public class TestMesgEventB : MonoBehaviour
 {
     private void Start()
     {
-        //1.使用静态方法直接调用TestMesgEventA模块
-        MsgEvent.SendMsg("TestMesgEventA_MsgNameTest1", "我是b1");
-        MsgEvent.SendMsg("TestMesgEventA_MsgNameTest2", "我是b2");
+        ////1.使用静态方法直接调用TestMesgEventA模块
+        //MsgEvent.SendMsg("TestMesgEventA_MsgNameTest1", "我是b1");
+        //MsgEvent.SendMsg("TestMesgEventA_MsgNameTest2", "我是b2");
 
-        //2.使用AbMFrameworkBase框架调用TestMesgEventA模块
-        base.SendMsg("TestMesgEventA_MsgNameTest3", "我是b3");
+        ////2.使用AbMFrameworkBase框架调用TestMesgEventA模块
+        //base.SendMsg("TestMesgEventA_MsgNameTest3", "我是b3");
+
+        //发送消息
+        //发送无参消息
+        MsgEvent.SendMsg("MsgName1");
+        //发送带参消息
+        object objParam = "TestSendMsg";
+        MsgEvent.SendMsg("MsgName2",objParam);
     }
 }

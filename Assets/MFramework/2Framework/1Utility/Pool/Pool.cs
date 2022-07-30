@@ -91,13 +91,13 @@ namespace MFramework
         /// </summary>
         private void Test()
         {
-            GameObject res = null;
-            Transform objParent = null;
+            GameObject objRes = null;
+            Transform objResParent = null;
             Pool<GameObject> pool = new Pool<GameObject>(() =>
             {
                 //回调 获取对象-创建新对象后回调
-                GameObject newObj = UnityEngine.Object.Instantiate<GameObject>(res);
-                newObj.transform.SetParent(objParent);
+                GameObject newObj = UnityEngine.Object.Instantiate<GameObject>(objRes);
+                newObj.transform.SetParent(objResParent);
                 newObj.gameObject.SetActive(false);
                 return newObj;
             }, (GameObject cube) =>
