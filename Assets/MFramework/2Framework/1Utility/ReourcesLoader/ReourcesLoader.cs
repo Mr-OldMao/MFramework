@@ -13,9 +13,9 @@ namespace MFramework
     public class ReourcesLoader
     {
         /// <summary>
-        /// 缓存正在使用的资源容器
+        /// 缓存正在使用的资源容器    唯一标识：资源路径
         /// </summary>
-        public static List<ResData> resourcesContainer = new List<ResData>();
+        private static List<ResData> resContainer = new List<ResData>();
 
         /// <summary>
         /// 资源数据结构
@@ -47,7 +47,7 @@ namespace MFramework
             {
                 Resources.UnloadAsset(Asset);
                 Asset = null;
-                resourcesContainer.Remove(this);
+                resContainer.Remove(this);
                 Debug.Log("已回收资源 Asset：" + Asset + "，AssetAllPath：" + AssetAllPath);
             }
         }
@@ -61,7 +61,7 @@ namespace MFramework
         /// <returns></returns>
         public static T LoadAssets<T>(string assetAllPath) where T : Object
         {
-            ResData resData = resourcesContainer.Find(loadedAsset => loadedAsset.AssetAllPath == assetAllPath);
+            ResData resData = resContainer.Find(loadedAsset => loadedAsset.AssetAllPath == assetAllPath);
             if (resData != null)
             {
                 resData.Release();
@@ -70,7 +70,7 @@ namespace MFramework
             T res = Resources.Load<T>(assetAllPath);
             ResData newResData = new ResData(res, assetAllPath);
             newResData.Release();
-            resourcesContainer.Add(newResData);
+            resContainer.Add(newResData);
             return res;
         }
         #endregion
@@ -82,11 +82,11 @@ namespace MFramework
         /// </summary>
         public static void UnLoadAllAssets()
         {
-            for (int i = 0; i < resourcesContainer.Count; i++)
+            for (int i = 0; i < resContainer.Count; i++)
             {
-                Resources.UnloadAsset(resourcesContainer[i].Asset);
+                Resources.UnloadAsset(resContainer[i].Asset);
             }
-            resourcesContainer.Clear();
+            resContainer.Clear();
         }
 
         /// <summary>
@@ -95,13 +95,52 @@ namespace MFramework
         /// <param name="assetAllPath">资源 Resources下的全路径  格式：xx/xxx/xxx</param>
         public static void UnLoadAssets(string assetAllPath)
         {
-            for (int i = 0; i < resourcesContainer.Count; i++)
+            for (int i = 0; i < resContainer.Count; i++)
             {
-                if (resourcesContainer[i].AssetAllPath == assetAllPath)
+                if (resContainer[i].AssetAllPath == assetAllPath)
                 {
-                    resourcesContainer[i].Retain();
+                    resContainer[i].Retain();
                     break;
                 }
+            }
+        }
+        #endregion
+
+
+        #region 获取资源信息
+        /// <summary>
+        /// 判定资源是否已被加载
+        /// </summary>
+        /// <param name="assetAllPath">资源 Resources下的全路径  格式：xx/xxx/xxx</param>
+        public static ResData CheckResExist(string assetAllPath)
+        {
+            ResData resData = resContainer.Find(loadedAsset => loadedAsset.AssetAllPath == assetAllPath);
+            return resData;
+        }
+
+        /// <summary>
+        /// 判定资源是否已被加载
+        /// </summary>
+        /// <typeparam name="T">资源的类型</typeparam>
+        /// <param name="assetAllPath">资源 Resources下的全路径  格式：xx/xxx/xxx</param>
+        /// <returns></returns>
+        public static ResData CheckResExist<T>(string assetAllPath) where T : Object
+        {
+            ResData resData = resContainer.Find(loadedAsset => loadedAsset.AssetAllPath == assetAllPath && typeof(T) == loadedAsset.Asset.GetType());
+            return resData;
+        }
+
+
+        /// <summary>
+        /// 显示当前资源信息
+        /// </summary>
+        public static void ShowResLogInfo()
+        {
+            Debug.Log("显示当前资源信息");
+            Debug.Log("资源总个数：" + resContainer.Count);
+            foreach (ResData resData in resContainer)
+            {
+                Debug.Log(string.Format("资源实例：{0}，位置{1}，引用次数{2}", resData.Asset, resData.AssetAllPath, resData.RefCount));
             }
         }
         #endregion

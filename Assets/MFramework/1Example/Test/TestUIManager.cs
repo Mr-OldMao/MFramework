@@ -20,15 +20,15 @@ public class TestUIManager : MonoBehaviour
         SetResolution(1920, 1080, 0);
 
         //加载面板
-        Debug.Log(LoadPanel("GamePanel_Common1", "UI/Panel/GamePanel", UILayerType.Common));
-        Debug.Log(LoadPanel("GamePanel_Common2", "UI/Panel/GamePanel", UILayerType.Common));
-        int panelID = LoadPanel("BgPanel_Bg", "UI/Panel/BgPanel", UILayerType.Bg);
+        Debug.Log(LoadPanel("GamePanel_Common1", "TestRes/UI/Panel/GamePanel", UILayerType.Common));
+        Debug.Log(LoadPanel("GamePanel_Common2", "TestRes/UI/Panel/GamePanel", UILayerType.Common));
+        int panelID = LoadPanel("BgPanel_Bg", "TestRes/UI/Panel/BgPanel", UILayerType.Bg);
 
         //获取面板
-        Debug.Log(GetPanelByID(LoadPanel("HidePanel_Top", "UI/Panel/HidePanel", UILayerType.Top)));
+        Debug.Log(GetPanelByID(LoadPanel("HidePanel_Top", "TestRes/UI/Panel/HidePanel", UILayerType.Top)));
 
         //延时卸载面板
-        DelayTool.GetInstance.Delay(5, () => UnloadPanel(panelID));
+        UnityTool.GetInstance.DelayCoroutine(5, () => UnloadPanel(panelID));
 
     }
 }

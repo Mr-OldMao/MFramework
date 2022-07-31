@@ -17,12 +17,14 @@ namespace MFramework
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 Debug.Log("获取资源");
-                ReourcesLoader.LoadAssets<AudioClip>("Audio/bgm1");
+                ReourcesLoader.LoadAssets<AudioClip>("TestRes/Audio/bgm1");
             }
+
+
             if (Input.GetKeyDown(KeyCode.W))
             {
                 Debug.Log("回收资源");
-                ReourcesLoader.UnLoadAssets("Audio/bgm1");
+                ReourcesLoader.UnLoadAssets("TestRes/Audio/bgm1");
             }
         }
     }
