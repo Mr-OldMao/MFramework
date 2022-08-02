@@ -18,7 +18,7 @@ namespace MFramework
         public int RefCount { get; private set; }
 
         /// <summary>
-        /// 持有资源
+        /// 持有资源 引用次数+1
         /// </summary>
         /// <param name="refOwner"></param>
         public void Release(object refOwner = null)
@@ -27,7 +27,7 @@ namespace MFramework
         }
 
         /// <summary>
-        /// 释放资源
+        /// 释放资源 引用次数-1
         /// </summary>
         /// <param name="refOwner"></param>
         public void Retain(object refOwner = null)
