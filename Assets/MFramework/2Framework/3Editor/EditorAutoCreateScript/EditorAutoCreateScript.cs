@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace MFramework
     /// <summary>
     /// 标题：脚本自动化生成工具
     /// 目的：解决手动获取场景对象实例需要繁琐且重复的操作
-    /// 功能：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，自动获取根节点其下字段、属性、映射并生成脚本到指定路径 
+    /// 功能：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，点击生成，可自动获取根节点其下字段、属性、映射并生成脚本到指定路径 
     /// 规则：游戏对象的命名要规范，要以小写字母开头，不要使用创建时默认的名称会被屏蔽
     /// 作者：毛俊峰
     /// 时间：2022.08.01
@@ -25,15 +26,14 @@ namespace MFramework
             //创建CubChange对话窗，第一个参数为弹窗名，第二个参数为Create按钮名(不填参默认为Create)
             ScriptableWizard.DisplayWizard<EditorAutoCreateScript>("脚本自动化", "生成", "重置");
         }
-
-        [Header("场景面板父对象")]
+        [Header("根节点")]
         public Transform rootTrans;
-        [Header("脚本类名")]
+        [Header("脚本类名 格式：Xxx")]
         public string scriptName;
-        [Header("脚本路径 格式：: x:/xxx/xx/xxx/")]
+        [Header("脚本路径 格式：x:/xxx/xx/xxx/")]
         public string scriptPath;
-        [Header("是否创建隐藏游戏对象字段")]
-        public bool isCreateHideObj;
+        [Header("是否创建根节点旗下未激活的游戏对象字段")]
+        public bool isCreateInactiveChildObj;
         [Header("是否覆盖同路径下的同类名脚本")]
         public bool isOverrideScript;
 
@@ -48,7 +48,7 @@ namespace MFramework
                 rootTrans = rootTrans,
                 scriptName = scriptName,
                 scriptPath = scriptPath,
-                isCreateHideObj = isCreateHideObj,
+                isCreateHideObj = isCreateInactiveChildObj,
                 isOverrideScript = isOverrideScript
             };
             AutoCreateScript.BuildUIScript(autoCreateScriptStructInfo);
@@ -72,7 +72,11 @@ namespace MFramework
                 if (!rootTrans)
                 {
                     //给出错误提示
-                    errorString = "请选择至少一个物体放入 SceneGameObject";
+                    errorString = "请选择场景中的游戏对象作为根节点放入 rootTrans";
+                }
+                else if (string.IsNullOrEmpty(scriptName))
+                {
+                    errorString = "请填写脚本类名 ScriptName";
                 }
             }
         }
@@ -90,7 +94,7 @@ namespace MFramework
             rootTrans = null;
             scriptName = string.Empty;
             scriptPath = Application.dataPath + "/ScriptAuto/";
-            isCreateHideObj = true;
+            isCreateInactiveChildObj = true;
             isOverrideScript = false;
         }
     }
@@ -264,10 +268,10 @@ namespace MFramework
             fieldMapContent += "}";
 
             string classInfo = AutoCreateScriptTemplate.classTemplate;
-            classInfo = classInfo.Replace("#类名#", scriptName);
-            classInfo = classInfo.Replace("#字段#", fieldContent);
-            classInfo = classInfo.Replace("#属性#", propertyContent);
-            classInfo = classInfo.Replace("#方法#", fieldMapContent);
+            classInfo = classInfo.Replace("{类名}", scriptName);
+            classInfo = classInfo.Replace("{字段}", fieldContent);
+            classInfo = classInfo.Replace("{属性}", propertyContent);
+            classInfo = classInfo.Replace("{方法}", fieldMapContent);
 
             //写入本地
             //判定文件夹
@@ -331,18 +335,18 @@ using MFramework;
 /// <summary>
 /// 以下代码都是通过脚本自动生成的
 /// </summary>
-public class #类名# : MonoBehaviour
+public class {类名} : MonoBehaviour
 {
-    #字段#   
+    {字段}
     
-    #属性#
+    {属性}
 
     private void Awake()
     {
 		InitMapField();
 	}
 
-    #方法#
+    {方法}
 }
 ";
         /// <summary>
@@ -370,3 +374,5 @@ public class #类名# : MonoBehaviour
         }
     }
 }
+
+#endif

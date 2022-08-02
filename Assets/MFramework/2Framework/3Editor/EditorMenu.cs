@@ -1,17 +1,14 @@
+#if UNITY_EDITOR
 using System;
 using UnityEngine;
-#if UNITY_EDITOR
+using MFramework;
+
 using UnityEditor;
-#endif
-
-
 namespace MFramework_Editor
 {
     public class EditorMenu : MonoBehaviour
     {
-#if UNITY_EDITOR
         [MenuItem("MFramework/01.自动打包框架UnityPackage包     %e")]
-#endif
         private static void MenuClicked1()
         {
             string packageName = "MFramework_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".unitypackage";
@@ -21,12 +18,17 @@ namespace MFramework_Editor
         }
 
 
-#if UNITY_EDITOR
         [MenuItem("MFramework/02.判定当前视图 是否为16：9分辨率")]
-#endif
         private static void MenuClicked2()
         {
             Debug.Log(CheckScreenRatio(16, 9));
+        }
+
+        [MenuItem("MFramework/脚本自动化工具")]
+        static void CreateWizard()
+        {
+            //创建CubChange对话窗，第一个参数为弹窗名，第二个参数为Create按钮名(不填参默认为Create)
+            ScriptableWizard.DisplayWizard<EditorAutoCreateScript>("脚本自动化", "生成", "重置");
         }
 
 
@@ -61,3 +63,4 @@ namespace MFramework_Editor
     }
 }
 
+#endif
