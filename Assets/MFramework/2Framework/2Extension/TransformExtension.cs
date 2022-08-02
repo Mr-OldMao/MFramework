@@ -13,12 +13,12 @@ namespace MFramework
     public static class TransformExtension
     {
         /// <summary>
-        /// 查找对象
+        /// 查找游戏对象(Transform静态扩展)
         /// </summary>
-        /// <typeparam name="T">查找的类型</typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="transform"></param>
         /// <param name="targetName">查找的对象名</param>
-        /// <param name="includeInactive">是否包含不显示在场景中的对象</param>
+        /// <param name="includeInactive">查找范围是否包含未激活的游戏对象</param>
         /// <returns></returns>
         public static T Find<T>(this Transform transform, string targetName, bool includeInactive = true) where T : Component
         {
@@ -37,6 +37,29 @@ namespace MFramework
                 }
             }
             return res;
+        }
+
+        /// <summary>
+        /// 查找游戏对象(Transform静态扩展)
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="targetName">查找的对象名</param>
+        /// <param name="includeInactive">查找范围是否包含未激活的游戏对象</param>
+        /// <returns></returns>
+        public static GameObject Find(this Transform transform, string targetName, bool includeInactive = true)
+        {
+            Transform res = transform.Find<Transform>(targetName, includeInactive);
+            return res ? res.gameObject : null;
+        }
+
+        /// <summary>
+        /// 设置对象激活状态(Transform静态扩展)
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="isShow"></param>
+        public static void SetActive(this Transform transform,bool isShow)
+        {
+            transform.gameObject.SetActive(isShow);
         }
     }
 }
