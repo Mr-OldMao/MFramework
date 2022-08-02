@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -328,6 +326,11 @@ namespace MFramework
                 Transform child = trans.GetChild(i);
                 if (!isSaveHideObj && !child.gameObject.activeSelf)
                 {
+                    //重复迭代
+                    if (child.childCount > 0)
+                    {
+                        SaveAllUIComponentContainerOnly(child);
+                    }
                     continue;
                 }
                 //屏蔽未重命名的UI组件
@@ -336,6 +339,11 @@ namespace MFramework
                     || child.name == "Checkmark" || child.name == "Label" || child.name == "Content" || child.name == "Fill Area" || child.name == "Fill" || child.name == "Handle Slide Area"
                     || child.name == "Handle" || child.name == "Scrollbar Horizontal" || child.name == "Scrollbar Vertical" || child.name == "Sliding Area")
                 {
+                    //重复迭代
+                    if (child.childCount > 0)
+                    {
+                        SaveAllUIComponentContainerOnly(child);
+                    }
                     continue;
                 }
                 Button childBtn = child.GetComponent<Button>();
@@ -382,24 +390,21 @@ namespace MFramework
                 {
                     dicTextPro.Add(child.name, childTxtPro);
                 }
+                else if (childImg && !dicImg.ContainsKey(child.name))
+                {
+                    dicImg.Add(child.name, childImg);
+                }
+                else if (childtext && !dicText.ContainsKey(child.name))
+                {
+                    dicText.Add(child.name, childtext);
+                }
+                else if (childTrans && !dicTrans.ContainsKey(child.name))
+                {
+                    dicTrans.Add(child.name, childTrans);
+                }
                 else
                 {
-                    if (childImg && !dicImg.ContainsKey(child.name))
-                    {
-                        dicImg.Add(child.name, childImg);
-                    }
-                    else if (childtext && !dicText.ContainsKey(child.name))
-                    {
-                        dicText.Add(child.name, childtext);
-                    }
-                    else if (childTrans && !dicTrans.ContainsKey(child.name))
-                    {
-                        dicTrans.Add(child.name, childTrans);
-                    }
-                    else
-                    {
-                        Debug.LogError("未知错误 child：" + child);
-                    }
+                    Debug.LogError("未知错误 child：" + child);
                 }
                 //重复迭代
                 if (child.childCount > 0)

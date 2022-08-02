@@ -16,19 +16,27 @@ namespace MFramework
         /// 查找对象
         /// </summary>
         /// <typeparam name="T">查找的类型</typeparam>
-        /// <param name="trans"></param>
-        /// <param name="name">查找的对象名</param>
+        /// <param name="transform"></param>
+        /// <param name="targetName">查找的对象名</param>
         /// <param name="includeInactive">是否包含不显示在场景中的对象</param>
         /// <returns></returns>
-        public static T FindObject<T>(this Transform trans, string name, bool includeInactive = true) where T : Component
+        public static T Find<T>(this Transform transform, string targetName, bool includeInactive = true) where T : Component
         {
-            if (trans == null || name == null) return default(T);
-            T[] ts = trans.GetComponentsInChildren<T>(includeInactive);
-            for (int i = 0; i < ts.Length; i++)
+            T res = default;
+            if (transform == null || string.IsNullOrEmpty(targetName))
             {
-                if (ts[i].name == name) return ts[i];
+                res = null;
             }
-            return default(T);
+            var targetArr = transform.GetComponentsInChildren<T>(includeInactive);
+            for (int i = 0; i < targetArr.Length; i++)
+            {
+                if (targetArr[i].name == targetName)
+                {
+                    res = targetArr[i];
+                    break;
+                }
+            }
+            return res;
         }
     }
 }

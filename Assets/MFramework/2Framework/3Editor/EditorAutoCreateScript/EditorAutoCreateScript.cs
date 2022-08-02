@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
@@ -23,8 +22,7 @@ namespace MFramework
         [MenuItem("MFramework/脚本自动化工具")]
         static void CreateWizard()
         {
-            //创建CubChange对话窗，第一个参数为弹窗名，第二个参数为Create按钮名(不填参默认为Create)
-            ScriptableWizard.DisplayWizard<EditorAutoCreateScript>("脚本自动化", "生成", "重置");
+            DisplayWizard<EditorAutoCreateScript>("脚本自动化", "生成", "重置");
         }
         [Header("根节点")]
         public Transform rootTrans;
@@ -51,7 +49,7 @@ namespace MFramework
                 isCreateHideObj = isCreateInactiveChildObj,
                 isOverrideScript = isOverrideScript
             };
-            AutoCreateScript.BuildUIScript(autoCreateScriptStructInfo);
+            AutoCreateScriptImpl.BuildUIScript(autoCreateScriptStructInfo);
         }
         private void OnWizardOtherButton()
         {
@@ -126,8 +124,10 @@ namespace MFramework
         public bool isOverrideScript;
     }
 
-
-    public class AutoCreateScript
+    /// <summary>
+    /// 脚本自动化生成具体实现
+    /// </summary>
+    public class AutoCreateScriptImpl
     {
         //拼接字段
         static string fieldContent = string.Empty;
@@ -308,10 +308,12 @@ namespace MFramework
 
         private static void WriteScript(string fieldName, string fieldType)
         {
-            fieldContent += "public " + fieldType + " " + fieldName + ";\n\t";
+            //fieldContent += "public " + fieldType + " " + fieldName + ";\n\t";
+
             string propertyName = fieldName.Substring(0, 1).ToUpper() + fieldName.Substring(1);
-            propertyContent += AutoCreateScriptTemplate.propertyTemplate(fieldType, propertyName, fieldName);
-            fieldMapContent += AutoCreateScriptTemplate.fieldMapTemplate(fieldName, fieldType);
+            fieldContent += AutoCreateScriptTemplate.FieldTemplate(fieldName, fieldType);
+            propertyContent += AutoCreateScriptTemplate.PropertyTemplate(fieldType, propertyName, fieldName);
+            fieldMapContent += AutoCreateScriptTemplate.FieldMapTemplate(fieldName, fieldType);
         }
     }
 
@@ -321,6 +323,7 @@ namespace MFramework
     /// </summary>
     public class AutoCreateScriptTemplate
     {
+        [SerializeField]
         public static Transform rootTrans;
         /// <summary>
         /// 头节点模板
@@ -329,8 +332,6 @@ namespace MFramework
 @"using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems;
-using System;
 using MFramework;
 /// <summary>
 /// 以下代码都是通过脚本自动生成的
@@ -349,6 +350,18 @@ public class {类名} : MonoBehaviour
     {方法}
 }
 ";
+
+        /// <summary>
+        /// 字段模板
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="fieldType"></param>
+        /// <returns></returns>
+        public static string FieldTemplate(string fieldName, string fieldType)
+        {
+            return "[SerializeField]\n\tprivate " + fieldType + " " + fieldName + ";\n\t";
+        }
+
         /// <summary>
         /// 属性模板
         /// </summary>
@@ -356,7 +369,7 @@ public class {类名} : MonoBehaviour
         /// <param name="PropertyStr"></param>
         /// <param name="fieldStr"></param>
         /// <returns></returns>
-        public static string propertyTemplate(string returnStr, string PropertyStr, string fieldStr)
+        public static string PropertyTemplate(string returnStr, string PropertyStr, string fieldStr)
         {
             return "public " + returnStr + " " + PropertyStr + " { get => " + fieldStr + "; set => " + fieldStr + " = value; }\n\t";
         }
@@ -368,9 +381,9 @@ public class {类名} : MonoBehaviour
         /// <param name="PropertyStr"></param>
         /// <param name="fieldStr"></param>
         /// <returns></returns>
-        public static string fieldMapTemplate(string fieldName, string fieldType)
+        public static string FieldMapTemplate(string fieldName, string fieldType)
         {
-            return "\t" + @fieldName + @" = transform.FindObject<" + fieldType + ">(\"" + fieldName + "\");\n\t";
+            return "\t" + @fieldName + @" = transform.Find<" + fieldType + ">(\"" + fieldName + "\");\n\t";
         }
     }
 }
