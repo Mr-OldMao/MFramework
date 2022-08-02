@@ -176,6 +176,8 @@ UnityTool.cs
 
 UnityEngine静态类扩展
 
+TransformExtension.cs
+
 ## 3Editor
 
 Unity编辑器扩展
@@ -184,6 +186,8 @@ Unity编辑器扩展
 
 脚本自动化生成工具
 
+核心脚本：EditorAutoCreateScript.cs 
+
 目的：解决手动获取场景对象实例需要繁琐且重复的操作 
 
 功能：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，自动获取根节点其下字段、属性、映射并生成脚本到指定路径 
@@ -191,10 +195,6 @@ Unity编辑器扩展
 规则：游戏对象的命名要规范，要以小写字母开头，不要使用创建时默认的名称会被屏蔽
 
 测试：Unity菜单栏  MFramework/脚本自动化工具
-
-4.Base
-
-待定
 
 ## Resources
 
