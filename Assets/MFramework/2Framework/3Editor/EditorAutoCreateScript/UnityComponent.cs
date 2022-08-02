@@ -87,7 +87,7 @@ namespace MFramework
             {
                 if (dicText.ContainsKey(uiObjName))
                 {
-                    res = dicText[uiObjName].text as T;
+                    res = dicText[uiObjName] as T;
                 }
             }
             else if (typeof(T) == typeof(Button))
@@ -216,21 +216,36 @@ namespace MFramework
 
 
         /// <summary>
-        /// 缓存当前对象下所有UI组件
+        /// 缓存当前对象下所有UI组件  一个游戏对象可缓存在多个容器中
         /// 规则：场景挂载UI的游戏对象名需要唯一，自动屏蔽默认的游戏对象名 如Text、Text (TMP)、Button
         /// </summary>
         /// <param name="trans"></param>
-        public void SaveAllUIComponent(Transform trans)
+        /// <param name="isSaveHideObj">是否缓存未激活对象</param>
+        public void SaveAllUIComponent(Transform trans, bool isSaveHideObj = true)
         {
             for (int i = 0; i < trans.childCount; i++)
             {
                 Transform child = trans.GetChild(i);
+                if (!isSaveHideObj && !child.gameObject.activeSelf)
+                {
+                    //重复迭代
+                    if (child.childCount > 0)
+                    {
+                        SaveAllUIComponent(child);
+                    }
+                    continue;
+                }
                 //屏蔽未重命名的UI组件
                 if (child.name == "Canvas" || child.name == "Text" || child.name == "Button" || child.name == "Toggle" || child.name == "Image" || child.name == "Slider"
                     || child.name == "Text (TMP)" || child.name == "RawImage" || child.name == "EventSystem" || child.name == "Viewport" || child.name == "Background"
                     || child.name == "Checkmark" || child.name == "Label" || child.name == "Content" || child.name == "Fill Area" || child.name == "Fill" || child.name == "Handle Slide Area"
                     || child.name == "Handle" || child.name == "Scrollbar Horizontal" || child.name == "Scrollbar Vertical" || child.name == "Sliding Area")
                 {
+                    //重复迭代
+                    if (child.childCount > 0)
+                    {
+                        SaveAllUIComponent(child);
+                    }
                     continue;
                 }
                 Button childBtn = child.GetComponent<Button>();
@@ -245,52 +260,50 @@ namespace MFramework
                 TMP_InputField childInputFieldPro = child.GetComponent<TMP_InputField>();
                 TextMeshProUGUI childTxtPro = child.GetComponent<TextMeshProUGUI>();
 
-                if (childTrans != null)
+                if (childTrans != null && !dicTrans.ContainsKey(child.name))
                 {
                     dicTrans.Add(child.name, childTrans);
                 }
-                if (childBtn != null)
+                if (childBtn != null && !dicBtn.ContainsKey(child.name))
                 {
                     dicBtn.Add(child.name, childBtn);
                 }
-                if (childTge != null)
+                if (childTge != null && !dicTge.ContainsKey(child.name))
                 {
                     dicTge.Add(child.name, childTge);
-
                 }
-                if (childImg != null)
+                if (childImg != null && !dicImg.ContainsKey(child.name))
                 {
                     dicImg.Add(child.name, childImg);
                 }
-                if (childtext != null)
+                if (childtext != null && !dicText.ContainsKey(child.name))
                 {
                     dicText.Add(child.name, childtext);
                 }
-                if (childSlider)
+                if (childSlider && !dicSlider.ContainsKey(child.name))
                 {
                     dicSlider.Add(child.name, childSlider);
                 }
-                if (childScrollRect)
+                if (childScrollRect && !dicScrollRect.ContainsKey(child.name))
                 {
                     dicScrollRect.Add(child.name, childScrollRect);
                 }
-                if (childScrollbar)
+                if (childScrollbar && !dicScrollbar.ContainsKey(child.name))
                 {
                     dicScrollbar.Add(child.name, childScrollbar);
                 }
-                if (childInputField)
+                if (childInputField && !dicInputField.ContainsKey(child.name))
                 {
                     dicInputField.Add(child.name, childInputField);
                 }
-                if (childInputFieldPro)
+                if (childInputFieldPro && !dicInputFieldPro.ContainsKey(child.name))
                 {
                     dicInputFieldPro.Add(child.name, childInputFieldPro);
                 }
-                if (childTxtPro)
+                if (childTxtPro && !dicTextPro.ContainsKey(child.name))
                 {
                     dicTextPro.Add(child.name, childTxtPro);
                 }
-
                 //重复迭代
                 if (child.childCount > 0)
                 {
@@ -337,51 +350,55 @@ namespace MFramework
                 TMP_InputField childInputFieldPro = child.GetComponent<TMP_InputField>();
                 TextMeshProUGUI childTxtPro = child.GetComponent<TextMeshProUGUI>();
 
-                if (childBtn)
+                if (childBtn && !dicBtn.ContainsKey(child.name))
                 {
                     dicBtn.Add(child.name, childBtn);
                 }
-                else if (childTge)
+                else if (childTge && !dicTge.ContainsKey(child.name))
                 {
                     dicTge.Add(child.name, childTge);
                 }
-                else if (childSlider)
+                else if (childSlider && !dicSlider.ContainsKey(child.name))
                 {
                     dicSlider.Add(child.name, childSlider);
                 }
-                else if (childScrollRect)
+                else if (childScrollRect && !dicScrollRect.ContainsKey(child.name))
                 {
                     dicScrollRect.Add(child.name, childScrollRect);
                 }
-                else if (childScrollbar)
+                else if (childScrollbar && !dicScrollbar.ContainsKey(child.name))
                 {
                     dicScrollbar.Add(child.name, childScrollbar);
                 }
-                else if (childInputField)
+                else if (childInputField && !dicInputField.ContainsKey(child.name))
                 {
                     dicInputField.Add(child.name, childInputField);
                 }
-                else if (childInputFieldPro)
+                else if (childInputFieldPro && !dicInputFieldPro.ContainsKey(child.name))
                 {
                     dicInputFieldPro.Add(child.name, childInputFieldPro);
                 }
-                else if (childTxtPro)
+                else if (childTxtPro && !dicTextPro.ContainsKey(child.name))
                 {
                     dicTextPro.Add(child.name, childTxtPro);
                 }
                 else
                 {
-                    if (childImg)
+                    if (childImg && !dicImg.ContainsKey(child.name))
                     {
                         dicImg.Add(child.name, childImg);
                     }
-                    else if (childtext)
+                    else if (childtext && !dicText.ContainsKey(child.name))
                     {
                         dicText.Add(child.name, childtext);
                     }
-                    else if (childTrans)
+                    else if (childTrans && !dicTrans.ContainsKey(child.name))
                     {
                         dicTrans.Add(child.name, childTrans);
+                    }
+                    else
+                    {
+                        Debug.LogError("未知错误 child：" + child);
                     }
                 }
                 //重复迭代
