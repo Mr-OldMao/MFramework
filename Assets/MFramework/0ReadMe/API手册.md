@@ -178,13 +178,15 @@ UnityEngine静态类扩展
 
 TransformExtension.cs
 
+StringExtension.cs
+
 ## 3Editor
 
 Unity编辑器扩展
 
-### EditorAutoCreateScript
+### EditorAutoCreateScriptSceneObj
 
-脚本自动化生成工具
+场景游戏对象自动映射与关联 脚本自动化生成工具
 
 核心脚本：EditorAutoCreateScript.cs 
 
@@ -194,7 +196,21 @@ Unity编辑器扩展
 
 规则：游戏对象的命名要规范，要以小写字母开头，不要使用创建时默认的名称会被屏蔽
 
-测试：Unity菜单栏  MFramework/脚本自动化工具
+测试：Unity菜单栏  MFramework/脚本自动化工具/1.场景游戏对象映射实体类
+
+
+
+### EditorAutoCreateScriptJsonMapClass
+
+Json自动映射成为实体类(基于Newtonsoft.Json) 脚本自动化生成工具
+
+核心脚本：EditorAutoCreateScriptJsonMapClass.cs
+
+目的：解决前后端协议传输，获取后端Json数据需要手动创建对应的实体类的问题
+
+功能：输入Json格式的字符串，指定实体类的路径，自动生成Json对应的实体类
+
+测试：Unity菜单栏  MFramework/脚本自动化工具/2.Json自动映射实体类
 
 ## Resources
 
