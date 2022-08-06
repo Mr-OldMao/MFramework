@@ -20,15 +20,27 @@ API手册、开发文档、版本记录
 
 # 1Example
 
-测试案例
+范例
 
 ## Test
 
+测试案例
+
+### TestAssets
+
+存放测试所用的资源
+
+#### BuildAssetBundle
+
+AB包 资源
+
+#### Resources
+
+Resources资源
+
+### TestScript
+
 测试类
-
-### Resources
-
-测试所用的资源
 
 ## ExampleTest.unity
 
