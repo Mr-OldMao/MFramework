@@ -180,37 +180,43 @@ TransformExtension.cs
 
 StringExtension.cs
 
+
+
 ## 3Editor
 
 Unity编辑器扩展
 
-### EditorAutoCreateScriptSceneObj
+### AutoCreateScript
 
-场景游戏对象自动映射与关联 脚本自动化生成工具
+#### EditorSceneObjMapEntity
 
-核心脚本：EditorAutoCreateScript.cs 
+Scene GameObject => EntityClass 场景游戏对象转实体类
 
-目的：解决手动获取场景对象实例需要繁琐且重复的操作 
+核心脚本：EditorSceneObjMapEntity.cs 
 
-功能：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，自动获取根节点其下字段、属性、映射并生成脚本到指定路径 
+目的：解决手动获取场景对象实例需要繁琐且重复的操作
 
-规则：游戏对象的命名要规范，要以小写字母开头，不要使用创建时默认的名称会被屏蔽
+功能：脚本自动化生成工具，根据场景中某游戏对象下的所有子对象，创建实体并与之对应，自动映射与关联
 
-测试：Unity菜单栏  MFramework/脚本自动化工具/1.场景游戏对象映射实体类
+调用：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，点击生成，可自动获取根节点其下字段、属性、映射并生成脚本到指定路径
+
+规则：场景游戏对象会被直接引用成为字段名，所以命名要规范，并且不要使用创建场景对象时引擎默认的名称会被屏蔽
 
 
 
-### EditorAutoCreateScriptJsonMapClass
+#### EditorJsonMapEntity
 
-Json自动映射成为实体类(基于Newtonsoft.Json) 脚本自动化生成工具
+Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 脚本自动化生成工具
 
-核心脚本：EditorAutoCreateScriptJsonMapClass.cs
+核心脚本：EditorJsonMapEntity.cs
 
-目的：解决前后端协议传输，获取后端Json数据需要手动创建对应的实体类的问题
+目的：为解决根据Json数据进行反序列化，需要手动创建对应的对象实体进行数据缓存的问题
 
-功能：输入Json格式的字符串，指定实体类的路径，自动生成Json对应的实体类
+功能：输入Json格式的字符串，指定实体类的路径，自动生成Json反序列化所需的实体类
 
-测试：Unity菜单栏  MFramework/脚本自动化工具/2.Json自动映射实体类
+调用：Unity菜单栏  MFramework/脚本自动化工具/2.Json自动映射实体类
+
+
 
 ## Resources
 
