@@ -1,9 +1,8 @@
 #if UNITY_EDITOR
 using System;
 using UnityEngine;
-using MFramework;
 using UnityEditor;
-namespace MFramework_Editor
+namespace MFramework.Editor
 {
     /// <summary>
     /// 标题：Unity编辑器菜单
@@ -30,13 +29,13 @@ namespace MFramework_Editor
         [MenuItem("MFramework/脚本自动化工具/1.场景游戏对象映射实体类", false, 1)]
         private static void EditorMenu_EditorAutoCreateScriptSceneObj()
         {
-            EditorAutoCreateScriptSceneObj.CreateWizard();
+            EditorSceneObjMapEntity.CreateWizard();
         }
 
-        [MenuItem("MFramework/脚本自动化工具/2.Json自动映射实体类", false, 2)]
+        [MenuItem("MFramework/脚本自动化工具/2.Json反序列化实体类自动生成工具", false, 2)]
         private static void EditorMenu_EditorAutoCreateScriptJsonMapClass()
         {
-            EditorAutoCreateScriptJsonMapClass.CreateWizard();
+            EditorJsonMapEntity.CreateWizard();
         }
     }
 }

@@ -1,28 +1,28 @@
 #if UNITY_EDITOR
-using MFramework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-namespace MFramework_Editor
+namespace MFramework.Editor
 {
     /// <summary>
-    /// 标题：Json自动映射成为实体类(基于Newtonsoft.Json) 脚本自动化生成工具
-    /// 目的：解决前后端协议传输，获取后端Json数据需要手动创建对应的实体类的问题
-    /// 功能：输入Json格式的字符串，指定实体类的路径，自动生成Json对应的实体类
+    /// 标题：Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 脚本自动化生成工具
+    /// 目的：为解决根据Json数据进行反序列化，需要手动创建对应的对象实体进行数据缓存的问题
+    /// 功能：输入Json格式的字符串，指定实体类的路径，自动生成Json反序列化所需的实体类
+    /// 调用：Unity菜单栏  MFramework/脚本自动化工具/2.Json自动映射实体类
     /// 作者：毛俊峰
     /// 时间：2022.08.05
     /// 版本：1.0
     /// </summary>
-    public class EditorAutoCreateScriptJsonMapClass : ScriptableWizard
+    public class EditorJsonMapEntity : ScriptableWizard
     {
         public static JsonMapClassStruct jsonMapClassStruct;
-        //[MenuItem("MFramework/脚本自动化工具/1.Json自动映射实体类", false, 2)]
+        //[MenuItem("MFramework/脚本自动化工具/2.Json反序列化实体类自动生成工具", false, 2)]
         public static void CreateWizard()
         {
-            DisplayWizard<EditorAutoCreateScriptJsonMapClass>("Json自动映射实体类", "生成", "重置");
+            DisplayWizard<EditorJsonMapEntity>("Json反序列化实体类自动生成工具", "生成", "重置");
         }
         [Header("Json格式字符串")]
         public string jsonStr;
@@ -30,9 +30,36 @@ namespace MFramework_Editor
         public string scriptName;
         [Header("脚本路径 格式：x:/xxx/xx/xxx/")]
         public string scriptPath;
+        [Header("是否需要文本注释")]
+        public bool isSummaryAnnotation;
         [Header("是否覆盖同路径下的同类名脚本")]
         public bool isOverrideScript;
-
+        /// <summary>
+        /// 脚本自动化结构体
+        /// </summary>
+        public struct JsonMapClassStruct
+        {
+            /// <summary>
+            /// Json格式字符串
+            /// </summary>
+            public string jsonStr;
+            /// <summary>
+            /// 脚本类名
+            /// </summary>
+            public string scriptName;
+            /// <summary>
+            /// 脚本路径
+            /// </summary>
+            public string scriptPath;
+            /// <summary>
+            /// 是否需要文本注释
+            /// </summary>
+            public bool isSummaryAnnotation;
+            /// <summary>
+            /// 是否覆盖同路径下的同类名脚本
+            /// </summary>
+            public bool isOverrideScript;
+        }
         private void OnEnable()
         {
             Reset();
@@ -44,6 +71,7 @@ namespace MFramework_Editor
                 jsonStr = jsonStr,
                 scriptName = scriptName,
                 scriptPath = scriptPath,
+                isSummaryAnnotation = isSummaryAnnotation,
                 isOverrideScript = isOverrideScript
             };
             try
@@ -57,7 +85,6 @@ namespace MFramework_Editor
         }
         private void OnWizardOtherButton()
         {
-            Debug.Log("重置");
             Reset();
         }
         private void OnWizardUpdate()
@@ -99,6 +126,7 @@ namespace MFramework_Editor
             jsonStr = string.Empty;
             scriptName = string.Empty;
             scriptPath = EditorMenu.autoCreateScriptDefaultPath + "JsonMapEntity/";
+            isSummaryAnnotation = false;
             isOverrideScript = false;
         }
 
@@ -118,7 +146,7 @@ namespace MFramework_Editor
 
             public static void BuildScript()
             {
-                JsonMapClassStruct jsonMapClassStruct = EditorAutoCreateScriptJsonMapClass.jsonMapClassStruct;
+                JsonMapClassStruct jsonMapClassStruct = EditorJsonMapEntity.jsonMapClassStruct;
                 DeserializeObject(jsonMapClassStruct.jsonStr, jsonMapClassStruct.scriptName);
                 string scriptContent = "";
                 foreach (var item in dicClassContent)
@@ -127,73 +155,79 @@ namespace MFramework_Editor
                     scriptContent += subContent;
                     //Debug.Log("k: " + item.Key + "，v：" + subContent);
                 }
-                scriptContent = AutoCreateScriptTemplate.classTemplateHead(jsonMapClassStruct.scriptName, scriptContent);
+                scriptContent = AutoCreateScripttestTemplate.classtestTemplateHead(jsonMapClassStruct.scriptName, scriptContent);
                 WriteFile(jsonMapClassStruct, scriptContent);
             }
 
-            static int temp = 1;
-            //反序列化json成为 Obj
-            private static void DeserializeObject(string jsonStr, string className)
+            //private static int testTemp = 1;
+            /// <summary>
+            /// 反序列化 json => Obj (核心方法)
+            /// </summary>
+            /// <param name="jsonStr"></param>
+            /// <param name="curClassName">当前json包含的字段的类名</param>
+            private static void DeserializeObject(string jsonStr, string curClassName)
             {
                 JObject jObject = (JObject)JsonConvert.DeserializeObject(jsonStr);//将json字符串转化为JObject
                 foreach (var obj in jObject)
                 {
-                    //Debug.Log("temp:" + temp + ",item.Key:" + obj.Key + " ,item.Value.Type:" + obj.Value.Type + ",item.Value : " + obj.Value);
-                    if (obj.Value.Type == JTokenType.Integer)
+                    //Debug.Log("testTemp:" + testTemp + ",item.Key:" + obj.Key + " ,item.Value.Type:" + obj.Value.Type + ",item.Value : " + obj.Value);
+                    if (obj.Value.Type == JTokenType.Object)
                     {
-                        //Debug.Log("temp:" + temp + ",type:" + obj.Value.Type + ",k:" + obj.Key + ",v:" + obj.Value);
-                        SpliceStr(className, obj.Key, obj.Value.Type);
-                    }
-                    else if (obj.Value.Type == JTokenType.String)
-                    {
-                        //Debug.Log("temp:" + temp + ",type:" + obj.Value.Type + ",k:" + obj.Key + ",v:" + obj.Value);
-                        SpliceStr(className, obj.Key, obj.Value.Type);
+                        string fieldName = obj.Key;
+                        string fieldType = curClassName + "_" + obj.Key;
+                        string nextJson = obj.Value.ToString();
+                        string nextClassName = fieldType;
+                        //testTemp++;
+                        //Debug.Log("testTemp:" + testTemp + "，fieldName：" + fieldName + "，fieldContent：" + obj.Value + "，type：" + obj.Value.Type + "，fieldType：" + fieldType);
+                        SpliceStr(curClassName, fieldName, fieldType);
+                        DeserializeObject(nextJson, nextClassName);
                     }
                     else if (obj.Value.Type == JTokenType.Array)
                     {
-                        string subJson = obj.Value.ToString();
-                        temp++;
-                        //Debug.Log("temp:" + temp + ",type:" + obj.Value.Type + ",k:" + obj.Key + ",v:" + obj.Value + ",subJson：" + subJson);
+                        //testTemp++;
+                        //Debug.Log("testTemp:" + testTemp + ",type:" + obj.Value.Type + ",k:" + obj.Key + ",v:" + obj.Value + ",subArrJson：" + obj.Value.ToString());
                         //遍历数组
                         foreach (var arrItem in obj.Value)
                         {
-                            //Debug.Log("temp:" + temp + ",arrItem  数组元素类型:" + arrItem.Type + "数组元素v:" + arrItem);
+                            string fieldName = obj.Key;
+                            //Debug.Log("testTemp:" + testTemp + "，ArrElemType:" + arrItem.Type + "，ArrElemValue" + arrItem);
                             if (arrItem.Type == JTokenType.Object || arrItem.Type == JTokenType.Array)
                             {
-                                temp++;
-                                //Debug.Log("temp:" + temp + ",subJson " + subJson);
-                                SpliceStr(className, obj.Key, obj.Value.Type);
-                                DeserializeObject(arrItem.ToString(), obj.Key);
+                                string fieldType = curClassName + "_" + obj.Key + "[]";
+                                string nextJson = arrItem.ToString();
+                                string nextClassName = curClassName + "_" + obj.Key;
+                                //testTemp++;
+                                //Debug.Log("testTemp:" + testTemp + "，fieldName：" + fieldName + "，fieldContent：" + obj.Value + "，type：" + obj.Value.Type + "，fieldType：" + fieldType);
+                                SpliceStr(curClassName, fieldName, fieldType);
+                                DeserializeObject(nextJson, nextClassName);
                             }
                             else
                             {
-                                string typeStr = GetFieldTypeByJTokenType("", arrItem.Type) + "[]";
-                                SpliceStr(className, obj.Key, JTokenType.None, typeStr);
+                                string fieldType = GetFieldTypeByJTokenType(fieldName, arrItem.Type) + "[]";
+                                //Debug.Log("testTemp:" + testTemp + "，fieldName：" + fieldName + "，fieldContent：" + obj.Value + "，type：" + obj.Value.Type + "，fieldType：" + fieldType);
+                                SpliceStr(curClassName, fieldName, fieldType);
                             }
                             break;//仅遍历一次
                         }
                     }
-                    else if (obj.Value.Type == JTokenType.Object)
+                    else
                     {
-                        temp++;
-                        string subJson = obj.Value.ToString();
-                        //Debug.Log("temp:" + temp + ",type:" + obj.Value.Type + ",k:" + obj.Key + ",v:" + obj.Value + ",subJson " + subJson);
-                        SpliceStr(className, obj.Key, obj.Value.Type);
-                        DeserializeObject(subJson, obj.Key);
+                        string fieldName = obj.Key;
+                        string fieldType = GetFieldTypeByJTokenType(fieldName, obj.Value.Type); 
+                        //Debug.Log("testTemp:" + testTemp +  "，fieldName：" + fieldName + "，fieldContent：" + obj.Value+"，type：" + obj.Value.Type + "，fieldType："+ fieldType);
+                        SpliceStr(curClassName, fieldName, fieldType);
                     }
+
                 }
             }
             /// <summary>
             /// 拼接字符串
             /// </summary>
             /// <param name="subClassName">类名</param>
-            /// <param name="fieldName"></param>
-            /// <param name="jTokenType"></param>
-            /// <param name="customType">基本数据数组类型</param>
-            private static void SpliceStr(string subClassName, string fieldName, JTokenType jTokenType, string baseTypeArray = "")
+            /// <param name="fieldName">字段名</param>
+            /// <param name="fieldType">字段类型</param>
+            private static void SpliceStr(string subClassName, string fieldName, string fieldType)
             {
-                string dataType = string.IsNullOrEmpty(baseTypeArray) ? GetFieldTypeByJTokenType(fieldName, jTokenType) : baseTypeArray;
-
                 if (!dicClassContent.ContainsKey(subClassName))
                 {
                     ClassInfo classInfo = new ClassInfo();
@@ -205,7 +239,7 @@ namespace MFramework_Editor
                     else
                     {
                         //类名首字母大写
-                        string changeClassName = subClassName.StringFirstUpper(subClassName);  //StringFirstUpper(subClassName);
+                        string changeClassName = subClassName;
                         classInfo.classHead = "\n\tpublic class " + changeClassName + "\n\t{";
                         classInfo.classEnd = "\n\t}";
                     }
@@ -214,11 +248,11 @@ namespace MFramework_Editor
                 }
                 //字段缩进格式   class缩进一次 subClass缩进两次
                 string format = subClassName == jsonMapClassStruct.scriptName ? "\n\t" : "\n\t\t";
-                dicClassContent[subClassName].classBody += (format + AutoCreateScriptTemplate.FieldTemplate(fieldName, dataType));
+                dicClassContent[subClassName].classBody += AutoCreateScripttestTemplate.FieldtestTemplate(fieldName, fieldType, format);
             }
 
             /// <summary>
-            /// 获取字段类型 根据JTokenType
+            /// 获取字段类型 根据JTokenType映射c#数据类型
             /// </summary>
             /// <param name="jTokenType"></param>
             /// <returns></returns>
@@ -227,45 +261,38 @@ namespace MFramework_Editor
                 string fieldTypeStr = "";
                 switch (jTokenType)
                 {
-                    case JTokenType.None:
-                        break;
-                    case JTokenType.Object:
-                        fieldTypeStr = fieldName.StringFirstUpper(fieldName);// StringFirstUpper(fieldName);
-                        break;
-                    case JTokenType.Array:
-                        fieldTypeStr = fieldName.StringFirstUpper(fieldName) + "[]"; //StringFirstUpper(fieldName) + "[]";
-                        break;
-                    case JTokenType.Constructor:
-                        break;
-                    case JTokenType.Property:
-                        break;
-                    case JTokenType.Comment:
-                        break;
                     case JTokenType.Integer:
                         fieldTypeStr = "int";
                         break;
                     case JTokenType.Float:
+                        fieldTypeStr = "float";
                         break;
                     case JTokenType.String:
                         fieldTypeStr = "string";
                         break;
                     case JTokenType.Boolean:
-                        break;
-                    case JTokenType.Null:
-                        break;
-                    case JTokenType.Undefined:
-                        break;
-                    case JTokenType.Date:
-                        break;
-                    case JTokenType.Raw:
+                        fieldTypeStr = "bool";
                         break;
                     case JTokenType.Bytes:
+                        fieldTypeStr = "byte";
                         break;
+                    case JTokenType.Null:
+                        fieldTypeStr = "object";
+                        Debug.LogError("fieldName：" + fieldName + "，jTokenType：" + jTokenType + "，未知类型自动转为 object");
+                        break;
+                    case JTokenType.None:
+                    case JTokenType.Object:
+                    case JTokenType.Array:
+                    case JTokenType.Constructor:
+                    case JTokenType.Property:
+                    case JTokenType.Comment:
+                    case JTokenType.Undefined:
+                    case JTokenType.Date:
+                    case JTokenType.Raw:
                     case JTokenType.Guid:
-                        break;
                     case JTokenType.Uri:
-                        break;
                     case JTokenType.TimeSpan:
+                        Debug.LogError("反序列化 不支持当前类型请检查  jTokenType：" + jTokenType);
                         break;
                     default:
                         break;
@@ -319,7 +346,7 @@ namespace MFramework_Editor
         /// <summary>
         /// 自动生成代码模板
         /// </summary>
-        public class AutoCreateScriptTemplate
+        public class AutoCreateScripttestTemplate
         {
             /// <summary>
             /// 头节点模板
@@ -327,11 +354,10 @@ namespace MFramework_Editor
             /// <param name="className"></param>
             /// <param name="content"></param>
             /// <returns></returns>
-            public static string classTemplateHead(string className, string content)
+            public static string classtestTemplateHead(string className, string content)
             {
                 string res =
-@"
-/// <summary>
+@"/// <summary>
 /// Json映射的实体类 以下代码自动生成
 /// 接口地址：
 /// 创建时间：" + System.DateTime.Now + @"
@@ -343,35 +369,22 @@ public class " + className + "\n{  " + content + "\n}";
             /// <summary>
             /// 字段模板
             /// </summary>
-            /// <param name="fieldName"></param>
-            /// <param name="fieldType"></param>
+            /// <param name="fieldName">字段名称</param>
+            /// <param name="fieldType">字段类型</param>
+            /// <param name="format">字段格式</param>
             /// <returns></returns>
-            public static string FieldTemplate(string fieldName, string fieldType)
+            public static string FieldtestTemplate(string fieldName, string fieldType, string format)
             {
-                return "public " + fieldType + " " + fieldName + ";";
+                string res = string.Empty;
+                if (jsonMapClassStruct.isSummaryAnnotation)
+                {
+                    res += format + "/// <summary>";
+                    res += format + "/// ";
+                    res += format + "/// </summary>";
+                }
+                res += format + "public " + fieldType + " " + fieldName + ";";
+                return res;
             }
-        }
-        /// <summary>
-        /// 脚本自动化结构体
-        /// </summary>
-        public struct JsonMapClassStruct
-        {
-            /// <summary>
-            /// Json格式字符串
-            /// </summary>
-            public string jsonStr;
-            /// <summary>
-            /// 脚本类名
-            /// </summary>
-            public string scriptName;
-            /// <summary>
-            /// 脚本路径
-            /// </summary>
-            public string scriptPath;
-            /// <summary>
-            /// 是否覆盖同路径下的同类名脚本
-            /// </summary>
-            public bool isOverrideScript;
         }
     }
 

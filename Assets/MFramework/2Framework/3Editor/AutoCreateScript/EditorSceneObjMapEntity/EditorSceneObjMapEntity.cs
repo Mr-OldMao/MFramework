@@ -1,28 +1,28 @@
 #if UNITY_EDITOR
-using MFramework;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-namespace MFramework_Editor
+namespace MFramework.Editor
 {
     /// <summary>
-    /// 标题：场景游戏对象自动映射与关联 脚本自动化生成工具
+    /// 标题：Scene GameObject => EntityClass 场景游戏对象转实体类 
     /// 目的：解决手动获取场景对象实例需要繁琐且重复的操作
-    /// 功能：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，点击生成，可自动获取根节点其下字段、属性、映射并生成脚本到指定路径 
-    /// 规则：游戏对象的命名要规范，要以小写字母开头，不要使用创建时默认的名称会被屏蔽
+    /// 功能：脚本自动化生成工具，根据场景中某游戏对象下的所有子对象，创建实体并与之对应，自动映射与关联
+    /// 调用：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，点击生成，可自动获取根节点其下字段、属性、映射并生成脚本到指定路径 
+    /// 规则：场景游戏对象会被直接引用成为字段名，所以命名要规范，并且不要使用创建场景对象时引擎默认的名称会被屏蔽
     /// 作者：毛俊峰
     /// 时间：2022.08.01
     /// 版本：1.0
     /// </summary>
-    public class EditorAutoCreateScriptSceneObj : ScriptableWizard
+    public class EditorSceneObjMapEntity : ScriptableWizard
     {
-        //[MenuItem("MFramework/脚本自动化工具/2.场景游戏对象映射实体类", false, 1)]
+        //[MenuItem("MFramework/脚本自动化工具/1.场景游戏对象映射实体类", false, 1)]
         public static void CreateWizard()
         {
-            DisplayWizard<EditorAutoCreateScriptSceneObj>("场景游戏对象映射实体类", "生成", "重置");
+            DisplayWizard<EditorSceneObjMapEntity>("场景游戏对象映射实体类", "生成", "重置");
         }
         [Header("根节点")]
         public Transform rootTrans;
@@ -53,7 +53,6 @@ namespace MFramework_Editor
         }
         private void OnWizardOtherButton()
         {
-            Debug.Log("重置");
             Reset();
         }
         private void OnWizardUpdate()
