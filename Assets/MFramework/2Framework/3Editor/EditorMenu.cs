@@ -2,6 +2,8 @@
 using System;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
+
 namespace MFramework.Editor
 {
     /// <summary>
@@ -24,6 +26,18 @@ namespace MFramework.Editor
             //准备导出unitypackage资源路径
             string exportPathName = "Assets/MFramework";
             EditorAutoBuildUnityPackage.ExportUnityPactage(packageName, exportPathName);
+        }
+
+        [MenuItem("MFramework/AssetsBundle/ExportAssetsBundle")]
+        private static void BuildAssetBundle()
+        {
+            string buildPath = Application.streamingAssetsPath + "/BuildAssetBundle";
+            Debug.Log("BuildAB  Path：" + buildPath);
+            if (!Directory.Exists(buildPath))
+            {
+                Directory.CreateDirectory(buildPath);
+            }
+            BuildPipeline.BuildAssetBundles(buildPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
         }
 
         [MenuItem("MFramework/脚本自动化工具/1.场景游戏对象映射实体类", false, 1)]

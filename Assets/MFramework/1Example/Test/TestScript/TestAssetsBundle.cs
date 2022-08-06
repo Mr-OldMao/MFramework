@@ -13,33 +13,20 @@ namespace MFramework
     /// </summary>
     public class TestAssetsBundle : MonoBehaviour
     {
-
-#if UNITY_EDITOR
-        public string buildABPath = Application.dataPath + "/BuildAssetBundle";
-
+        AssetBundle ab;
         private void Start()
         {
-            BuildAssetBundle(buildABPath);
-
-
-        }
-
-        private void BuildAssetBundle(string buildPath)
-        {
-            Debug.Log("BuildAB  Path：" + buildPath);
-            if (!Directory.Exists(buildPath))
-            {
-                Directory.CreateDirectory(buildPath);
-            }
-            UnityEditor.BuildPipeline.BuildAssetBundles(buildPath, UnityEditor.BuildAssetBundleOptions.None, UnityEditor.BuildTarget.StandaloneWindows);
+            LoadRes();
         }
 
         private void LoadRes()
         {
+            string buildPath = Application.streamingAssetsPath + "/BuildAssetBundle/";
+            ab = AssetBundle.LoadFromFile(buildPath + "abobj");
+            GameObject obj = ab.LoadAsset<GameObject>("cube");
+            Instantiate(obj);
 
         }
-
-#endif
 
     }
 }

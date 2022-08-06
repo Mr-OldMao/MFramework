@@ -1,0 +1,34 @@
+ManifestFileVersion: 0
+CRC: 2237685068
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 557d3f819a4f7c92852cdb3518ba4db0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6fc5420ae58b9d2ca2d622720d151b8e
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/MFramework/1Example/Test/TesAssets/Resources/TestRes/Obj/cubePrefab.prefab
+- Assets/MFramework/1Example/Test/TesAssets/Resources/TestRes/Obj/planePrefab.prefab
+Dependencies: []
