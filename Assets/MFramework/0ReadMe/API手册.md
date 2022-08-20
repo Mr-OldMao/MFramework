@@ -30,10 +30,6 @@ API手册、开发文档、版本记录
 
 存放测试所用的资源
 
-#### BuildAssetBundle
-
-AB包 资源
-
 #### Resources
 
 Resources资源
@@ -164,43 +160,56 @@ AbRefCounter.cs
 
 核心脚本：ResLoader.cs 	资源加载器
 
-核心功能：管理Resource资源、AssetBundle资源的同步加载、异步加载、资源卸载
+核心功能：管理Resource资源、ab包、ab包中具体资源的同步加载、异步加载、资源卸载
 
-ResourcesRes.cs 	Resource资源加载、卸载
+ResourcesRes.cs		Resource资源加载、卸载
 
-AssetBundleRes.cs	AssetBundle资源加载、卸载
+AssetBundleRes.cs		AB包加载、卸载
 
-AbRes.cs 资源信息数据结构抽象类
+AssetRes.cs		AB包中的具体资源加载、卸载
+
+AbRes.cs		资源实现类的抽象基类
 
 测试类： ExampleTest.unity	TestResLoader.cs
 
 核心API：
 
 ```c#
-//加载AB包
- 	AssetBundle ab = ResLoader.LoadSync<AssetBundle>("ab包所在位置 例：Application.streamingAssetsPath/BuildAssetBundle/abaudio", 	ResType.AssetBundle);//同步加载Reoueces资源
-ResLoader.LoadSync<AudioClip>("Resources文件夹下的路径 例：TestRes/Audio/bgm1", ResType.Resources);
-
+///Resource资源
+//同步加载Resources资源
+	AudioClip al = ResLoader.LoadSync<AudioClip>(ResType.Resources, "Resources文件夹下的资源路径 例TestRes/Audio/bgm1");
 //异步加载Reoueces资源
-ResLoader.LoadASync<AudioClip>("Resources文件夹下的路径 例:TestRes/Audio/effJumpScene", (AudioClip res) => {}, ResType.Resources);
+	ResLoader.LoadASync<AudioClip>(ResType.Resources,"Resources文件夹下的资源路径", (AudioClip res) => 
+		{ 
+			//TODO 
+		});
+//卸载Resources资源
+	ResLoader.UnLoadAssets("Resources文件夹下的资源路径");
 
-//同步加载AssetBundle资源
-	//加载AB包
- 	AssetBundle ab = ResLoader.LoadSync<AssetBundle>("ab包所在位置 例：Application.streamingAssetsPath/BuildAssetBundle/abaudio", 	ResType.AssetBundle);
-	//加载AB包中资源
-    ab.LoadAsset<AudioClip>("资源名 例：bgm1");
 
-//异步加载AssetBundle资源
-	//加载AB包
-	ResLoader.LoadASync<AssetBundle>("ab包所在位置 例：Application.streamingAssetsPath/BuildAssetBundle/abaudio", 
-	(AssetBundle ab) => 
+///AB包
+//同步加载AB包
+ 	AssetBundle ab = ResLoader.LoadSync<AssetBundle>(ResType.AssetBundle,
+		"ab包全路径 例Application.streamingAssetsPath/BuildAssetBundle/abaudio");
+//异步加载AB包
+	ResLoader.LoadASync<AssetBundle>( ResType.AssetBundle,"ab包全路径", (AssetBundle ab) => 
+		{
+    		//TODO
+		},);
+//卸载Resources资源
+	ResLoader.UnLoadAssets("ab包全路径");
+
+
+///AB包中的具体资源
+//同步加载AB包中具体资源
+    GameObject obj = ResLoader.LoadSync<GameObject>(ResType.Asset, "ab包全路径", "ab包中具体资源名 例:planePrefab");
+//异步加载AB包中具体资源
+	ResLoader.LoadAsync<GameObject>(ResType.Asset,(GameObject obj)=>
 	{
-    	//加载AB包中资源
-    	ab.LoadAsset<GameObject>("cubePrefab");
-	}, ResType.AssetBundle);
-
-//卸载资源
-ResLoader.UnLoadAssets("Resources文件夹下的路径 格式：TestRes/Audio/bgm1")
+        //TODO
+    },"ab包全路径", "ab包中具体资源名");
+//卸载AB包中具体资源
+	ResLoader.UnLoadAssets("ab包全路径/ab包中具体资源名");
 ```
 
 
@@ -278,6 +287,14 @@ Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 
 框架资源
 
 
+
+# StreamingAssets
+
+
+
+## BuildAB
+
+打包的AB文件容器
 
 
 
