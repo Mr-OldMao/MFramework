@@ -5,14 +5,43 @@ using UnityEngine;
 namespace MFramework
 {
     /// <summary>
-    /// 标题：资源信息数据结构抽象类
-    /// 功能：缓存资源信息，对资源进行引用计数处理， 未引用资源自动回收
+    /// 标题：资源实现类的抽象基类
+    /// 功能：资源的加载、卸载  缓存资源的状态、路径、被引用的次数、未引用资源自动卸载
     /// 作者：毛俊峰
     /// 时间：2022.08.02
     /// 版本：1.0
     /// </summary>
     public abstract class AbRes : AbRefCounter
     {
+        /// <summary>
+        /// 资源类型
+        /// </summary>
+        public ResType resType;
+
+        /// <summary>
+        /// 资源状态类型
+        /// </summary>
+        public enum ResStateType
+        {
+            /// <summary>
+            /// 资源未加载 刚创建好Res对象
+            /// </summary>
+            Waiting,
+            /// <summary>
+            /// 资源正在加载
+            /// </summary>
+            Loading,
+            /// <summary>
+            /// 资源加载结束
+            /// </summary>
+            Loaded
+        }
+
+        /// <summary>
+        /// 资源状态
+        /// </summary>
+        public ResStateType ResState { get; protected set; }
+
         /// <summary>
         /// 资源实例路径
         /// </summary>
@@ -23,7 +52,7 @@ namespace MFramework
         /// </summary>
         public UnityEngine.Object Asset { get; set; }
         /// <summary>
-        /// 资源Rousources下的全路径 xx/xxx/xxx
+        /// 资源(roesouce、ab包、ab包中具体具体资源)的全路径 xx/xxx/xxx
         /// </summary>
         public string AssetAllPath { get; set; }
         /// <summary>
@@ -31,6 +60,7 @@ namespace MFramework
         /// </summary>
         public abstract bool LoadSync();
         public abstract void LoadAsync(Action<AbRes> callback);
+
         /// <summary>
         /// 卸载资源
         /// </summary>

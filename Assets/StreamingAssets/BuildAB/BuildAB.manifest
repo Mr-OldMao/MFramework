@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 2697091858
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: abaudio
+      Dependencies: {}
+    Info_1:
+      Name: abui
+      Dependencies: {}
+    Info_2:
+      Name: abmat
+      Dependencies: {}
+    Info_3:
+      Name: abcube
+      Dependencies:
+        Dependency_0: abmat
+    Info_4:
+      Name: abplane
+      Dependencies:
+        Dependency_0: abmat

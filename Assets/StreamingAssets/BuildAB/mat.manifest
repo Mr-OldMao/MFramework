@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 2947460677
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d29b220ab246b6f9354dd6093b9cdfc8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9373241baafe7684daf662ef4780ff70
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/MFramework/1Example/Test/TesAssets/Resources/TestRes/Mat/greenMat.mat
+- Assets/MFramework/1Example/Test/TesAssets/Resources/TestRes/Mat/redMat.mat
+Dependencies: []

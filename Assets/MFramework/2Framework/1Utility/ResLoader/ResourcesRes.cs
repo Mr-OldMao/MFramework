@@ -15,20 +15,27 @@ namespace MFramework
     {
         public ResourcesRes(string assetAllPath) : base(assetAllPath)
         {
+            base.resType = ResType.Resources;
             base.AssetAllPath = assetAllPath;
+            ResState = ResStateType.Waiting;
         }
 
         public override bool LoadSync()
         {
-            return Asset = Resources.Load(AssetAllPath);
+            ResState = ResStateType.Loading;
+            Asset = Resources.Load(AssetAllPath);
+            ResState = ResStateType.Loaded;
+            return Asset;
         }
 
         public override void LoadAsync(Action<AbRes> callback)
         {
+            ResState = ResStateType.Loading;
             ResourceRequest rr = Resources.LoadAsync(AssetAllPath);
             rr.completed += (AsyncOperation ao) =>
             {
                 Asset = rr.asset;
+                ResState = ResStateType.Loaded;
                 callback?.Invoke(this);
             };
         }

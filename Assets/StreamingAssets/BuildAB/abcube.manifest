@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2237685068
+CRC: 1885411361
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 557d3f819a4f7c92852cdb3518ba4db0
+    Hash: 28dab1b84f09fb63d3896767086dc1dc
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6fc5420ae58b9d2ca2d622720d151b8e
+    Hash: 4db82f4e618e4630b2fa8228e9c6d8d1
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -21,14 +21,10 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
-- Class: 48
-  Script: {instanceID: 0}
-- Class: 64
-  Script: {instanceID: 0}
 - Class: 65
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/MFramework/1Example/Test/TesAssets/Resources/TestRes/Obj/cubePrefab.prefab
-- Assets/MFramework/1Example/Test/TesAssets/Resources/TestRes/Obj/planePrefab.prefab
-Dependencies: []
+Dependencies:
+- E:/UnityProjectPath/Framework/MFramework/Assets/StreamingAssets/BuildAB/abmat

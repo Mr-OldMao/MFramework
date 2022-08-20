@@ -31,8 +31,7 @@ namespace MFramework.Editor
         [MenuItem("MFramework/AssetsBundle/ExportAssetsBundle")]
         private static void BuildAssetBundle()
         {
-            string buildPath = Application.streamingAssetsPath + "/BuildAssetBundle";
-            Debug.Log("BuildAB  Path：" + buildPath);
+            string buildPath = ResLoader.Path_AB;
             if (!Directory.Exists(buildPath))
             {
                 Directory.CreateDirectory(buildPath);
