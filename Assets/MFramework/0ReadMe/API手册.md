@@ -68,39 +68,62 @@ UIManager.cs
 
 脚本：MsgEvent.cs
 
-核心功能：管理消息的注册、注销、调用
+标题：消息系统 功能：基于事件的消息系统，
 
-规则：注册消息--允许同一个消息名下有一个或者多个无参或者带参事件，调用消息--根据消息名可调用旗下所有无参消息、所有带参消息、所有消息
+目的：降低不同模块之间的相互调用的耦合性 
+
+具体功能：消息注册(四种)：1.不带参、不带返回值 2.带参、不带返回值 3.不带参、带返回值 4.带参、带返回值 
+
+​					消息发送(四种)：1.不带参、不带返回值 2.带参、不带返回值 3.不带参、带返回值 4.带参、带返回值
+
+​					消息注销(九种)：1.注销指定类型指定消息 2.注销指定类型所有消息 3.注销所有类型所有消息
 
 核心API：
 
 ```c#
 //注册消息
-        //注册无参消息
-        MsgEvent.RegisterMsgEvent("MsgName1", () => { Debug.Log("无参事件1.1"); }, "当前无参消息事件文字描述1.1(可忽略不填)");
-        MsgEvent.RegisterMsgEvent("MsgName1", () => { Debug.Log("无参事件1.2"); }, "当前无参消息事件文字描述1.2(可忽略不填)");
-        MsgEvent.RegisterMsgEvent("MsgName1", Method1, "当前无参消息事件文字描述1.3");
-        //注册带参消息
-        MsgEvent.RegisterMsgEvent("MsgName2", (object p) => { Debug.Log("带参事件2.1 " + p); }, "当前带参消息事件文字描述2.1");
-        MsgEvent.RegisterMsgEvent("MsgName2", (object p) => { Debug.Log("带参事件2.2 " + p); }, "当前带参消息事件文字描述2.2");
-        MsgEvent.RegisterMsgEvent("MsgName2", Method2, "当前带参消息事件文字描述2.3");
+        //注册不带参不带返回值消息
+        MsgEvent.RegisterMsgEvent(MsgEventName.Test, () => { Debug.Log("无参、无返回、lamdba"); });
+        //注册带参不带返回值消息
+        MsgEvent.RegisterMsgEvent(MsgEventName.Test, (object obj) => { Debug.Log("有参、无返回、lamdba obj：" + obj); });
+		//注册不带参带返回值消息
+		MsgEvent.RegisterMsgEvent(MsgEventName.Test, () =>
+        {
+            Debug.Log("无参、有返回、lamdba");
+            int value = 123;
+            return value;
+        });
+		//注册无参无返回值消息
+		MsgEvent.RegisterMsgEvent(MsgEventName.Test, (object friendID) =>
+        {
+            Debug.Log("有参、有返回、lamdba");
+            string res = (string)friendID + "1111";
+            return res;
+        });
+
 //注销消息
-		//注销消息名下的 所有无参消息
-        MsgEvent.UnregisterMsgEventNotParam("MsgName1");
-        //注销消息名下的 所有带参消息
-        MsgEvent.UnregisterMsgEventParam("MsgName1");
-        //注销消息名下的 指定无参消息 一般用于注销 注册过非lamda表达式的事件消息
-        MsgEvent.UnregisterMsgEvent("MsgName1", Method1);
-        //注销消息名下的 指定带参消息 一般用于注销 注册过非lamda表达式的事件消息
-        MsgEvent.UnregisterMsgEvent("MsgName2", Method2);
-        //注销消息名下的  所有消息（带参和无参）
-        MsgEvent.UnregisterMsgEventAll("MsgName1");
+		//注销指定类型指定消息，仅针对非lamdba事件注册的消息使用
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, action);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, actionParam);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, func);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, funcParam);
+        //注销指定类型所有消息，可用于注销使用Lamda和非Lamdba表达式注册过的事件消息
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, MsgEventType.NoParamNoReturn);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, MsgEventType.HasParamNoReturn);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, MsgEventType.NoParamHasReturn);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test, MsgEventType.HasParamHasReturn);
+        //注销所有类型所有消息，可用于注销使用Lamda和非Lamdba表达式注册过的事件消息
+        MsgEvent.UnregisterMsgEventAll(MsgEventName.Test);
+
 //发送消息
-        //发送无参消息
-        MsgEvent.SendMsg("MsgName1");
-        //发送带参消息
-        object objParam = "TestSendMsg";
-        MsgEvent.SendMsg("MsgName2",objParam);
+        //发送无参无返回值消息
+        MsgEvent.SendMsg(MsgEventName.Test);
+        //发送有参无返回值消息
+        MsgEvent.SendMsg(MsgEventName.Test, "测试发送有参无返回值消息");
+        //发送无参有返回值消息
+        MsgEvent.SendMsg(MsgEventName.Test, (obj) => { Debug.Log("测试发送无参有返回值 res：" + obj); });
+        //发送有参有返回值消息
+        MsgEvent.SendMsg(MsgEventName.Test, "1001", (obj) => { Debug.Log("测试发送有参有返回值 res：" + obj); });
 ```
 
 

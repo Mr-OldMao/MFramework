@@ -6,7 +6,7 @@ namespace MFramework
 {
     /// <summary>
     /// 标题：资源加载器
-    /// 功能：管理Resource资源、AssetBundle资源的同步加载、异步加载、资源卸载
+    /// 功能：管理Resource资源、ab包、ab包中具体资源的同步加载、异步加载、资源卸载
     /// 作者：毛俊峰
     /// 时间：2022.07.24
     /// 版本：1.0
