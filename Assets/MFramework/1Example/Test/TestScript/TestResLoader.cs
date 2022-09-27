@@ -14,7 +14,6 @@ namespace MFramework
     {
         private void Start()
         {
-
             Debug.Log("Q：同步加载Reoueces资源，" +
                 "W：异步加载Reoueces资源，" +
                 "E：回收Reoueces资源，" +
@@ -82,7 +81,7 @@ namespace MFramework
                 string abPath = ResLoader.Path_AB + "/abplane";
                 GameObject obj = ResLoader.LoadSync<GameObject>(ResType.Asset, abPath, "planePrefab");
                 Instantiate(obj);
-                Debug.Log("同步加载AssetBundle资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(abPath+ "/planePrefab")?.RefCount);
+                Debug.Log("同步加载AssetBundle资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(abPath + "/planePrefab")?.RefCount);
             }
             if (Input.GetKeyDown(KeyCode.X))
             {
