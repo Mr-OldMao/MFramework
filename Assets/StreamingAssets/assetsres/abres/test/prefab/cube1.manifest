@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 3408052623
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 16e997148a024e1cf6336bb7d42eda75
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 58ec148d4d90a6355f79c35cef573e02
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetsRes/ABRes/Test/Prefab/Cube1.prefab
+Dependencies:
+- E:/UnityProjectPath/Framework/MFramework/Assets/StreamingAssets/assetsres/abres/test/art/mat/matrad
+- E:/UnityProjectPath/Framework/MFramework/Assets/StreamingAssets/assetsres/abres/test/audio/audio01

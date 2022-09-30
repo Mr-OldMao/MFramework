@@ -6,7 +6,7 @@ namespace MFramework
 {
     /// <summary>
     /// 标题：资源加载器
-    /// 功能：管理Resource资源、ab包、ab包中具体资源的同步加载、异步加载、资源卸载
+    /// 功能：管理Editor资源、Resource资源、ab包、ab包中具体资源的同步加载、异步加载、资源卸载
     /// 作者：毛俊峰
     /// 时间：2022.07.24
     /// 版本：1.0
@@ -18,13 +18,6 @@ namespace MFramework
         /// </summary>
         public static List<AbRes> resContainer = new List<AbRes>();
 
-
-
-        /// <summary>
-        /// AB包路径
-        /// </summary>
-        public static string Path_AB = Application.streamingAssetsPath + "/BuildAB";
-
         #region 加载资源
 
         /// <summary>
@@ -32,28 +25,30 @@ namespace MFramework
         /// </summary>
         /// <typeparam name="T">U3D资源类型</typeparam>
         /// <param name="resType">资源种类</param>
-        /// <param name="assetAllPath">ab包资源、resources资源全路径  格式：xx/xxx/xxx</param>
+        /// <param name="resPath">资源种类所对应路径   ab包资源、resources资源全路径  格式：xx/xxx/xxx    </param>
         /// <param name="assetName">具体资源名称 仅ResType.Asset资源种类填写</param>
         /// <returns></returns>
-        public static T LoadSync<T>(ResType resType, string assetAllPath, string assetName = "") where T : UnityEngine.Object
+        public static T LoadSync<T>(ResType resType, string resPath, string assetName = "") where T : UnityEngine.Object
         {
-            AbRes resData = FindResInfoByResContainer(resType, assetAllPath, assetName);
+            AbRes resData = FindResInfoByResContainer(resType, resPath, assetName);
             if (resData != null)
             {
                 //判断资源加载的状态
                 switch (resData.ResState)
                 {
                     case AbRes.ResStateType.Loading:
-                        throw new Exception("当前资源正在加载中！注意：对于同一个资源，请不要在异步加载当前资源未加载完毕时，使用同步加载该资源  assetAllPath：" + assetAllPath);
+                        throw new Exception("当前资源正在加载中！注意：对于同一个资源，请不要在异步加载当前资源未加载完毕时，使用同步加载该资源  assetAllPath：" + resPath);
                     case AbRes.ResStateType.Loaded:
                         resData.Release();
+                        Debug.Log("同步加载资源 资源类型：" + resType + "，当前资源引用次数:" + CheckResExist(resPath, resType)?.RefCount + "，资源池资源总数：" + resContainer.Count);
                         return resData.Asset as T;
                 }
             }
-            AbRes newResData = CreateAsset(resType, assetAllPath, assetName);
+            AbRes newResData = ResFactory.Create(resType, resPath, assetName);
             newResData.LoadSync();
             newResData.Release();
             resContainer.Add(newResData);
+            Debug.Log("同步加载新资源 资源类型：" + resType + "，当前资源引用次数:" + CheckResExist(resPath, resType)?.RefCount + "，资源池资源总数：" + resContainer.Count);
             return newResData.Asset as T;
         }
 
@@ -62,12 +57,12 @@ namespace MFramework
         /// </summary>
         /// <param name="resType">资源种类</param>
         /// <param name="callback">回调<U3D资源类型></param>
-        /// <param name="assetAllPath">资源 Resources下的全路径  格式：xx/xxx/xxx</param>
-        /// <param name="assetName">具体资源名称 仅ResType.Asset资源种类填写</param>
+        /// <param name="resPath">资源 Resources下的全路径  格式：xx/xxx/xxx</param>
+        /// <param name="resName">具体资源名称 仅ResType.Asset资源种类填写</param>
         /// <returns></returns>
-        public static void LoadAsync<T>(ResType resType, Action<T> callback, string assetAllPath, string assetName = "") where T : UnityEngine.Object
+        public static void LoadAsync<T>(ResType resType, Action<T> callback, string resPath, string resName = "") where T : UnityEngine.Object
         {
-            AbRes resData = FindResInfoByResContainer(resType, assetAllPath, assetName);
+            AbRes resData = FindResInfoByResContainer(resType, resPath, resName);
             if (resData != null)
             {
                 //判断资源加载的状态
@@ -75,7 +70,8 @@ namespace MFramework
                 {
                     case AbRes.ResStateType.Loading:
                         //等待资源加载完毕 回调
-                        Debug.Log("该资源正在异步加载中，等待资源加载完毕 回调");
+                        //Debug.Log("该资源正在异步加载中，等待资源加载完毕 回调");
+                        Debug.Log("异步加载资源开始 资源类型：" + resType + "，当前资源引用次数:" + CheckResExist(resPath, resType)?.RefCount + "，资源池资源总数：" + resContainer.Count);
                         UnityTool.GetInstance.DelayCoroutineWaitReturnTrue(() =>
                         {
                             return resData.ResState == AbRes.ResStateType.Loaded;
@@ -83,51 +79,21 @@ namespace MFramework
                         {
                             resData.Release();
                             callback(resData.Asset as T);
+                            Debug.Log("异步加载新资源结束 资源类型：" + resType + "，当前资源引用次数:" + CheckResExist(resPath, resType)?.RefCount + "，资源池资源总数：" + resContainer.Count);
                         });
                         return;
                     case AbRes.ResStateType.Loaded:
                         resData.Release();
                         callback(resData.Asset as T);
+                        Debug.Log("异步加载资源结束 资源类型：" + resType + "，当前资源引用次数:" + CheckResExist(resPath, resType)?.RefCount + "，资源池资源总数：" + resContainer.Count);
                         return;
                 }
             }
-            AbRes newResData = CreateAsset(resType, assetAllPath, assetName);
+            AbRes newResData = ResFactory.Create(resType, resPath, resName);
             newResData.LoadAsync((AbRes p) => callback(p.Asset as T));
             newResData.Release();
             resContainer.Add(newResData);
         }
-
-        /// <summary>
-        /// 创建资源
-        /// </summary>
-        /// <param name="assetAllPath"></param>
-        /// <param name="resType"></param>
-        /// <returns></returns>
-        private static AbRes CreateAsset(ResType resType, string assetAllPath, string assetName)
-        {
-            AbRes newResData = null;
-            switch (resType)
-            {
-                case ResType.Resources:
-                    newResData = new ResourcesRes(assetAllPath);
-                    break;
-                case ResType.AssetBundle:
-                    newResData = new AssetBundleRes(assetAllPath);
-                    break;
-                case ResType.Asset:
-                    if (string.IsNullOrEmpty(assetName))
-                    {
-                        Debug.LogError("assetName is null !  ResType.Asset方式加载资源，需要填写具体资源名 assetName");
-                        break;
-                    }
-                    newResData = new AssetRes(assetAllPath, assetName);
-                    break;
-                default:
-                    break;
-            }
-            return newResData;
-        }
-
 
         /// <summary>
         /// 在资源容器根据查找资源根据资源路径
@@ -135,14 +101,8 @@ namespace MFramework
         /// <returns></returns>
         private static AbRes FindResInfoByResContainer(ResType resType, string assetAllPath, string assetName = "")
         {
-            if (resType == ResType.Asset)
-            {
-                assetAllPath = assetAllPath + "/" + assetName;
-            }
-            return resContainer.Find(loadedAsset => loadedAsset.AssetAllPath == assetAllPath);
+            return resContainer.Find(loadedAsset => loadedAsset.resType == resType && loadedAsset.AssetAllPath == assetAllPath);
         }
-
-
         #endregion
 
         #region 卸载资源
@@ -154,7 +114,22 @@ namespace MFramework
         {
             for (int i = 0; i < resContainer.Count; i++)
             {
-                Resources.UnloadAsset(resContainer[i].Asset);
+                try
+                {
+                    if (resContainer[i].Asset?.GetType() == typeof(AssetBundle))
+                    {
+                        AssetBundle ab = resContainer[i].Asset as AssetBundle;
+                        ab.Unload(true);
+                    }
+                    else
+                    {
+                        Resources.UnloadAsset(resContainer[i].Asset);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("UnLoadAllAssets e: " + e);
+                }
             }
             resContainer.Clear();
         }
@@ -162,16 +137,24 @@ namespace MFramework
         /// <summary>
         /// 卸载指定资源
         /// </summary>
-        /// <param name="assetAllPath">资源 Resources下的全路径  格式：xx/xxx/xxx</param>
-        public static void UnLoadAssets(string assetAllPath)
+        /// <param name="resPath">资源路径</param>
+        public static void UnLoadAssets(string resPath, ResType resType)
         {
             for (int i = 0; i < resContainer.Count; i++)
             {
-                if (resContainer[i].AssetAllPath == assetAllPath)
+                if (resContainer[i].resType == resType && resContainer[i].AssetAllPath == resPath)
                 {
                     resContainer[i].Retain();
                     break;
                 }
+            }
+            if (CheckResExist(resPath, resType) == null)
+            {
+                Debug.Log("卸载资源 资源类型：" + resType + "，资源路径：" + resPath + "，当前资源已被释放，资源池资源总数：" + resContainer.Count);
+            }
+            else
+            {
+                Debug.Log("卸载资源 资源类型：" + resType + "，资源路径：" + resPath + "，引用次数:" + CheckResExist(resPath, resType)?.RefCount + "，资源池资源总数：" + resContainer.Count);
             }
         }
         #endregion
@@ -181,9 +164,9 @@ namespace MFramework
         /// 判定资源是否已被加载
         /// </summary>
         /// <param name="assetAllPath">资源 Resources下的全路径  格式：xx/xxx/xxx</param>
-        public static AbRes CheckResExist(string assetAllPath)
+        public static AbRes CheckResExist(string assetAllPath, ResType resType)
         {
-            AbRes resData = resContainer.Find(loadedAsset => loadedAsset.AssetAllPath == assetAllPath);
+            AbRes resData = resContainer.Find(loadedAsset => loadedAsset.AssetAllPath == assetAllPath && loadedAsset.resType == resType);
             return resData;
         }
 
@@ -204,11 +187,10 @@ namespace MFramework
         /// </summary>
         public static void ShowResLogInfo()
         {
-            Debug.Log("显示当前资源信息");
-            Debug.Log("资源总个数：" + resContainer.Count);
+            Debug.Log("显示当前资源信息\n资源总个数：" + resContainer.Count);
             foreach (AbRes resData in resContainer)
             {
-                Debug.Log(string.Format("资源类型：{0} 资源实例{1}，位置{1}，引用次数{2}", resData.resType, resData.Asset, resData.AssetAllPath, resData.RefCount));
+                Debug.Log(string.Format("资源类型：{0} 资源实例{1}，位置{2}，引用次数{3}", resData.resType, resData.Asset, resData.AssetAllPath, resData.RefCount));
             }
         }
         #endregion
@@ -218,17 +200,22 @@ namespace MFramework
     /// </summary>
     public enum ResType
     {
+        Null,
         /// <summary>
-        /// Resources资源
+        /// 编辑器模式下资源类型  path格式：Assets/AssetsRes/ABRes/Prefab/Cube3.prefab
         /// </summary>
-        Resources,
+        ResEditor,
         /// <summary>
-        /// ab包
+        /// Resources目录下资源   path格式：(Resources/) + xxx/xxx/xx
         /// </summary>
-        AssetBundle,
+        ResResources,
         /// <summary>
-        /// ab包中的资源
+        /// ab包 .manifest资源     path格式：ab标签名称   (.manifest=>AssetBundleManifest=>Name)
         /// </summary>
-        Asset
+        ResAssetBundlePack,
+        /// <summary>
+        /// ab包中的资源     path格式：ab标签名称   (.manifest=>AssetBundleManifest=>Name)
+        /// </summary>
+        ResAssetBundleAsset
     }
 }

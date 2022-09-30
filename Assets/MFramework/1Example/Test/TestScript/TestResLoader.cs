@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MFramework
 {
     /// <summary>
-    /// 标题：测试Resource资源、AssetBundle资源的加载卸载 
+    /// 标题：测试四类资源的同步加载、异步加载、卸载自动回收
     /// 功能：
     /// 作者：毛俊峰
     /// 时间：2022.
@@ -12,99 +12,114 @@ namespace MFramework
     /// </summary>
     public class TestResLoader : MonoBehaviour
     {
+        private string pathCube1 = "Assets/AssetsRes/ABRes/Test/Prefab/Cube1.prefab";//不关心大小写，但资源必须要有后缀
+        private string pathCube2 = "Assets/AssetsRes/ABRes/Test/Prefab/Cube2.prefab";
+        private string pathCube3 = "Assets/AssetsRes/ABRes/Test/Prefab/Cube3.prefab";
+
+        private string pathResouces = "TestRes/Obj/cubePrefab";
         private void Start()
         {
-            Debug.Log("Q：同步加载Reoueces资源，" +
-                "W：异步加载Reoueces资源，" +
-                "E：回收Reoueces资源，" +
-                "A：同步加载AB包，" +
+            Debug.Log("Q：同步加载编辑器资源，" +
+                "A：异步加载编辑器资源，" +
+                "Z：回收编辑器资源，" +
+                "W：同步加载AB包，" +
                 "S：异步加载AB包，" +
-                "D：回收AB包资源2，" +
-                "Z：同步加载AB包中具体资源，" +
-                "X：异步加载AB包中具体资源，" +
-                "C：回收AB包中具体资源");
+                "X：回收AB包资源，" +
+                "E：同步加载AB包中具体资源，" +
+                "D：异步加载AB包中具体资源，" +
+                "C：回收AB包中具体资源" +
+                "R：同步加载Reoueces资源，" +
+                "F：异步加载Reoueces资源，" +
+                "V：回收Reoueces资源");
         }
         private void Update()
         {
-            #region Resources
+            #region Editor
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                ResLoader.LoadSync<AudioClip>(ResType.Resources, "TestRes/Audio/bgm1");
-                Debug.Log("同步加载Reoueces资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist("TestRes/Audio/bgm1")?.RefCount);
+                LoadResource.LoadSync<GameObject>(pathCube1, ResType.ResEditor);
             }
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.A))
             {
-                ResLoader.LoadAsync<AudioClip>(ResType.Resources, (AudioClip res) =>
+                LoadResource.LoadAsync<GameObject>(pathCube1, (go) =>
                 {
-                    Debug.Log("异步加载Reoueces资源 B资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist("TestRes/Audio/bgm1")?.RefCount);
-                }, "TestRes/Audio/bgm1");
-                Debug.Log("异步加载Reoueces资源 A资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist("TestRes/Audio/bgm1")?.RefCount);
+                    Instantiate(go);
+                }, ResType.ResEditor);
             }
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.Z))
             {
-                ResLoader.UnLoadAssets("TestRes/Audio/bgm1");
-                Debug.Log("回收Reoueces资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist("TestRes/Audio/bgm1")?.RefCount);
+                ResLoader.UnLoadAssets(pathCube1, ResType.ResEditor);
             }
             #endregion
 
-            #region AssetBundle
-            if (Input.GetKeyDown(KeyCode.A))
+            #region AssetBundlePack
+            if (Input.GetKeyDown(KeyCode.W))
             {
-                string path = ResLoader.Path_AB + "/abcube";
-                //同步加载AB包
-                AssetBundle ab = ResLoader.LoadSync<AssetBundle>(ResType.AssetBundle, path);
-                Instantiate(ab.LoadAsset("cubePrefab"));
-                Debug.Log("同步加载AssetBundle资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(path)?.RefCount);
+                LoadResource.LoadSync<AssetBundle>(pathCube1, ResType.ResAssetBundlePack);
+                string abPath = LoadResource.ParseAssetPath(pathCube1);
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
                 //异步加载AB包
-                string path = ResLoader.Path_AB + "/abcube";
-                ResLoader.LoadAsync<AssetBundle>(ResType.AssetBundle, (AssetBundle ab) =>
+                LoadResource.LoadAsync<AssetBundle>(pathCube1, (go) =>
                 {
-                    Instantiate(ab.LoadAsset("cubePrefab"));
-                    Debug.Log("异步加载AssetBundle资源 B资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(path)?.RefCount);
-                }, path);
-                Debug.Log("异步加载AssetBundle资源 A资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(path)?.RefCount);
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                //卸载AB包
-                string path = ResLoader.Path_AB + "/abcube";
-                ResLoader.UnLoadAssets(path);
-                Debug.Log("回收AssetBundle资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(path)?.RefCount);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                //同步加载ab包中具体资源
-                string abPath = ResLoader.Path_AB + "/abplane";
-                GameObject obj = ResLoader.LoadSync<GameObject>(ResType.Asset, abPath, "planePrefab");
-                Instantiate(obj);
-                Debug.Log("同步加载AssetBundle资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(abPath + "/planePrefab")?.RefCount);
+                    Instantiate(go);
+                    string abPath = LoadResource.ParseAssetPath(pathCube1);
+                }, ResType.ResAssetBundlePack);
             }
             if (Input.GetKeyDown(KeyCode.X))
             {
-                //异步加载ab包中具体资源
-                string abPath = ResLoader.Path_AB + "/abplane";
-                ResLoader.LoadAsync<GameObject>(ResType.Asset, (GameObject obj) =>
+                //卸载AB包 
+                string abPath = LoadResource.ParseAssetPath(pathCube1);
+                ResLoader.UnLoadAssets(abPath, ResType.ResAssetBundlePack);
+            }
+            #endregion
+
+            #region AssetBundleAsset
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                LoadResource.LoadSync<GameObject>(pathCube3, ResType.ResAssetBundleAsset);
+                string abPath = LoadResource.ParseAssetPath(pathCube3);
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                //异步加载AB包
+                LoadResource.LoadAsync<GameObject>(pathCube3, (go) =>
                 {
-                    Instantiate(obj);
-                    Debug.Log("异步加载AssetBundle资源 B资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(abPath + "/planePrefab")?.RefCount);
-                }, abPath, "planePrefab");
-                Debug.Log("异步加载AssetBundle资源 A资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(abPath + "/planePrefab")?.RefCount);
+                    Instantiate(go);
+                    string abPath = LoadResource.ParseAssetPath(pathCube3);
+                }, ResType.ResAssetBundleAsset);
             }
             if (Input.GetKeyDown(KeyCode.C))
             {
-                string path = ResLoader.Path_AB + "/abplane/planePrefab";
-                ResLoader.UnLoadAssets(path);
-                Debug.Log("回收AssetBundle资源 资源池当前资源个数 " + ResLoader.resContainer.Count + " 当前资源引用次数:" + ResLoader.CheckResExist(path)?.RefCount);
+                string abPath = LoadResource.ParseAssetPath(pathCube3);
+                ResLoader.UnLoadAssets(abPath, ResType.ResAssetBundleAsset);
             }
+            #endregion
+
+            #region Resources
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                LoadResource.LoadSync<GameObject>(pathResouces, ResType.ResResources);
+            }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                LoadResource.LoadAsync<GameObject>(pathResouces, (go) =>
+                {
+                    Instantiate(go);
+                }, ResType.ResResources);
+            }
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                ResLoader.UnLoadAssets(pathResouces, ResType.ResResources);
+            }
+            #endregion
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 ResLoader.ShowResLogInfo();
+                Resources.UnloadUnusedAssets();
             }
-            #endregion
         }
     }
 }

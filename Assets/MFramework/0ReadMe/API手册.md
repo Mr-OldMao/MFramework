@@ -181,58 +181,64 @@ AbRefCounter.cs
 
 ### ResLoader
 
-核心脚本：ResLoader.cs 	资源加载器
+核心脚本：核心实现类封装**LoadResource.cs**   核心实现类ResLoader.cs 资源加载器
 
-核心功能：管理Resource资源、ab包、ab包中具体资源的同步加载、异步加载、资源卸载
+核心功能：对四种资源(Editor自定义路径资源、Resource资源、ab包、ab包中具体)的同步加载、异步加载、资源卸载
 
-ResourcesRes.cs		Resource资源加载、卸载
+具体实现类：
 
-AssetBundleRes.cs		AB包加载、卸载
+ResEditor.cs	Editor自定义路径资源同步加载、异步加载、卸载
 
-AssetRes.cs		AB包中的具体资源加载、卸载
+ResResources.cs	Resource资源同步加载、异步加载、卸载
+
+ResAssetBundlePack.cs	AB包的同步加载、异步加载、卸载
+
+ResAssetBundleAsset.cs	AB包中的具体资源同步加载、异步加载、卸载
 
 AbRes.cs		资源实现类的抽象基类
+
+ABSetting.cs	AB自动化标记、打包设置
 
 测试类： ExampleTest.unity	TestResLoader.cs
 
 核心API：
 
 ```c#
-///Resource资源
-//同步加载Resources资源
-	AudioClip al = ResLoader.LoadSync<AudioClip>(ResType.Resources, "Resources文件夹下的资源路径 例TestRes/Audio/bgm1");
-//异步加载Reoueces资源
-	ResLoader.LoadASync<AudioClip>(ResType.Resources,"Resources文件夹下的资源路径", (AudioClip res) => 
-		{ 
-			//TODO 
-		});
-//卸载Resources资源
-	ResLoader.UnLoadAssets("Resources文件夹下的资源路径");
-
-
-///AB包
-//同步加载AB包
- 	AssetBundle ab = ResLoader.LoadSync<AssetBundle>(ResType.AssetBundle,
-		"ab包全路径 例Application.streamingAssetsPath/BuildAssetBundle/abaudio");
-//异步加载AB包
-	ResLoader.LoadASync<AssetBundle>( ResType.AssetBundle,"ab包全路径", (AssetBundle ab) => 
-		{
-    		//TODO
-		},);
-//卸载Resources资源
-	ResLoader.UnLoadAssets("ab包全路径");
-
-
-///AB包中的具体资源
-//同步加载AB包中具体资源
-    GameObject obj = ResLoader.LoadSync<GameObject>(ResType.Asset, "ab包全路径", "ab包中具体资源名 例:planePrefab");
-//异步加载AB包中具体资源
-	ResLoader.LoadAsync<GameObject>(ResType.Asset,(GameObject obj)=>
+//同步加载	<泛型类型>(资源路径,资源类型)
+LoadResource.LoadSync<T>("资源路径", ResType.Null);
+//异步加载
+LoadResource.LoadAsync<T>("资源路径", (T t) =>
 	{
-        //TODO
-    },"ab包全路径", "ab包中具体资源名");
-//卸载AB包中具体资源
-	ResLoader.UnLoadAssets("ab包全路径/ab包中具体资源名");
+		//todo
+	}, ResType.Null);
+//显示当前资源信息
+ResLoader.ShowResLogInfo();
+//卸载指定资源
+ResLoader.UnLoadAssets("资源路径", ResType.ResResources);
+
+/// <summary>
+/// 资源种类
+/// </summary>
+public enum ResType
+{
+    Null,
+    /// <summary>
+    /// 编辑器模式下资源类型  path格式：Assets/AssetsRes/ABRes/Prefab/Cube3.prefab
+    /// </summary>
+    ResEditor,
+    /// <summary>
+    /// Resources目录下资源   path格式：(Resources/) + xxx/xxx/xx
+    /// </summary>
+    ResResources,
+    /// <summary>
+    /// ab包 .manifest资源     path格式：ab标签名称   (.manifest=>AssetBundleManifest=>Name)
+    /// </summary>
+    ResAssetBundlePack,
+    /// <summary>
+    /// ab包中的资源     path格式：ab标签名称   (.manifest=>AssetBundleManifest=>Name)
+    /// </summary>
+    ResAssetBundleAsset
+}
 ```
 
 
@@ -273,6 +279,16 @@ StringExtension.cs
 
 Unity编辑器扩展
 
+### AssetBundleTool
+
+#### ABBuild.cs
+
+一键打包生成AssetBundle
+
+#### ABTag.cs
+
+AB资源标签一键标记，自动对资源进行AB标记
+
 ### AutoCreateScript
 
 #### EditorSceneObjMapEntity
@@ -311,13 +327,29 @@ Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 
 
 
 
+# AssetsRes
+
+## ABRes
+
+准备进AB包的资源存放位置，可在ABSetting.cs手动修改
+
+### Test
+
+测试资源
+
+## Res
+
+不进AB包的资源存放位置
+
+
+
 # StreamingAssets
 
 
 
-## BuildAB
+## assetsres
 
-打包的AB文件容器
+AB包 测试文件，ABBuild.cs自动生成
 
 
 

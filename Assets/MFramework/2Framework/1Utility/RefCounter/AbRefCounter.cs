@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 namespace MFramework
 {
     /// <summary>
@@ -32,10 +29,13 @@ namespace MFramework
         /// <param name="refOwner"></param>
         public void Retain(object refOwner = null)
         {
-            RefCount--;
-            if (RefCount == 0)
+            if (RefCount > 0)
             {
-                OnZeroRef();
+                RefCount--;
+                if (RefCount == 0)
+                {
+                    OnZeroRef();
+                }
             }
         }
 

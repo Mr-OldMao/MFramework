@@ -1273,7 +1273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &631721749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1286,6 +1286,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac3c8ee7f87c8b44eaa91053c12bde74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathCube1: Assets/AssetsRes/ABRes/Prefab/Cube1.prefab
+  pathCube2: Assets/AssetsRes/ABRes/Prefab/Cube2.prefab
+  pathCube3: Assets/AssetsRes/ABRes/Prefab/Cube3.prefab
 --- !u!4 &631721750
 Transform:
   m_ObjectHideFlags: 0
@@ -2309,7 +2312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &996335250
 Transform:
   m_ObjectHideFlags: 0
