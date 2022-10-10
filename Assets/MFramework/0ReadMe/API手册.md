@@ -60,7 +60,38 @@ UIManager.cs
 
 ## 1Utility
 
-工具类类库
+### HotUpdate
+
+热更新路径配置
+
+HotUpdateConfig.cs
+
+版本信息数据，热更文件信息的读写
+
+VersionData.cs
+
+### IO
+
+数据读写接口
+
+AbFileIO.cs
+
+文本文件读写
+
+FileIOTxt.cs
+
+核心API:
+
+```c#
+//初始化
+AbFileIO io =new FileIOTxt("根目录","文件名(带后缀)")
+//读
+io.Read();
+//写
+io.Write("文本内容");
+```
+
+
 
 ### MsgEvent
 
