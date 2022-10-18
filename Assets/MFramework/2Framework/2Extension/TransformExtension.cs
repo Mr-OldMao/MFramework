@@ -61,5 +61,27 @@ namespace MFramework
         {
             transform.gameObject.SetActive(isShow);
         }
+
+        /// <summary>
+        /// 重置坐标、旋转、缩放(Transform静态扩展)
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="isLocal"></param>
+        public static void Reset(this Transform transform, bool isLocal = true)
+        {
+            if (!transform) return;
+            if (isLocal)
+            {
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.Euler(Vector3.zero);
+                transform.localScale = Vector3.one;
+            }
+            else
+            {
+                transform.position = Vector3.zero;
+                transform.rotation = Quaternion.Euler(Vector3.zero);
+                transform.localScale = Vector3.one;
+            }
+        }
     }
 }
