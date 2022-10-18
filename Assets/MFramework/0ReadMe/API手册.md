@@ -93,6 +93,12 @@ io.Write("文本内容");
 
 
 
+### Json
+
+Json序列化、反序列化插件LitJson
+
+
+
 ### MsgEvent
 
 消息系统
@@ -292,7 +298,13 @@ UnityTool.cs
 
 
 
+ImageAutoChangeByText.cs UIImage自适应Text文本长度
 
+LoadUIHintWindows.cs	自动加载提示框UI窗体
+
+ScreenShotSavePhoto.cs	截图保存到手机本地相册
+
+DownloadAsset.cs	根据URL下载资源
 
 
 
@@ -309,6 +321,14 @@ StringExtension.cs
 ## 3Editor
 
 Unity编辑器扩展
+
+### Renderer
+
+#### MergeMesh.cs
+
+合并模型网格 子对象mesh
+
+用法：在编辑器模式下，在子模型的父对象上挂载此脚本，并右键选择合并网格即可得到合并后的网格
 
 ### AssetBundleTool
 
