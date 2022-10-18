@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2734615529
+CRC: 3064796329
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -30,3 +30,49 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: assetsres/abres/test/art/mat/matblue
         Dependency_1: assetsres/abres/test/audio/audio01
+    Info_7:
+      Name: assetsres/abres/prefab/hintborder/cvsuihint
+      Dependencies: {}
+    Info_8:
+      Name: assetsres/abres/prefab/hintborder/imgbordernotbtn
+      Dependencies:
+        Dependency_0: assetsres/abres/fonts/pingfang/pingfang bold
+        Dependency_1: assetsres/abres/fonts/pingfang/pingfang regular
+        Dependency_2: assetsres/abres/texture/hintwindow/btn
+    Info_9:
+      Name: assetsres/abres/prefab/hintborder/imgborderonebtn
+      Dependencies:
+        Dependency_0: assetsres/abres/fonts/pingfang/pingfang medium
+        Dependency_1: assetsres/abres/fonts/pingfang/pingfang regular
+        Dependency_2: assetsres/abres/texture/hintwindow/btn
+        Dependency_3: assetsres/abres/texture/hintwindow/line1
+    Info_10:
+      Name: assetsres/abres/prefab/hintborder/imgbordertwobtn
+      Dependencies:
+        Dependency_0: assetsres/abres/fonts/pingfang/pingfang medium
+        Dependency_1: assetsres/abres/fonts/pingfang/pingfang regular
+        Dependency_2: assetsres/abres/texture/hintwindow/btn
+        Dependency_3: assetsres/abres/texture/hintwindow/line1
+    Info_11:
+      Name: assetsres/abres/prefab/hintborder/imghintsimple
+      Dependencies:
+        Dependency_0: assetsres/abres/fonts/pingfang/pingfang medium
+        Dependency_1: assetsres/abres/texture/hintwindow/btn
+    Info_12:
+      Name: assetsres/abres/fonts/pingfang/pingfang bold
+      Dependencies:
+        Dependency_0: assetsres/abres/fonts/pingfang/pingfang medium
+        Dependency_1: assetsres/abres/fonts/pingfang/pingfang regular
+    Info_13:
+      Name: assetsres/abres/fonts/pingfang/pingfang medium
+      Dependencies:
+        Dependency_0: assetsres/abres/fonts/pingfang/pingfang regular
+    Info_14:
+      Name: assetsres/abres/fonts/pingfang/pingfang regular
+      Dependencies: {}
+    Info_15:
+      Name: assetsres/abres/texture/hintwindow/btn
+      Dependencies: {}
+    Info_16:
+      Name: assetsres/abres/texture/hintwindow/line1
+      Dependencies: {}

@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 177719892
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 875aa95d49da94dc90a77ecbf08fa005
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: aead347c4b9e2ff03fd96d9314fc50c6
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetsRes/ABRes/Prefab/HintBorder/cvsUIHint.prefab
+Dependencies: []

@@ -57,12 +57,12 @@ namespace MFramework
             T asset = ResLoader.LoadSync<T>(resType, parsedAssetPath, assetName);
             if (typeof(T) == typeof(GameObject) && goCloneReturn)
             {
-                return Instantiate(asset);
+                if (asset != null)
+                {
+                    return Instantiate(asset);
+                }
             }
-            else
-            {
-                return asset;
-            }
+            return asset;
         }
 
         /// <summary>
