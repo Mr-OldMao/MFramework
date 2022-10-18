@@ -50,6 +50,18 @@ namespace MFramework.Editor
         {
             EditorJsonMapEntity.CreateWizard();
         }
+
+        [MenuItem("MFramework/Renderer/合并网格", false, 1)]
+        private static void MeshCombine()
+        {
+            MergeMesh.GetInstance.MeshCombine();
+        }
+
+        [MenuItem("MFramework/Renderer/清空网格", false, 2)]
+        private static void ClearMesh()
+        {
+            MergeMesh.GetInstance.ClearMesh();
+        }
     }
 }
 
