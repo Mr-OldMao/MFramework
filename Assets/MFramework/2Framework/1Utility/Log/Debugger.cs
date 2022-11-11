@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 namespace MFramework
 {
@@ -63,7 +61,7 @@ namespace MFramework
                 }
                 if (DebuggerConfig.canChangeConsolePrintStyle)
                 {
-                    ChangeStyle(ref logMsg, logTag);
+                    ChangeStyle(ref logMsg, logTag, logType);
                 }
                 Debug.unityLogger.Log(logType, logMsg);
                 logCallback?.Invoke(m_CurLogIndex++, logMsg, logType, logTag, StackTraceUtility.ExtractStackTrace());
@@ -75,19 +73,51 @@ namespace MFramework
         /// </summary>
         /// <param name="logMsg"></param>
         /// <param name="logTag"></param>
-        private static void ChangeStyle(ref object logMsg, LogTag logTag)
+        private static void ChangeStyle(ref object logMsg, LogTag logTag, LogType logType)
         {
-            switch (logTag)
+            switch (logType)
             {
-                case LogTag.Temp:
+                case LogType.Error:
+                    switch (logTag)
+                    {
+                        case LogTag.Temp:
+                            logMsg = "<color=#FF5656>" + logMsg + "</color>";
+                            break;
+                        case LogTag.Test:
+                            logMsg = "<B><color=#FF5656>" + logMsg + "</color></B>";
+                            break;
+                        case LogTag.Forever:
+                            logMsg = "<B><color=red>" + logMsg + "</color></B>";
+                            break;
+                    }
                     break;
-                case LogTag.Test:
-                    logMsg = "<B><color=red>" + logMsg + "</color></B>";
+                case LogType.Warning:
+                    switch (logTag)
+                    {
+                        case LogTag.Temp:
+                            logMsg = "<color=#FFF556>" + logMsg + "</color>";
+                            break;
+                        case LogTag.Test:
+                            logMsg = "<B><color=#FFF556>" + logMsg + "</color></B>";
+                            break;
+                        case LogTag.Forever:
+                            logMsg = "<B><color=yellow>" + logMsg + "</color></B>";
+                            break;
+                    }
                     break;
-                case LogTag.Forever:
-                    logMsg = "<B><color=#00C3FF>" + logMsg + "</color></B>";
-                    break;
-                default:
+                case LogType.Log:
+                    switch (logTag)
+                    {
+                        case LogTag.Temp:
+                            logMsg = "<color=#AFFFFF>" + logMsg + "</color>";
+                            break;
+                        case LogTag.Test:
+                            logMsg = "<B><color=#97FFFF>" + logMsg + "</color></B>";
+                            break;
+                        case LogTag.Forever:
+                            logMsg = "<B><color=#00FFFF>" + logMsg + "</color></B>";
+                            break;
+                    }
                     break;
             }
         }

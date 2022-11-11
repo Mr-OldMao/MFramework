@@ -13,7 +13,7 @@ namespace MFramework
         /// <summary>
         /// 允许打印的日志标签
         /// </summary>
-        public static List<LogTag> canPrintLogTagList = new()
+        public static List<LogTag> canPrintLogTagList = new List<LogTag>
         {
             LogTag.Temp,
             LogTag.Test,
