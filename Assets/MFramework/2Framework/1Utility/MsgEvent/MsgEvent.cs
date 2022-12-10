@@ -163,7 +163,7 @@ namespace MFramework
         /// <summary>
         /// 注销消息  注销消息名下的所有类型的所有消息（可用于注销使用Lamda和非Lamdba表达式注册过的事件消息）
         /// <param name="msgName">消息名</param>
-        public static void UnregisterMsgEventAll(MsgEventName msgName)
+        public static void UnregisterMsgEvent(MsgEventName msgName)
         {
             UnregisterMsgEventAll(msgName.ToString());
         }

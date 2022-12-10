@@ -56,7 +56,7 @@ public class TestMsgEvent : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             Debug.Log("Press R");
-            MsgEvent.UnregisterMsgEventAll(MsgEventName.Test);
+            MsgEvent.UnregisterMsgEvent(MsgEventName.Test);
         }
     }
 
@@ -148,6 +148,6 @@ public class TestMsgEvent : MonoBehaviour
         MsgEvent.UnregisterMsgEvent(MsgEventName.Test, MsgEventType.HasParamHasReturn);
 
         //注销所有类型所有消息
-        MsgEvent.UnregisterMsgEventAll(MsgEventName.Test);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test);
     }
 }

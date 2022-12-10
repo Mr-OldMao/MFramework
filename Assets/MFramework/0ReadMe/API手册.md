@@ -150,7 +150,7 @@ Json序列化、反序列化插件LitJson
         MsgEvent.UnregisterMsgEvent(MsgEventName.Test, MsgEventType.NoParamHasReturn);
         MsgEvent.UnregisterMsgEvent(MsgEventName.Test, MsgEventType.HasParamHasReturn);
         //注销所有类型所有消息，可用于注销使用Lamda和非Lamdba表达式注册过的事件消息
-        MsgEvent.UnregisterMsgEventAll(MsgEventName.Test);
+        MsgEvent.UnregisterMsgEvent(MsgEventName.Test);
 
 //发送消息
         //发送无参无返回值消息
