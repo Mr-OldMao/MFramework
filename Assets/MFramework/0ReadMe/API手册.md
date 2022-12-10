@@ -322,13 +322,7 @@ StringExtension.cs
 
 Unity编辑器扩展
 
-### Renderer
 
-#### MergeMesh.cs
-
-合并模型网格 子对象mesh
-
-用法：在编辑器模式下，在子模型的父对象上挂载此脚本，并右键选择合并网格即可得到合并后的网格
 
 ### AssetBundleTool
 
@@ -339,6 +333,14 @@ Unity编辑器扩展
 #### ABTag.cs
 
 AB资源标签一键标记，自动对资源进行AB标记
+
+
+
+### Attribute
+
+自定义特性
+
+
 
 ### AutoCreateScript
 
@@ -369,6 +371,16 @@ Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 
 功能：输入Json格式的字符串，指定实体类的路径，自动生成Json反序列化所需的实体类
 
 调用：Unity菜单栏  MFramework/脚本自动化工具/2.Json自动映射实体类
+
+
+
+### Renderer
+
+#### MergeMesh.cs
+
+合并模型网格 子对象mesh
+
+用法：在编辑器模式下，在子模型的父对象上挂载此脚本，并右键选择合并网格即可得到合并后的网格
 
 
 
