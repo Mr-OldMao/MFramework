@@ -11,5 +11,13 @@ public class MsgEventEnum { }
 public enum MsgEventName
 {
     Test,
+    /// <summary>
+    /// HTTP请求成功
+    /// </summary>
+    HttpRequestSucceed,
+    /// <summary>
+    /// HTTP请求失败
+    /// </summary>
+    HttpRequestFail,
 }
 

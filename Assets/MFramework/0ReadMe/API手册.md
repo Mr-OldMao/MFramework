@@ -105,7 +105,9 @@ Json序列化、反序列化插件LitJson
 
 脚本：MsgEvent.cs
 
-标题：消息系统 功能：基于事件的消息系统，
+标题：消息系统 
+
+功能：基于事件的消息系统
 
 目的：降低不同模块之间的相互调用的耦合性 
 
@@ -161,6 +163,36 @@ Json序列化、反序列化插件LitJson
         MsgEvent.SendMsg(MsgEventName.Test, (obj) => { Debug.Log("测试发送无参有返回值 res：" + obj); });
         //发送有参有返回值消息
         MsgEvent.SendMsg(MsgEventName.Test, "1001", (obj) => { Debug.Log("测试发送有参有返回值 res：" + obj); });
+```
+
+
+
+### Network
+
+网络通信
+
+脚本：NetworkHttp.cs
+
+标题：网络通信基于Http应用层协议(高层协议) 
+
+功能：发送HTTP请求，获取请求结果
+
+核心API
+
+```
+NetworkHttp.GetInstance.SendRequest(RequestType.Get, "URL接口地址", new Dictionary<string, string>()
+            {
+            	{ "参数key","参数value"},
+                { "platform","3d"},//接口调用来源（pc,ios,android,3d）
+                { "mobile",phoneNum},//手机号码
+                { "type","1"},//验证码类型（1短信2语音）
+            }, (string json) =>
+            {
+                Debug.Log("服务器返回 json：" + json);
+            }, {"Authorization", "TokenValue" }, "Body-raw参数 一般传入json数据", (p, k) =>
+            {
+                Debug.Log($"请求失败 错误信息：{p}，请求失败啊的接口地址：{k}");
+            });
 ```
 
 
