@@ -15,10 +15,15 @@ namespace MFramework
         /// 是否自动填充Token
         /// </summary>
         private bool m_CanAutoFillToken = true;
+        /// <summary>
+        /// 是否打印请求回调日志
+        /// </summary>
+        private bool m_CanPrintCallbackLog = true;
 
         /// <summary>
         /// 发送请求
         /// </summary>
+        /// <param name="requestType">请求方式</param>
         /// <param name="url">接口URL地址</param>
         /// <param name="dataParaDic">请求参数集合</param>
         /// <param name="callBack">回调函数，收到服务器消息执行，服务器传递json参数</param>
@@ -31,23 +36,23 @@ namespace MFramework
             {
                 dicHeader = new Dictionary<string, string> { { "Authorization", "TokenValue" } };
             }
+            if (m_CanPrintCallbackLog)
+            {
+                callBack += (json) => Debugger.Log($"Http Callback Json：{json}");
+            }
             base.SendRequest(requestType, url, dataParaDic, callBack, dicHeader, bodyRaw, reqErrorCallback);
         }
 
         /// <summary>
         /// 发送请求
         /// </summary>
+        /// <param name="requestType">请求方式</param>
         /// <param name="url">接口URL地址</param>
         /// <param name="dataParaDic">请求参数集合</param>
         /// <param name="callBack">回调函数，收到服务器消息执行，服务器传递json参数</param>
         public void SendRequest(RequestType requestType, string url, Dictionary<string, string> dataParaDic, Action<string> callBack = null)
         {
-            Dictionary<string, string> dicHeader = null;
-            if (m_CanAutoFillToken)
-            {
-                dicHeader = new Dictionary<string, string> { { "Authorization", "TokenValue" } };
-            }
-            base.SendRequest(requestType, url, dataParaDic, callBack, null, null, null);
+            SendRequest(requestType, url, dataParaDic, callBack, null, null);
         }
     }
 }

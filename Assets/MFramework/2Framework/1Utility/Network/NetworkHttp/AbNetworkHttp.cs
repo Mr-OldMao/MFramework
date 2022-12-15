@@ -51,6 +51,7 @@ namespace MFramework
         /// <summary>
         /// 发送请求
         /// </summary>
+        /// <param name="requestType">请求方式</param>
         /// <param name="url">接口URL地址</param>
         /// <param name="dataParaDic">请求参数集合</param>
         /// <param name="callBack">回调函数，收到服务器消息执行，服务器传递json参数</param>
