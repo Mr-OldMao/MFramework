@@ -12,13 +12,13 @@
 
 
 
-# 0ReadMe
+# ReadMe
 
 API手册、开发文档、版本记录
 
 
 
-# 1Example
+# Example
 
 范例
 
@@ -44,7 +44,7 @@ Resources资源
 
 
 
-# 2Framework
+# Framework
 
 框架主体
 
@@ -422,29 +422,11 @@ Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 
 
 
 
-# AssetsRes
+# HistoryVersion
 
-## ABRes
-
-准备进AB包的资源存放位置，可在ABSetting.cs手动修改
-
-### Test
-
-测试资源
-
-## Res
-
-不进AB包的资源存放位置
+框架历史版本
 
 
-
-# StreamingAssets
-
-
-
-## assetsres
-
-AB包 测试文件，ABBuild.cs自动生成
 
 
 
