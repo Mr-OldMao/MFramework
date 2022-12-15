@@ -15,7 +15,7 @@ namespace MFramework
     public abstract class AbNetworkHttp<T> : SingletonByMono<T>, INetworkHttp where T : Component
     {
         //请求集合容器
-        private Dictionary<int, Coroutine> m_DicRequestContainer = new();
+        private Dictionary<int, Coroutine> m_DicRequestContainer = new Dictionary<int, Coroutine>();
         //当前请求的索引号
         private int m_CurRequestIndex = 0;
 
