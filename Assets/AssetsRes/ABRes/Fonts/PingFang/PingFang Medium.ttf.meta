@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 65703ff98e4ef544fa3f3ae28ef350d4
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - PingFang SC
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: a4aa5bc01b5de98449a4c3d53b5cffe2, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: assetsres/abres/fonts/pingfang/pingfang medium
+  assetBundleVariant: 

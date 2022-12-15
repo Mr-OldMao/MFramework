@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 1891540588
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 536ca2ce5c455fbb0af1ace7e074e22b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f267fd2d8bcb1179236b6179ac5313bc
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AssetsRes/ABRes/Texture/HintWindow/line1.png
+Dependencies: []
