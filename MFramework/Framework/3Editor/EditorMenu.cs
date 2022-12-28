@@ -14,6 +14,17 @@ namespace MFramework.Editor
     /// </summary>
     public class EditorMenu
     {
+        #region Init
+        /// <summary>
+        /// 自动创建资源目录结构
+        /// </summary>
+        [MenuItem("MFramework/Init/创建工程目录结构")]
+        public static void AutoCreateAssetsDirectory()
+        {
+            EditorCreateAssetsDirectory.AutoCreateAssetsDirectory();
+        }
+        #endregion
+
         /// <summary>
         /// 脚本自动化默认路径
         /// </summary>
@@ -62,6 +73,8 @@ namespace MFramework.Editor
         {
             MergeMesh.GetInstance.ClearMesh();
         }
+
+
     }
 }
 
