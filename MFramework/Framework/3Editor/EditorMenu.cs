@@ -35,7 +35,7 @@ namespace MFramework.Editor
         {
             string packageName = "MFramework_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".unitypackage";
             //准备导出unitypackage资源路径
-            string exportPathName = "Assets/MFramework";
+            string exportPathName = "Assets/MFramework/MFramework";
             EditorAutoBuildUnityPackage.ExportUnityPactage(packageName, exportPathName);
         }
 

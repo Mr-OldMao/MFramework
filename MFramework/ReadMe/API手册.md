@@ -422,12 +422,6 @@ Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 
 
 
 
-# HistoryVersion
-
-框架历史版本
-
-
-
 
 
 
