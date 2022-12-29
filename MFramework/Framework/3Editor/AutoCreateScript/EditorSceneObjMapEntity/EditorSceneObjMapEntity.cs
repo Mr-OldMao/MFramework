@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
@@ -22,54 +23,83 @@ namespace MFramework.Editor
         //[MenuItem("MFramework/脚本自动化工具/1.场景游戏对象映射实体类", false, 1)]
         public static void CreateWizard()
         {
-            DisplayWizard<EditorSceneObjMapEntity>("场景游戏对象映射实体类", "生成", "重置");
+            DisplayWizard<EditorSceneObjMapEntity>("一键生成游戏对象映射实体类", "生成", "重置");
         }
         [Header("根节点")]
-        public Transform rootTrans;
+        public GameObject root;
         [Header("脚本类名 格式：Xxx")]
         public string scriptName;
-        [Header("脚本路径 格式：x:/xxx/xx/xxx/")]
+        [Header("脚本路径,Assetss目录下子路径 格式：/xxx/xx/xxx/")]
         public string scriptPath;
-        [Header("是否创建根节点旗下未激活的游戏对象字段")]
-        public bool isCreateInactiveChildObj;
+        [Header("是否创建根节点旗下未激活的游戏对象")]
+        public bool isCreateHideObj;
         [Header("是否覆盖同路径下的同类名脚本")]
         public bool isOverrideScript;
 
+        private string m_CreateScriptDefaultSubPath = "/GameMain/Scripts/UIController/";
         private void OnEnable()
         {
-            Reset();
+            Init();
         }
+
+        //Click Create
         private void OnWizardCreate()
         {
             AutoCreateScriptStructInfo autoCreateScriptStructInfo = new AutoCreateScriptStructInfo
             {
-                rootTrans = rootTrans,
+                root = root,
                 scriptName = scriptName,
-                scriptPath = scriptPath,
-                isCreateHideObj = isCreateInactiveChildObj,
+                scriptPath = Application.dataPath + scriptPath,
+                isCreateHideObj = isCreateHideObj,
                 isOverrideScript = isOverrideScript
             };
-            AutoCreateScriptImpl.BuildUIScript(autoCreateScriptStructInfo);
+            AutoCreateScriptImpl.BuildUIScript(autoCreateScriptStructInfo, (b) =>
+            {
+                if (b)
+                {
+                    EditorPrefs.SetString("scriptPath", scriptPath);
+                    EditorPrefs.SetBool("isCreateHideObj", isCreateHideObj);
+                    EditorPrefs.SetBool("isOverrideScript", isOverrideScript);
+                }
+            });
         }
+        //Click Reset
         private void OnWizardOtherButton()
         {
-            Reset();
+            root = null;
+            scriptName = string.Empty;
+            EditorPrefs.SetString("scriptPath", m_CreateScriptDefaultSubPath);
+            EditorPrefs.SetBool("isCreateHideObj", true);
+            EditorPrefs.SetBool("isOverrideScript", false);
+            scriptPath = m_CreateScriptDefaultSubPath;
+            isCreateHideObj = true;
+            isOverrideScript = false;
         }
+
+        /// <summary>
+        /// 当前字段值修改时调用
+        /// </summary>
         private void OnWizardUpdate()
         {
             helpString = null;
             errorString = null;
 
-            if (Selection.gameObjects.Length > 0)
+            if (Selection.activeGameObject != null)
             {
-                helpString = "选中：" + Selection.gameObjects[0];
+                if (root != Selection.activeGameObject)
+                {
+                    root = Selection.activeGameObject;
+                    scriptName = Selection.activeGameObject.name + "Ctrl";
+                    scriptPath = EditorPrefs.GetString("scriptPath", m_CreateScriptDefaultSubPath);
+                }
+                helpString = "AutoCreateScriptTargetPath：\n" + Application.dataPath + scriptPath + scriptName + ".cs";
             }
             else
             {
-                if (!rootTrans)
+                if (!root)
                 {
                     //给出错误提示
-                    errorString = "请选择场景中的游戏对象作为根节点放入 rootTrans";
+                    errorString = "请选择根节点作为Root";
                 }
                 else if (string.IsNullOrEmpty(scriptName))
                 {
@@ -77,6 +107,7 @@ namespace MFramework.Editor
                 }
             }
         }
+
 
         /// <summary>
         /// 当鼠标选中的物体发生改变时调用此方法
@@ -86,13 +117,13 @@ namespace MFramework.Editor
             OnWizardUpdate();
         }
 
-        private void Reset()
+        private void Init()
         {
-            rootTrans = null;
+            root = null;
             scriptName = string.Empty;
-            scriptPath = EditorMenu.autoCreateScriptDefaultPath + "SceneObjMapEntity/";
-            isCreateInactiveChildObj = true;
-            isOverrideScript = false;
+            scriptPath = EditorPrefs.GetString("scriptPath", m_CreateScriptDefaultSubPath);
+            isCreateHideObj = EditorPrefs.GetBool("isCreateHideObj", true);
+            isOverrideScript = EditorPrefs.GetBool("isOverrideScript", false);
         }
 
 
@@ -108,30 +139,33 @@ namespace MFramework.Editor
             //拼接字段映射
             static string fieldMapContent = "public void InitMapField()\n\t{\n\t";
             [MenuItem("生成/根据字符串生成枚举类型")]
-            public static void BuildUIScript(AutoCreateScriptStructInfo autoCreateScriptStructInfo)
+            public static void BuildUIScript(AutoCreateScriptStructInfo autoCreateScriptStructInfo, Action<bool> callback)
             {
                 string scriptPath = autoCreateScriptStructInfo.scriptPath;
                 string scriptName = autoCreateScriptStructInfo.scriptName;
-                if (!autoCreateScriptStructInfo.rootTrans)
+                if (!autoCreateScriptStructInfo.root)
                 {
                     Debug.LogError("脚本自动化失败 sceneGameObject is null");
+                    callback?.Invoke(false);
                     return;
                 }
                 if (string.IsNullOrEmpty(scriptName))//todo  后期通过正则表达式验证类名
                 {
                     Debug.LogError("脚本自动化失败 scriptName is null");
+                    callback?.Invoke(false);
                     return;
                 }
                 if (string.IsNullOrEmpty(scriptPath))
                 {
                     Debug.LogError("脚本自动化失败 scriptPath is null");
+                    callback?.Invoke(false);
                     return;
                 }
                 string scriptAllPath = scriptPath + scriptName + ".cs";
 
-                AutoCreateScriptTemplate.rootTrans = autoCreateScriptStructInfo.rootTrans.transform;
+                AutoCreateScriptTemplate.rootTrans = autoCreateScriptStructInfo.root.transform;
                 UnityComponent unityComponent = new UnityComponent();
-                unityComponent.SaveAllUIComponentContainerOnly(autoCreateScriptStructInfo.rootTrans.transform, autoCreateScriptStructInfo.isCreateHideObj);
+                unityComponent.SaveAllUIComponentContainerOnly(autoCreateScriptStructInfo.root.transform, autoCreateScriptStructInfo.isCreateHideObj);
                 //场景对象实例集合
                 List<object> listContainer = unityComponent.GetListComponentContainer();
                 foreach (var dic in listContainer)
@@ -274,6 +308,7 @@ namespace MFramework.Editor
                 fileW.Close();
                 file.Close();
                 Debug.Log("脚本自动化成功 scriptName：" + scriptName + "，scriptAllPath：" + scriptAllPath);
+                callback?.Invoke(true);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
@@ -310,7 +345,7 @@ using MFramework;
 /// <summary>
 /// 以下代码都是通过脚本自动生成的
 /// </summary>
-public class {类名} : MonoBehaviour
+public class {类名} : UIFormBase
 {
     {字段}
     
@@ -370,7 +405,7 @@ public class {类名} : MonoBehaviour
         /// <summary>
         /// 场景目标父对象
         /// </summary>
-        public Transform rootTrans;
+        public GameObject root;
         /// <summary>
         /// 脚本类名
         /// </summary>
