@@ -50,7 +50,7 @@ namespace MFramework.Editor
             BuildPipeline.BuildAssetBundles(buildPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
         }
 
-        [MenuItem("MFramework/脚本自动化工具/1.场景游戏对象映射实体类", false, 1)]
+        [MenuItem("MFramework/脚本自动化工具/1.一键生成游戏对象映射实体类", false, 1)]
         private static void EditorMenu_EditorAutoCreateScriptSceneObj()
         {
             EditorSceneObjMapEntity.CreateWizard();

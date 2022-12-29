@@ -11,7 +11,15 @@ namespace MFramework
     /// </summary>
     public class GameLaunch : SingletonByMono<GameLaunch>
     {
-        private void Start()
+        [SerializeField]
+        private LaunchModel m_LaunchModel = LaunchModel.EngineDebuggModel;
+        /// <summary>
+        /// 项目运行模式
+        /// </summary>
+        public LaunchModel LaunchModel { get => m_LaunchModel; }
+
+
+        private void Awake()
         {
             //初始化游戏框架
             this.InitFramework();
@@ -40,5 +48,17 @@ namespace MFramework
             //this.gameObject.AddComponent<GameLogic>().Init();
             GameLogic.GetInstance.Init();
         }
-    } 
+    }
+
+    public enum LaunchModel
+    {
+        /// <summary>
+        /// 引擎调试模式
+        /// </summary>
+        EngineDebuggModel,
+        /// <summary>
+        /// 打包模式
+        /// </summary>
+        BuilderModel,
+    }
 }

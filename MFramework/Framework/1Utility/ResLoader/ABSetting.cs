@@ -15,7 +15,7 @@ namespace MFramework
         /// <summary>
         /// 标记AB，对当前(Assets目录下)子路径下资源进行自动标记，
         /// </summary>
-        public static string assetsSubPath = "AssetsRes/ABRes";
+        public static string assetsSubPath = "GameMain/UI/UIForms";
         /// <summary>
         /// 打包AB，AB包存放路径
         /// </summary>

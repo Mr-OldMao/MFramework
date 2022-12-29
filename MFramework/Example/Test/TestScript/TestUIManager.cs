@@ -1,6 +1,4 @@
 using MFramework;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static MFramework.UIManager;
 
@@ -19,16 +17,14 @@ public class TestUIManager : MonoBehaviour
         //设置屏幕分辨率
         SetResolution(1920, 1080, 0);
 
-        //加载面板
-        Debug.Log(LoadPanel("GamePanel_Common1", "TestRes/UI/Panel/GamePanel", UILayerType.Common));
-        Debug.Log(LoadPanel("GamePanel_Common2", "TestRes/UI/Panel/GamePanel", UILayerType.Common));
-        int panelID = LoadPanel("BgPanel_Bg", "TestRes/UI/Panel/BgPanel", UILayerType.Bg);
+        UIManager.GetInstance.Show<UIFormMain>("Main/UIFormMain.prefab", UILayerType.Common);
 
-        //获取面板
-        Debug.Log(GetPanelByID(LoadPanel("HidePanel_Top", "TestRes/UI/Panel/HidePanel", UILayerType.Top)));
+        UIManager.GetInstance.GetPanelLogic<UIFormMain>().Test();
 
-        //延时卸载面板
-        UnityTool.GetInstance.DelayCoroutine(5, () => UnloadPanel(panelID));
+        UIManager.GetInstance.GetPanelEntity<UIFormMain>().name = "UIForm123";
 
+        UIManager.GetInstance.Hide<UIFormMain>();
+
+        UIManager.GetInstance.Show<UIFormMain>("Main/UIFormMain.prefab");
     }
 }

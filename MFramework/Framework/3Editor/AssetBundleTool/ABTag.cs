@@ -38,7 +38,8 @@ namespace MFramework
             // 标记AB，本地根路径
             string assetsDataPathRoot = Application.dataPath + "/" + ABSetting.assetsSubPath;
             DirectoryInfo dir = new DirectoryInfo(assetsDataPathRoot);
-            DirectoryInfo[] DirSons = dir.GetDirectories();            foreach (FileSystemInfo fileSystemInfo in DirSons)
+            DirectoryInfo[] DirSons = dir.GetDirectories();            
+            foreach (FileSystemInfo fileSystemInfo in DirSons)
             {
                 string SonsPath = assetsDataPathRoot + "/" + fileSystemInfo.Name;
                 DirectoryInfo Dinfo = new DirectoryInfo(SonsPath);

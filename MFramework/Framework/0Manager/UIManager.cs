@@ -1,5 +1,7 @@
+
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,16 +14,34 @@ namespace MFramework
     /// 时间：2022.07.16
     /// 版本：1.0
     /// </summary>
-    public class UIManager
+    public class UIManager : SingletonByMono<UIManager>
     {
         /// <summary>
-        /// 缓存加载后的面板  key-面板ID（唯一标识）
+        /// 缓存加载后的面板  key-面板名称（唯一标识） value-UI窗体数据
         /// </summary>
-        private static Dictionary<int, PanelInfo> m_DicUIPanelInfoContainer = new Dictionary<int, PanelInfo>();
-        class PanelInfo
+        private Dictionary<string, UIFormInfo> m_DicUIPanelInfoContainer = new Dictionary<string, UIFormInfo>();
+        /// <summary>
+        /// UIForm根路径
+        /// </summary>
+        private string m_UIFormsPath = "Assets/GameMain/UI/UIForms/";
+
+        class UIFormInfo
         {
-            public GameObject panel;
+            /// <summary>
+            /// UI窗体实体
+            /// </summary>
+            public GameObject UIFormEntity;
+            /// <summary>
+            /// UI窗体所挂载的逻辑脚本
+            /// </summary>
+            public UIFormBase UIFormLogicScript;
+            public UIFormInfo(GameObject UIForm, UIFormBase UIFormLogicScript)
+            {
+                this.UIFormEntity = UIForm;
+                this.UIFormLogicScript = UIFormLogicScript;
+            }
         }
+
 
         private static GameObject m_UIRoot;
         public static GameObject UIRoot
@@ -30,11 +50,21 @@ namespace MFramework
             {
                 if (!m_UIRoot)
                 {
-                    m_UIRoot = Object.Instantiate(Resources.Load<GameObject>("UI/Canvas/UIRoot"));
+                    if (GameObject.Find("UIRoot"))
+                    {
+                        m_UIRoot = GameObject.Find("UIRoot");
+                    }
+                    else
+                    {
+                        m_UIRoot = Instantiate(Resources.Load<GameObject>("UI/Canvas/UIRoot"));
+                    }
                 }
                 return m_UIRoot;
             }
         }
+
+
+
         /// <summary>
         /// UI层级
         /// </summary>
@@ -44,6 +74,99 @@ namespace MFramework
             Common,
             Top
         }
+
+
+
+        /// <summary>
+        /// 显示UI面板
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uiFormName">格式Assets/GameMain/UIForms/目录下的资源路径："xxx/xx.prefab" </param>
+        /// <returns></returns>
+        public T Show<T>(string uiFormName, UILayerType uILayerType = UILayerType.Common) where T : UIFormBase
+        {
+            if (string.IsNullOrEmpty(uiFormName))
+            {
+                return default;
+            }
+            if (!File.Exists(m_UIFormsPath + uiFormName))
+            {
+                Debugger.LogError("UIForm is null ，Path：" + m_UIFormsPath + uiFormName);
+                return default;
+            }
+            if (!uiFormName.EndsWith(".prefab"))
+            {
+                Debugger.LogError("UIFormName Not Exist .prefab ，Path：" + m_UIFormsPath + uiFormName);
+                return default;
+            }
+            T UIFormLogicScript = GetPanelLogic<T>();
+            if (UIFormLogicScript == null)
+            {
+                ResType resType = GameLaunch.GetInstance.LaunchModel == LaunchModel.EngineDebuggModel ? ResType.ResEditor : ResType.ResAssetBundleAsset;
+                GameObject UIForm = ResManager.GetInstance.LoadSync<GameObject>(m_UIFormsPath + uiFormName, resType);
+
+                string[] UIFormNameArr = uiFormName.Split('/', '.');
+                string name = UIFormNameArr[UIFormNameArr.Length - 2];
+                UIForm.name = name;
+
+                RectTransform cloneRect = UIForm.GetComponent<RectTransform>();
+                Transform parent = UIRoot.transform.Find(uILayerType.ToString());
+                cloneRect.SetParent(parent);
+                cloneRect.offsetMax = Vector3.zero;
+                cloneRect.offsetMin = Vector3.zero;
+                cloneRect.anchoredPosition3D = Vector3.zero;
+                cloneRect.anchorMin = Vector2.zero;
+                cloneRect.anchorMax = Vector2.one;
+                cloneRect.pivot = new Vector2(0.5f, 0.5f);
+
+                UIFormLogicScript = UIForm.AddComponent<T>();
+                m_DicUIPanelInfoContainer.Add(name, new UIFormInfo(UIForm, UIFormLogicScript));
+            }
+            UIFormLogicScript.Show();
+            return UIFormLogicScript;
+        }
+
+        /// <summary>
+        /// 获取UI窗体实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public GameObject GetPanelEntity<T>() where T : UIFormBase
+        {
+            if (m_DicUIPanelInfoContainer.ContainsKey(typeof(T).Name))
+            {
+                return m_DicUIPanelInfoContainer[typeof(T).Name].UIFormEntity;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public void Hide<T>() where T : UIFormBase
+        {
+            GetPanelLogic<T>()?.Hide();
+        }
+
+
+        /// <summary>
+        /// 获取UI窗体的逻辑脚本
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetPanelLogic<T>() where T : UIFormBase
+        {
+            if (m_DicUIPanelInfoContainer.ContainsKey(typeof(T).Name))
+            {
+                return m_DicUIPanelInfoContainer[typeof(T).Name].UIFormLogicScript as T;
+            }
+            else
+            {
+                Debug.Log("GetPanelLogic Fail，name："+ typeof(T).Name);
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// 设置Canvas分辨率
@@ -57,78 +180,6 @@ namespace MFramework
             canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasScaler.referenceResolution = new Vector2(width, height);
             canvasScaler.matchWidthOrHeight = matchValue;
-        }
-
-        /// <summary>
-        /// 加载UI面板
-        /// 返回：面板ID（唯一标识）
-        /// </summary>
-        /// <param name="resName">面板重命名 约定：</param>
-        /// <param name="resPath">面板预设位置全路径</param>
-        /// <param name="uILayerType">>面板层级</param>
-        /// <returns></returns>
-        public static int LoadPanel(string resName, string resPath, UILayerType uILayerType)
-        {
-            GameObject loadObj = Resources.Load<GameObject>(resPath);
-            if (loadObj == null)
-            {
-                Debug.LogError("加载UI面板失败 检查Resources资源路径 resPath ：" + resPath);
-                return -1;
-            }
-            GameObject clone = Object.Instantiate(loadObj);
-            clone.name = resName;
-            RectTransform cloneRect = clone.GetComponent<RectTransform>();
-            Transform parent = UIRoot.transform.Find(uILayerType.ToString());
-            cloneRect.SetParent(parent);
-            cloneRect.offsetMax = Vector3.zero;
-            cloneRect.offsetMin = Vector3.zero;
-            cloneRect.anchoredPosition3D = Vector3.zero;
-            cloneRect.anchorMin = Vector2.zero;
-            cloneRect.anchorMax = Vector2.one;
-            cloneRect.pivot = new Vector2(0.5f, 0.5f);
-
-            int panelID = GetNewPanelID();
-            m_DicUIPanelInfoContainer.Add(panelID, new PanelInfo() { panel = clone });
-            return panelID;
-        }
-
-        /// <summary>
-        /// 卸载面板
-        /// </summary>
-        /// <param name="panelID"></param>
-        public static void UnloadPanel(int panelID)
-        {
-            Object.Destroy(GetPanelByID(panelID));
-        }
-
-        /// <summary>
-        /// 获取面板实例根据面板ID
-        /// </summary>
-        /// <param name="panelID"></param>
-        public static GameObject GetPanelByID(int panelID)
-        {
-            if (m_DicUIPanelInfoContainer.ContainsKey(panelID))
-            {
-                return m_DicUIPanelInfoContainer[panelID].panel;
-            }
-            else
-            {
-                Debug.LogError("获取面板实例失败 检查 panelID：" + panelID);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// 获取新面板ID
-        /// </summary>
-        private static int GetNewPanelID()
-        {
-            int newPanelID = Random.Range(1, 1000);
-            while (m_DicUIPanelInfoContainer.ContainsKey(newPanelID))
-            {
-                newPanelID = Random.Range(1, 1000);
-            }
-            return newPanelID;
         }
     }
 
