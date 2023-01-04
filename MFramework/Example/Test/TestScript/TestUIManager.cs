@@ -17,14 +17,14 @@ public class TestUIManager : MonoBehaviour
         //设置屏幕分辨率
         SetResolution(1920, 1080, 0);
 
-        UIManager.GetInstance.Show<UIFormMain>("Main/UIFormMain.prefab", UILayerType.Common);
+        UIManager.GetInstance.Show<UIFormMain>();
 
-        UIManager.GetInstance.GetPanelLogic<UIFormMain>().Test();
+        UIManager.GetInstance.GetUIFormLogicScript<UIFormMain>().Test();
 
-        UIManager.GetInstance.GetPanelEntity<UIFormMain>().name = "UIForm123";
+        UIManager.GetInstance.GetUIFormEntity<UIFormMain>().name = "UIForm123";
 
         UIManager.GetInstance.Hide<UIFormMain>();
 
-        UIManager.GetInstance.Show<UIFormMain>("Main/UIFormMain.prefab");
+        UIManager.GetInstance.Show<UIFormMain>("Assets/GameMain/UI/UIForms/Main/UIFormMain.prefab");
     }
 }

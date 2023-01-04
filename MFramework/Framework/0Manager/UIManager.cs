@@ -20,10 +20,7 @@ namespace MFramework
         /// 缓存加载后的面板  key-面板名称（唯一标识） value-UI窗体数据
         /// </summary>
         private Dictionary<string, UIFormInfo> m_DicUIPanelInfoContainer = new Dictionary<string, UIFormInfo>();
-        /// <summary>
-        /// UIForm根路径
-        /// </summary>
-        private string m_UIFormsPath = "Assets/GameMain/UI/UIForms/";
+       
 
         class UIFormInfo
         {
@@ -42,7 +39,7 @@ namespace MFramework
             }
         }
 
-
+        private UIFormConfig m_UIFormConfig;
         private static GameObject m_UIRoot;
         public static GameObject UIRoot
         {
@@ -63,25 +60,42 @@ namespace MFramework
             }
         }
 
-
-
-        /// <summary>
-        /// UI层级
-        /// </summary>
-        public enum UILayerType
+        private void Awake()
         {
-            Bg,
-            Common,
-            Top
+            Init();
+        }
+
+        public void Init()
+        {
+            m_UIFormConfig = new UIFormConfig();
         }
 
 
-
         /// <summary>
-        /// 显示UI面板
+        /// 显示UI窗体
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="uiFormName">格式Assets/GameMain/UIForms/目录下的资源路径："xxx/xx.prefab" </param>
+        /// <returns></returns>
+        public T Show<T>() where T : UIFormBase
+        {
+            UIFormConfig.UIEntityConfigInfo uiEntityConfigInfo = m_UIFormConfig.GetUIFormConfigData<T>();
+            if (uiEntityConfigInfo != null)
+            {
+                return Show<T>(uiEntityConfigInfo.uiFormEntityName, uiEntityConfigInfo.uiLayerType);
+
+            }
+            else
+            {
+                Debugger.LogError("UIForm Show Fail ，uiFormEntity is Null， Type：" + typeof(T).Name);
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// 显示UI窗体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uiFormName">资源路径："Assets/xxx/xx.prefab"</param>
         /// <returns></returns>
         public T Show<T>(string uiFormName, UILayerType uILayerType = UILayerType.Common) where T : UIFormBase
         {
@@ -89,21 +103,21 @@ namespace MFramework
             {
                 return default;
             }
-            if (!File.Exists(m_UIFormsPath + uiFormName))
+            if (!File.Exists( uiFormName))
             {
-                Debugger.LogError("UIForm is null ，Path：" + m_UIFormsPath + uiFormName);
+                Debugger.LogError("UIForm is null ，Path：" +  uiFormName);
                 return default;
             }
             if (!uiFormName.EndsWith(".prefab"))
             {
-                Debugger.LogError("UIFormName Not Exist .prefab ，Path：" + m_UIFormsPath + uiFormName);
+                Debugger.LogError("UIFormName Not Exist .prefab ，Path：" +  uiFormName);
                 return default;
             }
-            T UIFormLogicScript = GetPanelLogic<T>();
+            T UIFormLogicScript = GetUIFormLogicScript<T>();
             if (UIFormLogicScript == null)
             {
                 ResType resType = GameLaunch.GetInstance.LaunchModel == LaunchModel.EngineDebuggModel ? ResType.ResEditor : ResType.ResAssetBundleAsset;
-                GameObject UIForm = ResManager.GetInstance.LoadSync<GameObject>(m_UIFormsPath + uiFormName, resType);
+                GameObject UIForm = ResManager.GetInstance.LoadSync<GameObject>(uiFormName, resType);
 
                 string[] UIFormNameArr = uiFormName.Split('/', '.');
                 string name = UIFormNameArr[UIFormNameArr.Length - 2];
@@ -127,11 +141,38 @@ namespace MFramework
         }
 
         /// <summary>
+        /// 获取UI窗体是否显示
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool IsShow<T>() where T : UIFormBase
+        {
+            return GetUIFormLogicScript<T>().IsShow;
+        }
+
+        //获取UI窗体所在层级
+        public UILayerType GetUIFromLayer<T>() where T : UIFormBase
+        {
+            return GetUIFormLogicScript<T>().GetUIFormLayer;
+        }
+
+
+        /// <summary>
+        /// 隐藏UI窗体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void Hide<T>() where T : UIFormBase
+        {
+            GetUIFormLogicScript<T>()?.Hide();
+        }
+
+
+        /// <summary>
         /// 获取UI窗体实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public GameObject GetPanelEntity<T>() where T : UIFormBase
+        public GameObject GetUIFormEntity<T>() where T : UIFormBase
         {
             if (m_DicUIPanelInfoContainer.ContainsKey(typeof(T).Name))
             {
@@ -143,18 +184,13 @@ namespace MFramework
             }
         }
 
-        public void Hide<T>() where T : UIFormBase
-        {
-            GetPanelLogic<T>()?.Hide();
-        }
-
 
         /// <summary>
         /// 获取UI窗体的逻辑脚本
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetPanelLogic<T>() where T : UIFormBase
+        public T GetUIFormLogicScript<T>() where T : UIFormBase
         {
             if (m_DicUIPanelInfoContainer.ContainsKey(typeof(T).Name))
             {
@@ -162,7 +198,7 @@ namespace MFramework
             }
             else
             {
-                Debug.Log("GetPanelLogic Fail，name："+ typeof(T).Name);
+                Debug.Log("GetPanelLogic Fail，name：" + typeof(T).Name);
                 return null;
             }
         }
@@ -182,6 +218,4 @@ namespace MFramework
             canvasScaler.matchWidthOrHeight = matchValue;
         }
     }
-
-
 }
