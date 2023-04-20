@@ -1,11 +1,5 @@
 # API手册
 
-
-
-
-
-
-
 [TOC]
 
 
@@ -22,21 +16,9 @@ API手册、开发文档、版本记录
 
 范例
 
-## Test
+### AssetsUnityPackage
 
-测试案例
-
-### TestAssets
-
-存放测试所用的资源
-
-#### Resources
-
-Resources资源
-
-### TestScript
-
-测试类
+测试某些案例所需要的资源，如资源加载、音频播放
 
 ## ExampleTest.unity
 
@@ -48,17 +30,111 @@ Resources资源
 
 框架主体
 
-## 0Manager
+
+
+## 0GameLaunch
+
+
+
+
+
+## 1Manager
 
 管理器
 
-AudioManager.cs
+### AudioManager.cs
 
-MainManager.cs
+### HotUpdateManager
 
-UIManager.cs
+### MainManager.cs
 
-## 1Utility
+### ResManager
+
+### ResManager
+
+资源加载管理器，对ResLoader进行封装
+
+核心API
+
+```c#
+/// <summary>
+/// 同步加载资源
+/// </summary>
+/// <typeparam name="T">资源类型</typeparam>
+/// <param name="resPath">资源路径，具体格式根据加载方式loadModel而定</param>
+/// <param name="loadModel">加载方式</param>
+/// <param name="goCloneReturn">T:GameObject 是否自动克隆并返回</param>
+/// <returns></returns>
+public static T LoadSync<T>(string resPath, LoadMode resType = LoadMode.Default, bool goCloneReturn = true) 
+	where T : UnityEngine.Object
+        
+/// <summary>
+/// 异步加载资源
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="resPath">资源路径，具体格式根据加载方式loadModel而定</param>
+/// <param name="callback">完成回调</param>
+/// <param name="loadModel">资源加载方式</param>
+public static void LoadAsync<T>(string resPath, Action<T> callback, LoadMode resType = LoadMode.Default) 
+	where T : UnityEngine.Object
+        
+/// <summary>
+/// 卸载指定资源
+/// </summary>
+/// <param name="resPath">资源路径</param>
+public static void UnLoadAssets(string resPath, LoadMode loadMode = (LoadMode)(-1))
+```
+
+
+
+### UIManager.cs
+
+UI管理器
+
+功能：UI资源的加载、卸载、面板层级配置、屏幕适配
+
+核心API
+
+```c#
+    /// <summary>
+    /// 显示UI窗体
+    /// </summary>
+    /// <typeparam name="T">UIFormBase的派生类</typeparam>
+    /// <returns></returns>
+    public T Show<T>() where T : UIFormBase
+
+    /// <summary>
+    /// 显示UI窗体
+    /// </summary>
+    /// <typeparam name="T">UIFormBase的派生类</typeparam>
+    /// <param name="uiFormName">UI窗体路径："Assets/xxx/xx.prefab"</param>
+    /// <returns></returns>
+    public T Show<T>(string uiFormName, UILayerType uILayerType = UILayerType.Common) where T : UIFormBase
+    
+    /// <summary>
+    /// 隐藏UI窗体
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public void Hide<T>() where T : UIFormBase
+
+    /// <summary>
+    /// 获取UI窗体实体
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public GameObject GetUIFormEntity<T>() where T : UIFormBase
+        
+    /// <summary>
+    /// 获取UI窗体的逻辑脚本
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T GetUIFormLogicScript<T>() where T : UIFormBase
+```
+
+
+
+## 2Utility
 
 ### HotUpdate
 
@@ -248,6 +324,8 @@ NetworkHttp.GetInstance.SendRequest(RequestType.Get, "URL接口地址", new Dict
 
 AbRefCounter.cs 
 
+
+
 ### ResLoader
 
 核心脚本：核心实现类封装**LoadResource.cs**   核心实现类ResLoader.cs 资源加载器
@@ -274,7 +352,7 @@ ABSetting.cs	AB自动化标记、打包设置
 
 ```c#
 //同步加载	<泛型类型>(资源路径,资源类型)
-LoadResource.LoadSync<T>("资源路径", ResType.Null);
+LoadResource.LoadSync<T>("资源路径", LoadMode.Default);
 //异步加载
 LoadResource.LoadAsync<T>("资源路径", (T t) =>
 	{
@@ -283,14 +361,17 @@ LoadResource.LoadAsync<T>("资源路径", (T t) =>
 //显示当前资源信息
 ResLoader.ShowResLogInfo();
 //卸载指定资源
-ResLoader.UnLoadAssets("资源路径", ResType.ResResources);
+ResLoader.UnLoadAssets("资源路径", LoadMode.ResResources);
 
 /// <summary>
 /// 资源种类
 /// </summary>
-public enum ResType
+public enum LoadMode
 {
-    Null,
+    /// <summary>
+    /// 根据GameLaunch工程模式 编辑器模式为ABSetting.resTypeDefaultEditor ，打包模式ABSetting.resTypeDefaultNotEditor
+    /// </summary>
+    Default = 0,
     /// <summary>
     /// 编辑器模式下资源类型  path格式：Assets/AssetsRes/ABRes/Prefab/Cube3.prefab
     /// </summary>
@@ -340,7 +421,19 @@ DownloadAsset.cs	根据URL下载资源
 
 
 
-## 2Extension
+### UI
+
+IUIFormBase.cs	UI窗体基类接口
+
+UIFormBase.cs	UI窗体基类
+
+UIFormConfig.cs	UI窗体配置表
+
+UILayerType.cs	UI层级
+
+
+
+## 3Extension
 
 UnityEngine静态类扩展
 
@@ -350,7 +443,7 @@ StringExtension.cs
 
 
 
-## 3Editor
+## 4Editor
 
 Unity编辑器扩展
 
