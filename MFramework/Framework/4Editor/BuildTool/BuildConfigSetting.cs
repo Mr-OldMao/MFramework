@@ -78,7 +78,7 @@ public class BuildConfigSetting : ScriptableWizard
             buildOutPutPath = GUILayout.TextField(buildOutPutPath);
             if (GUILayout.Button("浏览", GUILayout.Width(50f)))
             {
-                string selectPath = EditorUtility.OpenFolderPanel("Unity打包路径窗口", Application.dataPath + "/..", "请选择文件夹");
+                string selectPath = EditorUtility.OpenFolderPanel("Unity打包路径窗口", Application.dataPath, "请选择文件夹");
                 if (!string.IsNullOrEmpty(selectPath))
                 {
                     buildOutPutPath = selectPath;
