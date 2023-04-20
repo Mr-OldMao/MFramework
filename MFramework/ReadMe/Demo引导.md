@@ -1,14 +1,8 @@
-# API手册
+# Demo引导
 
-导入Demo资源包 Assets/MFramework/Example/ResLoaderUnitypackage.unitypackage
+Demo案例：Assets/MFramework/Example/ExampleTest.unity
 
-文件夹目录：
-
-Assets/AssetsRes
-
-Assets/AssetsRes/ABRes	准备进AB包的资源存放位置，可在ABSetting.cs手动修改
-
-Assets/StreamingAssets/assetsres	AB包 测试文件，ABBuild.cs自动生成
+资源加载案例需要导入资源包：Assets/MFramework/Example/AssetsUnityPackage/...
 
 
 
