@@ -23,33 +23,52 @@ namespace MFramework.Editor
         //[MenuItem("MFramework/脚本自动化工具/1.场景游戏对象映射实体类", false, 1)]
         public static void CreateWizard()
         {
-            DisplayWizard<EditorSceneObjMapEntity>("一键生成游戏对象映射实体类", "生成", "重置");
+            DisplayWizard<EditorSceneObjMapEntity>("一键生成游戏对象映射实体类", "生成且关闭", "生成不关闭" );
         }
         [Header("根节点")]
         public GameObject root;
         [Header("脚本类名 格式：Xxx")]
         public string scriptName;
-        [Header("脚本路径,Assetss目录下子路径 格式：/xxx/xx/xxx/")]
-        public string scriptPath;
+        //[Header("脚本路径,Assets目录下子路径 格式：/xxx/xx/xxx/")]
+        private string scriptPath;
+
         [Header("是否创建根节点旗下未激活的游戏对象")]
         public bool isCreateHideObj;
         [Header("是否覆盖同路径下的同类名脚本")]
         public bool isOverrideScript;
 
-        private string m_CreateScriptDefaultSubPath = "/GameMain/Scripts/UIController/";
-        private void OnEnable()
+        private void Reset()
         {
-            Init();
+            root = null;
+            scriptName = string.Empty;
+            scriptPath = EditorPrefs.GetString("scriptPath", Application.dataPath);
+            isCreateHideObj = EditorPrefs.GetBool("isCreateHideObj", true);
+            isOverrideScript = EditorPrefs.GetBool("isOverrideScript", false);
         }
 
-        //Click Create
+        /// <summary>
+        /// 生成且关闭 btn2
+        /// </summary>
         private void OnWizardCreate()
+        {
+            CreateScrits();
+        }
+
+        /// <summary>
+        /// 生成不关闭 btn1
+        /// </summary>
+        private void OnWizardOtherButton()
+        {
+            CreateScrits();
+        }
+
+        private void CreateScrits()
         {
             AutoCreateScriptStructInfo autoCreateScriptStructInfo = new AutoCreateScriptStructInfo
             {
                 root = root,
                 scriptName = scriptName,
-                scriptPath = Application.dataPath + scriptPath,
+                scriptPath = scriptPath,
                 isCreateHideObj = isCreateHideObj,
                 isOverrideScript = isOverrideScript
             };
@@ -62,18 +81,6 @@ namespace MFramework.Editor
                     EditorPrefs.SetBool("isOverrideScript", isOverrideScript);
                 }
             });
-        }
-        //Click Reset
-        private void OnWizardOtherButton()
-        {
-            root = null;
-            scriptName = string.Empty;
-            EditorPrefs.SetString("scriptPath", m_CreateScriptDefaultSubPath);
-            EditorPrefs.SetBool("isCreateHideObj", true);
-            EditorPrefs.SetBool("isOverrideScript", false);
-            scriptPath = m_CreateScriptDefaultSubPath;
-            isCreateHideObj = true;
-            isOverrideScript = false;
         }
 
         /// <summary>
@@ -89,8 +96,8 @@ namespace MFramework.Editor
                 if (root != Selection.activeGameObject)
                 {
                     root = Selection.activeGameObject;
-                    scriptName = Selection.activeGameObject.name + "Ctrl";
-                    scriptPath = EditorPrefs.GetString("scriptPath", m_CreateScriptDefaultSubPath);
+                    scriptName = Selection.activeGameObject.name;
+                    scriptPath = EditorPrefs.GetString("scriptPath", Application.dataPath);
                 }
                 helpString = "AutoCreateScriptTargetPath：\n" + Application.dataPath + scriptPath + scriptName + ".cs";
             }
@@ -117,15 +124,29 @@ namespace MFramework.Editor
             OnWizardUpdate();
         }
 
-        private void Init()
-        {
-            root = null;
-            scriptName = string.Empty;
-            scriptPath = EditorPrefs.GetString("scriptPath", m_CreateScriptDefaultSubPath);
-            isCreateHideObj = EditorPrefs.GetBool("isCreateHideObj", true);
-            isOverrideScript = EditorPrefs.GetBool("isOverrideScript", false);
-        }
 
+        protected override bool DrawWizardGUI()
+        {
+            base.DrawWizardGUI();
+            //水平布局
+            GUILayout.BeginVertical(new[] { GUILayout.Width(10), GUILayout.Height(100)});
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal(new[] { GUILayout.Height(10) });
+            {
+                GUILayout.Label("脚本路径,格式：X:/x/x/x/", GUILayout.Width(147f));
+                scriptPath = GUILayout.TextField(scriptPath);
+                if (GUILayout.Button("浏览", GUILayout.Width(50f)))
+                {
+                    string selectPath = EditorUtility.OpenFolderPanel("脚本自动化窗口", Application.dataPath , "请选择文件夹");
+                    if (!string.IsNullOrEmpty(selectPath))
+                    {
+                        scriptPath = selectPath +"/";
+                    }
+                }
+            }
+            GUILayout.EndHorizontal();
+            return default;
+        }
 
         /// <summary>
         /// 脚本自动化生成具体实现
@@ -351,10 +372,11 @@ public class {类名} : UIFormBase
     
     {属性}
 
-    private void Awake()
+    protected override void Awake()
     {
-		InitMapField();
-	}
+        base.Awake();
+        InitMapField();
+    }
 
     {方法}
 }
