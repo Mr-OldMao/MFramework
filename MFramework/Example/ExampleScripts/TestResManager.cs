@@ -7,7 +7,7 @@ namespace MFramework
     /// 标题：测试四类资源的同步加载、异步加载、卸载自动回收
     /// 功能：
     /// 作者：毛俊峰
-    /// 时间：2022.
+    /// 时间：2023.04.21
     /// 版本：1.0
     /// </summary>
     public class TestResManager : MonoBehaviour
@@ -38,13 +38,14 @@ namespace MFramework
             #region Editor
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                ResManager.LoadSync<GameObject>(pathCube1, LoadMode.ResEditor);
+                GameObject go = ResManager.LoadSync<GameObject>(pathCube1, LoadMode.ResEditor);
+                go.transform.position = Random.insideUnitSphere;
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
                 ResManager.LoadAsync<GameObject>(pathCube1, (go) =>
                 {
-                    Instantiate(go);
+                    Instantiate(go, Random.insideUnitSphere, Quaternion.identity);
                 }, LoadMode.ResEditor);
             }
             if (Input.GetKeyDown(KeyCode.Z))
@@ -61,7 +62,7 @@ namespace MFramework
             if (Input.GetKeyDown(KeyCode.S))
             {
                 //异步加载AB包
-                ResManager.LoadAsync<AssetBundle>(pathCube2, (go) => Instantiate(go), LoadMode.ResAssetBundlePack);
+                ResManager.LoadAsync<AssetBundle>(pathCube2, (go) => Instantiate(go, Random.insideUnitSphere, Quaternion.identity), LoadMode.ResAssetBundlePack);
             }
             if (Input.GetKeyDown(KeyCode.X))
             {
@@ -75,10 +76,12 @@ namespace MFramework
             if (Input.GetKeyDown(KeyCode.E))
             {
                 //同步加载AB包中具体资源
-                //ResManager.LoadSync<GameObject>(pathCube3, ResType.ResAssetBundleAsset);
+                //GameObject go = ResManager.LoadSync<GameObject>(pathCube3, ResType.ResAssetBundleAsset);
 
                 //注意 AssetBundleAsset 资源 可省略不写ResType类型，默认Default根据工程模式来觉得加载方式
-                ResManager.LoadSync<GameObject>(pathCube3);
+                GameObject go = ResManager.LoadSync<GameObject>(pathCube3);
+
+                go.transform.position = Random.insideUnitSphere;
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
@@ -86,7 +89,7 @@ namespace MFramework
                 //ResManager.LoadAsync<GameObject>(pathCube3, (go) => Instantiate(go), ResType.ResAssetBundleAsset);
 
                 //注意 AssetBundleAsset 资源 可省略不写ResType类型，默认Default根据工程模式来觉得加载方式
-                ResManager.LoadAsync<GameObject>(pathCube3, (go) => Instantiate(go));
+                ResManager.LoadAsync<GameObject>(pathCube3, (go) => Instantiate(go, Random.insideUnitSphere, Quaternion.identity));
             }
             if (Input.GetKeyDown(KeyCode.C))
             {
@@ -98,7 +101,8 @@ namespace MFramework
             #region Resources
             if (Input.GetKeyDown(KeyCode.R))
             {
-                ResManager.LoadSync<GameObject>(pathResouces, LoadMode.ResResources);
+                GameObject go = ResManager.LoadSync<GameObject>(pathResouces, LoadMode.ResResources);
+                go.transform.position = Random.insideUnitSphere;
             }
             if (Input.GetKeyDown(KeyCode.F))
             {
