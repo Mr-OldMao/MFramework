@@ -18,11 +18,18 @@ namespace MFramework
         /// 一级目录结构
         /// </summary>
         public static List<string> m_ListDireStruct1 = new List<string>()
-        {
+        {   
+            /*
+            存放进ab包的资源
+            */
+            "AB",   
+            /*
+            存放非ab包的资源
+            */
             "Audios",
             "Configs",//项目配置文件
             "DataTables",//txt格式数据表，由Excel表导出
-            "Entities",
+            "Prefab",   //不进ab包的实体预设体
             "Fonts",
             "Materials",
             "Meshes",
@@ -40,9 +47,13 @@ namespace MFramework
         /// </summary>
         public static List<string> m_ListDireStruct2 = new List<string>()
         {
+            "AB/Prefab",
             "Audios/BGM",
             "Audios/Sounds",
-            "Entities/DontABPack",//不进AssetBundle的实体预设体
+
+            "Prefab/Entity",   //不进ab包的gameobject预制体
+            "Prefab/UI",   //不进ab包的ui预制体
+
             "Scripts/Base",
             "Scripts/DataCache", //缓存数据，可读写
             "Scripts/DataConstantReadOnly", //存放项目常量（只读）
@@ -51,6 +62,7 @@ namespace MFramework
             "Scripts/Editor",
             "Scripts/Entity",
             "Scripts/Event",
+            "Scripts/Logic",
             "Scripts/Network",
             "Scripts/Procedure",
             "Scripts/Scene",
@@ -66,6 +78,9 @@ namespace MFramework
         /// </summary>
         public static List<string> m_ListDireStruct3 = new List<string>()
         {
+            "AB/Prefab/Entity", //进ab包 gameobject预制体
+            "AB/Prefab/UI", //进ab包 ui预制体
+            
             "Audios/Sounds/BtnSound",
 
             "Scripts/UI/Base", //存放UI的接口、抽象基类、UI工具
