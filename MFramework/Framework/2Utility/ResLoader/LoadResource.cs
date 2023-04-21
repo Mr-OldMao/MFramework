@@ -44,7 +44,7 @@ namespace MFramework
                         assetName = ParseAssetName(resPath);
                     }
 #else
-                    resType = ABSetting.resTypeDefaultNotEditor;
+                    loadModel = ABSetting.resTypeDefaultNotEditor;
                     parsedAssetPath = ParseAssetPath(resPath);
                     assetName = ParseAssetName(resPath);
 #endif
@@ -102,7 +102,7 @@ namespace MFramework
                         assetName = ParseAssetName(resPath);
                     }
 #else
-                    resType = ABSetting.resTypeDefaultNotEditor;
+                    loadModel = ABSetting.resTypeDefaultNotEditor;
                     parsedAssetPath = ParseAssetPath(resPath);
                     assetName = ParseAssetName(resPath);
 #endif
