@@ -333,11 +333,12 @@ namespace MFramework
                     }
                     continue;
                 }
-                //屏蔽未重命名的UI组件
-                if (child.name == "Canvas" || child.name == "Text" || child.name == "Button" || child.name == "Toggle" || child.name == "Image" || child.name == "Slider"
-                    || child.name == "Text (TMP)" || child.name == "RawImage" || child.name == "EventSystem" || child.name == "Viewport" || child.name == "Background"
-                    || child.name == "Checkmark" || child.name == "Label" || child.name == "Content" || child.name == "Fill Area" || child.name == "Fill" || child.name == "Handle Slide Area"
-                    || child.name == "Handle" || child.name == "Scrollbar Horizontal" || child.name == "Scrollbar Vertical" || child.name == "Sliding Area")
+
+                if (!MaskCustomUIObjAndChinds(child.name))
+                {
+                    continue;
+                }
+                if (!MaskCustomUIObj(child.name) || !JudgeUIName(child.name))
                 {
                     //重复迭代
                     if (child.childCount > 0)
@@ -413,6 +414,85 @@ namespace MFramework
                 }
             }
         }
+
+        /// <summary>
+        /// 屏蔽指定UI游戏对象 如果当前游戏对象名称不合法，是否连带子对象也一同屏蔽   T-合法
+        /// </summary>
+        /// <param name="uiObjName"></param>
+        /// <returns></returns>
+        private bool MaskCustomUIObj(string uiObjName)
+        {
+            if (string.IsNullOrEmpty(uiObjName))
+            {
+                return false;
+            }
+            //屏蔽未重命名的UI组件
+            if (
+                    uiObjName == "Canvas" || uiObjName == "Text" || uiObjName == "Button" || uiObjName == "Toggle" || uiObjName == "Image" || uiObjName == "Slider"
+                    || uiObjName == "Text (TMP)" || uiObjName == "RawImage" || uiObjName == "EventSystem" || uiObjName == "Viewport" || uiObjName == "Background"
+                    || uiObjName == "Checkmark" || uiObjName == "Label" || uiObjName == "Content" || uiObjName == "Fill Area" || uiObjName == "Fill" || uiObjName == "Handle Slide Area"
+                    || uiObjName == "Handle" || uiObjName == "Scrollbar Horizontal" || uiObjName == "Scrollbar Vertical" || uiObjName == "Sliding Area")
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 屏蔽指定UI游戏对象以及子对象 T-合法
+        /// </summary>
+        /// <param name="uiObjName"></param>
+        /// <returns></returns>
+        private bool MaskCustomUIObjAndChinds(string uiObjName)
+        {
+            if (string.IsNullOrEmpty(uiObjName))
+            {
+                return false;
+            }
+
+            if (uiObjName.Contains("LineChart"))
+            {
+                return false;
+            }
+
+
+            return true;
+        }
+
+        /// <summary>
+        /// 判定游戏名称是否合法 屏蔽不合法的ui组件根据游戏对象名称 T-合法
+        /// </summary>
+        /// <param name="uiObjName">ui游戏对象名称</param>
+        /// <returns></returns>
+        private bool JudgeUIName(string uiObjName)
+        {
+            if (string.IsNullOrEmpty(uiObjName))
+            {
+                return false;
+            }
+
+            char firstChar = uiObjName[0];
+            //大写字母开头
+            if (firstChar >= 'A' && firstChar <= 'Z')
+            {
+                return false;
+            }
+
+            //数字开头
+            if (firstChar >= '0' && firstChar <= '9')
+            {
+                return false;
+            }
+
+            //名称中有空格
+            if (string.IsNullOrWhiteSpace(uiObjName))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
 
         /// <summary>
         /// 获取UI组件容器
