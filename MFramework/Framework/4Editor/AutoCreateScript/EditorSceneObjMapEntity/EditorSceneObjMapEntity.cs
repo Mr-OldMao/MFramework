@@ -329,6 +329,7 @@ namespace MFramework.Editor
                 fileW.Close();
                 file.Close();
                 Debug.Log("脚本自动化成功 scriptName：" + scriptName + "，scriptAllPath：" + scriptAllPath);
+                Application.OpenURL(scriptAllPath);
                 callback?.Invoke(true);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
