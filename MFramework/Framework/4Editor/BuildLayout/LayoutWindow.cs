@@ -69,6 +69,10 @@ public class LayoutWindow : MonoBehaviour
 
     void Awake()
     {
+#if UNITY_EDITOR
+        return;
+#endif
+
         if (!m_IsUseLayout)
         {
             return;
