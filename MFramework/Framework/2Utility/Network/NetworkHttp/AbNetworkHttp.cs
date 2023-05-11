@@ -216,14 +216,14 @@ namespace MFramework
                 if (!string.IsNullOrEmpty(webRequest.error))
                 {
                     //请求失败
-                    MsgEvent.SendMsg(MsgEventName.HttpRequestFail, new HttpRequestFailParam() { RequestType = RequestType.Post, url = url, token = dicHeader?["Authorization"], errorDescript = webRequest.error });
+                    MsgEvent.SendMsg(MsgEventName.HttpRequestFail, new HttpRequestFailParam() { RequestType = RequestType.Get, url = url, token = dicHeader?["Authorization"], errorDescript = webRequest.error });
                     reqErrorCallback?.Invoke(webRequest.error, url);
                 }
                 else
                 {
                     //请求成功
                     string json = webRequest.downloadHandler.text;
-                    MsgEvent.SendMsg(MsgEventName.HttpRequestSucceed, new HttpRequestSucceedParam() { RequestType = RequestType.Post, url = url, token = dicHeader?["Authorization"], });
+                    MsgEvent.SendMsg(MsgEventName.HttpRequestSucceed, new HttpRequestSucceedParam() { RequestType = RequestType.Get, url = url, token = dicHeader?["Authorization"], });
                     reqSucCallBack?.Invoke(json);
                     //移除请求集合
                     if (m_DicRequestContainer.ContainsKey(requestID))
