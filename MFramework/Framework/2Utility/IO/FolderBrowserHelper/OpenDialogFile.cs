@@ -5,7 +5,8 @@ using UnityEngine;
 
 
 /// <summary>
-/// 非编辑器下 控制Windows窗体交互
+/// 标题：PC平台，非编辑器下控制Windows窗体交互，对硬盘文件夹选择读取操作
+/// 时间：2023.04.20
 /// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 public class OpenDialogFile
@@ -15,7 +16,7 @@ public class OpenDialogFile
     //    // 打开文件目录
     //    FolderBrowserHelper.OpenFolder(@"E:\temp");
     //    // 选择JPG/PNG图片文件并返回选择文件路径
-    //    FolderBrowserHelper.SelectFile(_ => Debug.Log(_), FloderBrowserHelper.IMAGEFILTER);
+    //    FolderBrowserHelper.SelectFile(_ => Debug.Log(_), FolderBrowserHelper.IMAGEFILTER);
     //    // 选择文件目录并返回选择文件夹路径
     //    Debug.Log(FolderBrowserHelper.GetPathFromWindowsExplorer());
     //}
