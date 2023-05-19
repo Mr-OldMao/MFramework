@@ -485,7 +485,13 @@ namespace MFramework
             }
 
             //名称中有空格
-            if (string.IsNullOrWhiteSpace(uiObjName))
+            if (uiObjName.Split(' ').Length > 1)
+            {
+                return false;
+            }
+
+            //_开头
+            if (uiObjName.StartsWith("_"))
             {
                 return false;
             }

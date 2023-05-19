@@ -35,7 +35,7 @@ namespace MFramework.Editor
         {
             string packageName = "MFramework_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".unitypackage";
             //准备导出unitypackage资源路径
-            string exportPathName = "Assets/MFramework/MFramework";
+            string exportPathName = "Assets/MFramework";
             EditorAutoBuildUnityPackage.ExportUnityPactage(packageName, exportPathName);
         }
 
@@ -60,6 +60,13 @@ namespace MFramework.Editor
         private static void EditorMenu_EditorAutoCreateScriptJsonMapClass()
         {
             EditorJsonMapEntity.CreateWizard();
+        }
+
+        [MenuItem("MFramework/脚本自动化工具/3.选中脚本(需继承ScriptableObject)生成.asset文件", false, 3)]
+        private static void EditorMenu_EditorAutoCreateAssetFile()
+        {
+            //右键脚本（脚本需要继承ScriptableObject）自动生成.asset文件 
+            AutoCreateAssetFile.Create();
         }
 
         [MenuItem("MFramework/Renderer/合并网格", false, 1)]

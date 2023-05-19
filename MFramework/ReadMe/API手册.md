@@ -148,6 +148,25 @@ VersionData.cs
 
 ### IO
 
+
+
+### WindowsInteraction
+
+OpenDialogFile.cs
+
+PC平台，非编辑器下控制Windows窗体交互，对硬盘文件夹选择读取操作
+
+```c#
+// 打开文件目录
+FolderBrowserHelper.OpenFolder(@"E:\temp");
+// 选择JPG/PNG图片文件并返回选择文件路径
+FolderBrowserHelper.SelectFile(_ => Debug.Log(_), FolderBrowserHelper.IMAGEFILTER);
+// 选择文件目录并返回选择文件夹路径
+Debug.Log(FolderBrowserHelper.GetPathFromWindowsExplorer());
+```
+
+
+
 数据读写接口
 
 AbFileIO.cs
@@ -171,7 +190,7 @@ io.Write("文本内容");
 
 ### Json
 
-Json序列化、反序列化插件LitJson
+Json序列化、反序列化插件LitJson源代码
 
 
 
@@ -270,6 +289,16 @@ NetworkHttp.GetInstance.SendRequest(RequestType.Get, "URL接口地址", new Dict
                 Debug.Log($"请求失败 错误信息：{p}，请求失败啊的接口地址：{k}");
             });
 ```
+
+
+
+脚本：SocketClient.cs
+
+todo
+
+脚本：SocketServer.cs
+
+todo
 
 
 
@@ -467,6 +496,16 @@ AB资源标签一键标记，自动对资源进行AB标记
 
 
 
+### AutoCreateAssetFile
+
+脚本：AutoCreateAssetFile.cs
+
+标题：编辑器工具，自动生成脚本对应的.asset文件
+
+功能：右键脚本（脚本需要继承ScriptableObject）自动生成.asset文件 
+
+
+
 ### AutoCreateScript
 
 #### EditorSceneObjMapEntity
@@ -481,7 +520,7 @@ Scene GameObject => EntityClass 场景游戏对象转实体类
 
 调用：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，点击生成，可自动获取根节点其下字段、属性、映射并生成脚本到指定路径
 
-规则：场景游戏对象会被直接引用成为字段名，所以命名要规范，并且不要使用创建场景对象时引擎默认的名称会被屏蔽
+规则：场景游戏对象会被直接引用成为字段名，所以命名要规范，并且不要使用创建场景对象时引擎默认的名称会被屏蔽，可自动屏蔽命名不规范的游戏对象，也可也自定义屏蔽某些对象
 
 
 
@@ -499,6 +538,50 @@ Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 
 
 
 
+### BuildLayout
+
+#### LayoutWindow
+
+核心脚本：EditorCreateAssetsDirectory.cs
+
+标题：PC平台程序窗体布局，Unity发布PC 设置窗口 无边框（显示win任务栏），或全屏无边框
+
+
+
+### BuildTool
+
+Unity自动打包
+
+#### autoBuildSummary.md
+
+自动化打包总结，自动化打包.bat命令，可用于jenkins网页自动化打包
+
+#### BuildConfigSetting
+
+标题：自动化打包参数配置设置窗体 配合一键打包使用
+功能：配置一键打包的设置参数， 配合一键打包使用
+编辑器菜单：一键打包 快捷键Shift+B  MFreamwork/BuildTool/BuildTargetPlatformBundle  
+           		   参数配置 快捷键Shift+S  MFreamwork/BuildTool/BuildConfigSetting
+
+#### BuildTool
+
+标题：自动打包工具
+功能：根据参数配置一键打包当前平台(Android,PC)的项目,
+编辑器菜单：一键打包 快捷键Shift+B  MFreamwork/BuildTool/BuildTargetPlatformBundle  
+		              参数配置 快捷键Shift+S  MFreamwork/BuildTool/BuildConfigSetting
+
+### IO
+
+#### EditorCreateAssetsDirectory
+
+核心脚本：EditorCreateAssetsDirectory.cs
+
+标题：编辑器工具类 自动创建Unity工程目录
+
+目的：初始化项目时可避免频繁创建文件夹操作
+
+
+
 ### Renderer
 
 #### MergeMesh.cs
@@ -506,6 +589,22 @@ Json =》 Object，Json反序列化实体类自动生成(基于Newtonsoft.Json) 
 合并模型网格 子对象mesh
 
 用法：在编辑器模式下，在子模型的父对象上挂载此脚本，并右键选择合并网格即可得到合并后的网格
+
+
+
+
+
+
+
+## Launch
+
+框架启动入口
+
+
+
+## Plugin
+
+框架所用到的dll
 
 
 

@@ -23,12 +23,14 @@ namespace MFramework.Editor
         //[MenuItem("MFramework/脚本自动化工具/1.场景游戏对象映射实体类", false, 1)]
         public static void CreateWizard()
         {
-            DisplayWizard<EditorSceneObjMapEntity>("一键生成游戏对象映射实体类", "生成且关闭", "生成不关闭" );
+            DisplayWizard<EditorSceneObjMapEntity>("一键生成游戏对象映射实体类", "生成且关闭", "生成不关闭");
         }
         [Header("根节点")]
         public GameObject root;
         [Header("脚本类名 格式：Xxx")]
         public string scriptName;
+        [Header("基类类名")]
+        public string baseClassName;
         //[Header("脚本路径,Assets目录下子路径 格式：/xxx/xx/xxx/")]
         private string scriptPath;
 
@@ -42,6 +44,7 @@ namespace MFramework.Editor
             root = null;
             scriptName = string.Empty;
             scriptPath = EditorPrefs.GetString("scriptPath", Application.dataPath);
+            baseClassName = EditorPrefs.GetString("baseClassName", "UIFormBase");
             isCreateHideObj = EditorPrefs.GetBool("isCreateHideObj", true);
             isOverrideScript = EditorPrefs.GetBool("isOverrideScript", false);
         }
@@ -70,6 +73,7 @@ namespace MFramework.Editor
                 scriptName = scriptName,
                 scriptPath = scriptPath,
                 isCreateHideObj = isCreateHideObj,
+                baseClassName = baseClassName,
                 isOverrideScript = isOverrideScript
             };
             AutoCreateScriptImpl.BuildUIScript(autoCreateScriptStructInfo, (b) =>
@@ -77,6 +81,7 @@ namespace MFramework.Editor
                 if (b)
                 {
                     EditorPrefs.SetString("scriptPath", scriptPath);
+                    EditorPrefs.SetString("baseClassName", baseClassName);
                     EditorPrefs.SetBool("isCreateHideObj", isCreateHideObj);
                     EditorPrefs.SetBool("isOverrideScript", isOverrideScript);
                 }
@@ -129,7 +134,7 @@ namespace MFramework.Editor
         {
             base.DrawWizardGUI();
             //水平布局
-            GUILayout.BeginVertical(new[] { GUILayout.Width(10), GUILayout.Height(100)});
+            GUILayout.BeginVertical(new[] { GUILayout.Width(10), GUILayout.Height(100) });
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal(new[] { GUILayout.Height(10) });
             {
@@ -137,10 +142,10 @@ namespace MFramework.Editor
                 scriptPath = GUILayout.TextField(scriptPath);
                 if (GUILayout.Button("浏览", GUILayout.Width(50f)))
                 {
-                    string selectPath = EditorUtility.OpenFolderPanel("脚本自动化窗口", Application.dataPath , "请选择文件夹");
+                    string selectPath = EditorUtility.OpenFolderPanel("脚本自动化窗口", Application.dataPath, "请选择文件夹");
                     if (!string.IsNullOrEmpty(selectPath))
                     {
-                        scriptPath = selectPath +"/";
+                        scriptPath = selectPath + "/";
                     }
                 }
             }
@@ -154,14 +159,23 @@ namespace MFramework.Editor
         public class AutoCreateScriptImpl
         {
             //拼接字段
-            static string fieldContent = string.Empty;
+            static string fieldContent;
             //拼接属性
-            static string propertyContent = string.Empty;
+            static string propertyContent;
             //拼接字段映射
-            static string fieldMapContent = "public void InitMapField()\n\t{\n\t";
+            static string fieldMapContent;
+
+            private static void ResetContent()
+            {
+                fieldContent = string.Empty;
+                propertyContent = string.Empty;
+                fieldMapContent = "public void InitMapField()\n\t{\n\t";
+            }
+
             [MenuItem("生成/根据字符串生成枚举类型")]
             public static void BuildUIScript(AutoCreateScriptStructInfo autoCreateScriptStructInfo, Action<bool> callback)
             {
+                ResetContent();
                 string scriptPath = autoCreateScriptStructInfo.scriptPath;
                 string scriptName = autoCreateScriptStructInfo.scriptName;
                 if (!autoCreateScriptStructInfo.root)
@@ -296,8 +310,10 @@ namespace MFramework.Editor
 
                 string classInfo = AutoCreateScriptTemplate.classTemplate;
                 classInfo = classInfo.Replace("{类名}", scriptName);
+                classInfo = classInfo.Replace("{: 基类}", string.IsNullOrEmpty(autoCreateScriptStructInfo.baseClassName) ? "" : ": " + autoCreateScriptStructInfo.baseClassName);
                 classInfo = classInfo.Replace("{字段}", fieldContent);
                 classInfo = classInfo.Replace("{属性}", propertyContent);
+                classInfo = classInfo.Replace("{初始化}", autoCreateScriptStructInfo.baseClassName== "UIFormBase"? AutoCreateScriptTemplate.awakeOverMethodTemplate : AutoCreateScriptTemplate.awakeMethodTemplate);
                 classInfo = classInfo.Replace("{方法}", fieldMapContent);
 
                 //写入本地
@@ -362,26 +378,35 @@ namespace MFramework.Editor
             public static string classTemplate =
     @"using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using MFramework;
 /// <summary>
 /// 以下代码都是通过脚本自动生成的
 /// </summary>
-public class {类名} : UIFormBase
+public class {类名} {: 基类}
 {
     {字段}
     
     {属性}
 
-    protected override void Awake()
+    {初始化}
+    
+    {方法}
+}
+";
+            public static string awakeOverMethodTemplate =
+  @"protected override void Awake()
     {
         base.Awake();
         InitMapField();
     }
-
-    {方法}
-}
 ";
+            public static string awakeMethodTemplate =
+  @"private void Awake()
+    {
+        InitMapField();
+    }
+";
+
 
             /// <summary>
             /// 字段模板
@@ -433,6 +458,10 @@ public class {类名} : UIFormBase
         /// 脚本类名
         /// </summary>
         public string scriptName;
+        /// <summary>
+        /// 基类类名
+        /// </summary>
+        public string baseClassName;
         /// <summary>
         /// 脚本路径
         /// </summary>
