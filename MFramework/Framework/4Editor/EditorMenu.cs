@@ -62,6 +62,13 @@ namespace MFramework.Editor
             EditorJsonMapEntity.CreateWizard();
         }
 
+        [MenuItem("MFramework/脚本自动化工具/3.选中脚本(需继承ScriptableObject)生成.asset文件", false, 3)]
+        private static void EditorMenu_EditorAutoCreateAssetFile()
+        {
+            //右键脚本（脚本需要继承ScriptableObject）自动生成.asset文件 
+            AutoCreateAssetFile.Create();
+        }
+
         [MenuItem("MFramework/Renderer/合并网格", false, 1)]
         private static void MeshCombine()
         {
