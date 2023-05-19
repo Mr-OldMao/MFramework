@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static MFramework.AudioManager;
 
 namespace MFramework
 {
@@ -72,70 +71,70 @@ namespace MFramework
 
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.Q))
-            //{
-            //    AudioManager.GetInstance.Play(SoundType.BGM, Resources.Load<AudioClip>("TestRes/Audio/bgm1"));
-            //}
-            //if (Input.GetKeyDown(KeyCode.W))
-            //{
-            //    AudioManager.GetInstance.Pause(SoundType.BGM);
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                AudioManager.GetInstance.Play(AudioManager.SoundType.BGM, Resources.Load<AudioClip>("TestRes/Audio/bgm1"));
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                AudioManager.GetInstance.Pause(AudioManager.SoundType.BGM);
 
-            //}
-            //if (Input.GetKeyDown(KeyCode.E))
-            //{
-            //    AudioManager.GetInstance.Play(SoundType.BGM);
-            //}
-            //if (Input.GetKeyDown(KeyCode.R))
-            //{
-            //    AudioManager.GetInstance.SetPlayerMute(SoundType.BGM, true);
-            //}
-            //if (Input.GetKeyDown(KeyCode.T))
-            //{
-            //    AudioManager.GetInstance.SetPlayerMute(SoundType.BGM, false);
-            //}
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                AudioManager.GetInstance.Play(AudioManager.SoundType.BGM);
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                AudioManager.GetInstance.SetPlayerMute(AudioManager.SoundType.BGM, true);
+            }
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                AudioManager.GetInstance.SetPlayerMute(AudioManager.SoundType.BGM, false);
+            }
 
 
-            //if (Input.GetKeyDown(KeyCode.A))
-            //{
-            //    AudioManager.GetInstance.Play(SoundType.SoundEffect, Resources.Load<AudioClip>("TestRes/Audio/effJumpScene"));
-            //}
-            //if (Input.GetKeyDown(KeyCode.S))
-            //{
-            //    AudioManager.GetInstance.Pause(SoundType.SoundEffect);
-            //}
-            //if (Input.GetKeyDown(KeyCode.D))
-            //{
-            //    AudioManager.GetInstance.Play(SoundType.SoundEffect);
-            //}
-            //if (Input.GetKeyDown(KeyCode.F))
-            //{
-            //    AudioManager.GetInstance.SetPlayerMute(SoundType.SoundEffect, true);
-            //}
-            //if (Input.GetKeyDown(KeyCode.G))
-            //{
-            //    AudioManager.GetInstance.SetPlayerMute(SoundType.SoundEffect, false);
-            //}
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                AudioManager.GetInstance.Play(AudioManager.SoundType.SoundEffect, Resources.Load<AudioClip>("TestRes/Audio/effJumpScene"));
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                AudioManager.GetInstance.Pause(AudioManager.SoundType.SoundEffect);
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                AudioManager.GetInstance.Play(AudioManager.SoundType.SoundEffect);
+            }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                AudioManager.GetInstance.SetPlayerMute(AudioManager.SoundType.SoundEffect, true);
+            }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                AudioManager.GetInstance.SetPlayerMute(AudioManager.SoundType.SoundEffect, false);
+            }
 
-            //if (Input.GetKeyDown(KeyCode.Z))
-            //{
-            //    AudioManager.GetInstance.Play(SoundType.SoundEffectTemp, Resources.Load<AudioClip>("TestRes/Audio/effJumpScene"));
-            //}
-            //if (Input.GetKeyDown(KeyCode.X))
-            //{
-            //    AudioManager.GetInstance.Pause(SoundType.SoundEffectTemp);
-            //}
-            //if (Input.GetKeyDown(KeyCode.C))
-            //{
-            //    AudioManager.GetInstance.Play(SoundType.SoundEffectTemp);
-            //}
-            //if (Input.GetKeyDown(KeyCode.V))
-            //{
-            //    AudioManager.GetInstance.SetPlayerMute(SoundType.SoundEffectTemp, true);
-            //}
-            //if (Input.GetKeyDown(KeyCode.B))
-            //{
-            //    AudioManager.GetInstance.SetPlayerMute(SoundType.SoundEffectTemp, false);
-            //}
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                AudioManager.GetInstance.Play(AudioManager.SoundType.SoundEffectTemp, Resources.Load<AudioClip>("TestRes/Audio/effJumpScene"));
+            }
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                AudioManager.GetInstance.Pause(AudioManager.SoundType.SoundEffectTemp);
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                AudioManager.GetInstance.Play(AudioManager.SoundType.SoundEffectTemp);
+            }
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                AudioManager.GetInstance.SetPlayerMute(AudioManager.SoundType.SoundEffectTemp, true);
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                AudioManager.GetInstance.SetPlayerMute(AudioManager.SoundType.SoundEffectTemp, false);
+            }
         }
     }
 }
