@@ -26,13 +26,13 @@ namespace MFramework
                 Directory.CreateDirectory(buildPath);
             }
             BuildPipeline.BuildAssetBundles(buildPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-            //写入资源热更json文件数据
-            ResHotUpdateData resHotUpdateData = new ResHotUpdateData()
-            {
-                version = "1.2.0",
-                assetBundleNames = AssetDatabase.GetAllAssetBundleNames()
-            };
-            HotUpdateManager.WriteResHotUpdateData(resHotUpdateData);
+            ////写入资源热更json文件数据
+            //ResHotUpdateData resHotUpdateData = new ResHotUpdateData()
+            //{
+            //    version = "1.2.0",
+            //    assetBundleNames = AssetDatabase.GetAllAssetBundleNames()
+            //};
+            //HotUpdateManager.WriteResHotUpdateData(resHotUpdateData);
             AssetDatabase.Refresh();
         }
 #endif
