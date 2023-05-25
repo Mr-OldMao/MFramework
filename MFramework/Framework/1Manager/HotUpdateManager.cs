@@ -115,7 +115,7 @@ namespace MFramework
                 resHotUpdateData = new ResHotUpdateData();
                 resHotUpdateData.version = "1.2.0";//Test
 #if UNITY_EDITOR
-                resHotUpdateData.assetBundleNames = UnityEditor.AssetDatabase.GetAllAssetBundleNames();
+                resHotUpdateData.assetBundleNames = AssetDatabaseTool.GetAllAssetBundleNames();
 #endif
             }
             string versionJson = JsonUtility.ToJson(resHotUpdateData, true);

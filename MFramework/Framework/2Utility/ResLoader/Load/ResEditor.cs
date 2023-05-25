@@ -22,7 +22,7 @@ namespace MFramework
         {
             ResState = ResStateType.Loading;
 #if UNITY_EDITOR
-            Asset = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(AssetAllPath);
+            Asset = AssetDatabaseTool.LoadAssetAtPath<GameObject>(AssetAllPath);
 #else
             Debug.LogError("非编辑器模式下无法进行UnityEditor.AssetDatabase.LoadAssetAtPath 方式资源加载");
 #endif

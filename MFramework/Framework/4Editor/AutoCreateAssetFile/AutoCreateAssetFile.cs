@@ -1,4 +1,5 @@
-﻿#pragma warning disable IDE0051 // 删除未使用的私有成员
+﻿#if UNITY_EDITOR
+#pragma warning disable IDE0051 // 删除未使用的私有成员
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -83,4 +84,5 @@ namespace MFramework
             return asset;
         }
     }
-}
+} 
+#endif
