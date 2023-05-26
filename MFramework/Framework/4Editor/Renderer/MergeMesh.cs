@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 namespace MFramework
@@ -105,5 +106,6 @@ namespace MFramework
             AssetDatabase.SaveAssets();
         }
 #endif
-    } 
-}
+    }
+} 
+#endif
