@@ -26,15 +26,15 @@ namespace MFramework
             {
                 try
                 {
-                    File.Delete(HotUpdateConfig.localVersionRootPath + "/" + HotUpdateConfig.hotUpdateVersionFileName);
-                    File.Delete(HotUpdateConfig.hotUpdatedLocalVersionRootPath + "/" + HotUpdateConfig.hotUpdateVersionFileName);
+                    File.Delete(HotUpdateSetting.localVersionRootPath + "/" + HotUpdateSetting.hotUpdateVersionFileName);
+                    File.Delete(HotUpdateSetting.hotUpdatedLocalVersionRootPath + "/" + HotUpdateSetting.hotUpdateVersionFileName);
                 }
                 catch (System.Exception)
                 {
 
                 }
                 //todo 写入测试数据 未热更的本地版本信息
-                Debug.Log("初始化写入测试数据 未热更的本地版本信息 localVersionRootPath：" + HotUpdateConfig.localVersionRootPath + " localVersionFileName：" + HotUpdateConfig.hotUpdateVersionFileName);
+                Debug.Log("初始化写入测试数据 未热更的本地版本信息 localVersionRootPath：" + HotUpdateSetting.localVersionRootPath + " localVersionFileName：" + HotUpdateSetting.hotUpdateVersionFileName);
                 HotUpdateManager.WriteResHotUpdateData();
             });
             btnCheckHotUpdate.onClick.AddListener(() =>

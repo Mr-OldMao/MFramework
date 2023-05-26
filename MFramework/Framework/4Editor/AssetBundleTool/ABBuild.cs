@@ -17,8 +17,7 @@ namespace MFramework
     public class ABBuild : MonoBehaviour
     {
 #if UNITY_EDITOR
-        [MenuItem("MFramework/AssetsBundle/一键打包生成AB", false, 3)]
-        private static void BuildAssetBundle()
+        public static void BuildAssetBundle()
         {
             string buildPath = ABSetting.assetBundleBuildPath;
             if (!Directory.Exists(buildPath))
