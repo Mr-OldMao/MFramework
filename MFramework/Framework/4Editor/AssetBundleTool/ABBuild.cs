@@ -17,8 +17,7 @@ namespace MFramework
     public class ABBuild : MonoBehaviour
     {
 #if UNITY_EDITOR
-        [MenuItem("MFramework/AssetsBundle/一键打包生成AB", false, 3)]
-        private static void BuildAssetBundle()
+        public static void BuildAssetBundle()
         {
             string buildPath = ABSetting.assetBundleBuildPath;
             if (!Directory.Exists(buildPath))
@@ -26,13 +25,13 @@ namespace MFramework
                 Directory.CreateDirectory(buildPath);
             }
             BuildPipeline.BuildAssetBundles(buildPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-            //写入资源热更json文件数据
-            ResHotUpdateData resHotUpdateData = new ResHotUpdateData()
-            {
-                version = "1.2.0",
-                assetBundleNames = AssetDatabase.GetAllAssetBundleNames()
-            };
-            HotUpdateManager.WriteResHotUpdateData(resHotUpdateData);
+            ////写入资源热更json文件数据
+            //ResHotUpdateData resHotUpdateData = new ResHotUpdateData()
+            //{
+            //    version = "1.2.0",
+            //    assetBundleNames = AssetDatabase.GetAllAssetBundleNames()
+            //};
+            //HotUpdateManager.WriteResHotUpdateData(resHotUpdateData);
             AssetDatabase.Refresh();
         }
 #endif

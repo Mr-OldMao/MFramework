@@ -27,18 +27,18 @@ namespace MFramework
             get
             {
                 //本地版本信息文件全路径
-                string filePath = HotUpdateConfig.hotUpdatedLocalVersionRootPath + "/" + HotUpdateConfig.hotUpdateVersionFileName;
+                string filePath = HotUpdateSetting.hotUpdatedLocalVersionRootPath + "/" + HotUpdateSetting.hotUpdateVersionFileName;
                 if (!File.Exists(filePath))
                 {
                     m_CurHotUpdateState = HotUpdateState.NeverUpdate;
                     Debug.Log("CurHotUpdateState：" + m_CurHotUpdateState + "，version：" +
-                        JsonUtility.FromJson<ResHotUpdateData>(new FileIOTxt(HotUpdateConfig.localVersionRootPath, HotUpdateConfig.hotUpdateVersionFileName).Read()).version);
+                        JsonUtility.FromJson<ResHotUpdateData>(new FileIOTxt(HotUpdateSetting.localVersionRootPath, HotUpdateSetting.hotUpdateVersionFileName).Read()).version);
                 }
                 else //Application.persistentDataPath资源版本 > Application.streamingAssetsPath资源版本
                 {
                     m_CurHotUpdateState = HotUpdateState.Updated;
-                    string hotUpdatedVersionJson = new FileIOTxt(HotUpdateConfig.hotUpdatedLocalVersionRootPath, HotUpdateConfig.hotUpdateVersionFileName).Read();
-                    string versionJson = new FileIOTxt(HotUpdateConfig.localVersionRootPath, HotUpdateConfig.hotUpdateVersionFileName).Read();
+                    string hotUpdatedVersionJson = new FileIOTxt(HotUpdateSetting.hotUpdatedLocalVersionRootPath, HotUpdateSetting.hotUpdateVersionFileName).Read();
+                    string versionJson = new FileIOTxt(HotUpdateSetting.localVersionRootPath, HotUpdateSetting.hotUpdateVersionFileName).Read();
                     ResHotUpdateData hotUpdatedVersionInfo = JsonUtility.FromJson<ResHotUpdateData>(hotUpdatedVersionJson);
                     ResHotUpdateData versionInfo = JsonUtility.FromJson<ResHotUpdateData>(versionJson);
                     if (VersionData.JudgeVersionSize(versionInfo.version, hotUpdatedVersionInfo.version))
@@ -115,11 +115,11 @@ namespace MFramework
                 resHotUpdateData = new ResHotUpdateData();
                 resHotUpdateData.version = "1.2.0";//Test
 #if UNITY_EDITOR
-                resHotUpdateData.assetBundleNames = UnityEditor.AssetDatabase.GetAllAssetBundleNames();
+                resHotUpdateData.assetBundleNames = AssetDatabaseTool.GetAllAssetBundleNames();
 #endif
             }
             string versionJson = JsonUtility.ToJson(resHotUpdateData, true);
-            new FileIOTxt(HotUpdateConfig.localVersionRootPath, HotUpdateConfig.hotUpdateVersionFileName).Write(versionJson);
+            new FileIOTxt(HotUpdateSetting.localVersionRootPath, HotUpdateSetting.hotUpdateVersionFileName).Write(versionJson);
         }
     }
 

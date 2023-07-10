@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 namespace MFramework
@@ -10,16 +11,51 @@ namespace MFramework
     /// 版本：1.0
     /// </summary>
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    public class MergeMesh : SingletonByMono<MergeMesh>
+    public  class MergeMesh : MonoBehaviour
 {
         public int MaxVertex = 65535;
         public UnityEngine.Rendering.IndexFormat indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        #region 单例
+        private static string singletonSceneGameName = "MFrameworkSingletonRoot";
+        private static GameObject singletonRoot = null;
+        public static MergeMesh m_Instance;
+        public static MergeMesh GetInstance
+        {
+            get
+            {
+                if (m_Instance == null)
+                {
+                    if (FindObjectOfType<MergeMesh>())
+                    {
+                        m_Instance = FindObjectOfType<MergeMesh>();
+                    }
+                    else
+                    {
+                        if (singletonRoot == null)
+                        {
+                            singletonRoot = GameObject.Find(singletonSceneGameName);
+                            if (singletonRoot == null)
+                            {
+                                singletonRoot = new GameObject(singletonSceneGameName);
+                                DontDestroyOnLoad(singletonRoot);
+                            }
+                        }
+                        GameObject singletonSubRoot = new GameObject(typeof(MergeMesh).Name);
+                        singletonSubRoot.transform.SetParent(singletonRoot.transform);
+                        m_Instance = singletonSubRoot.AddComponent<MergeMesh>();
+                    }
+                }
+                return m_Instance;
+            }
+        } 
+        #endregion
+
 
         [ContextMenu("合并网格")]
         /// <summary>
         /// 合并网格  合并当前对象以及其下所有模型
         /// </summary>
-        public void MeshCombine()
+        public  void MeshCombine()
         {
             MeshFilter[] filters = GetComponentsInChildren<MeshFilter>();
             Debug.Log(filters.Length);
@@ -70,5 +106,6 @@ namespace MFramework
             AssetDatabase.SaveAssets();
         }
 #endif
-    } 
-}
+    }
+} 
+#endif

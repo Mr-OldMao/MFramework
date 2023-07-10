@@ -15,20 +15,6 @@ namespace MFramework
     public class ABTag : MonoBehaviour
     {
 #if UNITY_EDITOR
-        [MenuItem("MFramework/AssetsBundle/查询项目所有ABName", false, 1)]
-        /// <summary>
-        /// 查询项目所有ABName
-        /// </summary>
-        public static void PrintAllABName()
-        {
-            string[] abNameArr = AssetDatabase.GetAllAssetBundleNames();
-            for (int i = 0; i < abNameArr.Length; i++)
-            {
-                Debug.Log((i + 1) + "：" + abNameArr[i]);
-            }
-        }
-
-        [MenuItem("MFramework/AssetsBundle/一键标记ABName", false, 2)]
         /// <summary>
         /// 自动对资源进行AB标记
         /// </summary>

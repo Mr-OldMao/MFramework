@@ -55,7 +55,7 @@ namespace MFramework
             //Debug.Log(content);
 
 #if UNITY_EDITOR
-            UnityEditor.AssetDatabase.Refresh();
+            AssetDatabaseTool.Refresh();
 #endif
         }
     }

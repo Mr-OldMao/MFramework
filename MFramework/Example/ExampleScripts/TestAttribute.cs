@@ -12,7 +12,9 @@ namespace MFramework
     /// </summary>
     public class TestAttribute : MonoBehaviour
     {
+#if UNITY_EDITOR
         [EnumLabel("场景名称")]
+#endif
         public SceneName sceneName;
 
         public enum SceneName

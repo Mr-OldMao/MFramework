@@ -230,30 +230,4 @@ namespace MFramework
         }
         #endregion
     }
-    /// <summary>
-    /// 加载方式
-    /// </summary>
-    public enum LoadMode
-    {
-        /// <summary>
-        /// 根据GameLaunch工程模式 编辑器模式为ABSetting.resTypeDefaultEditor ，打包模式ABSetting.resTypeDefaultNotEditor
-        /// </summary>
-        Default = 0,
-        /// <summary>
-        /// 编辑器模式下资源类型  path格式：Assets/AssetsRes/ABRes/Prefab/Cube3.prefab
-        /// </summary>
-        ResEditor,
-        /// <summary>
-        /// Resources目录下资源   path格式：(Resources/) + xxx/xxx/xx
-        /// </summary>
-        ResResources,
-        /// <summary>
-        /// ab包 .manifest资源     path格式：ab标签名称   (.manifest=>AssetBundleManifest=>Name)
-        /// </summary>
-        ResAssetBundlePack,
-        /// <summary>
-        /// ab包中的资源     path格式：ab标签名称   (.manifest=>AssetBundleManifest=>Name)
-        /// </summary>
-        ResAssetBundleAsset
-    }
 }

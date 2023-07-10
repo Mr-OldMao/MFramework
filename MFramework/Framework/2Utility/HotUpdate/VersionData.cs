@@ -36,13 +36,13 @@ namespace MFramework
             {
                 case HotUpdateState.NeverUpdate:
                     //localVersionContent = new FileIOTxt(localVersionRootPath, versionFileName).Read();    File类真机读取不到StreamingAssets中文件
-                    localVersionContent = ReadStreamingAssetFileByPlatform(HotUpdateConfig.localVersionRootPath + "/" + HotUpdateConfig.hotUpdateVersionFileName);
+                    localVersionContent = ReadStreamingAssetFileByPlatform(HotUpdateSetting.localVersionRootPath + "/" + HotUpdateSetting.hotUpdateVersionFileName);
                     break;
                 case HotUpdateState.Updated:
-                    localVersionContent = new FileIOTxt(HotUpdateConfig.hotUpdatedLocalVersionRootPath, HotUpdateConfig.hotUpdateVersionFileName).Read();
+                    localVersionContent = new FileIOTxt(HotUpdateSetting.hotUpdatedLocalVersionRootPath, HotUpdateSetting.hotUpdateVersionFileName).Read();
                     break;
                 case HotUpdateState.Overrided:
-                    localVersionContent = ReadStreamingAssetFileByPlatform(HotUpdateConfig.localVersionRootPath + "/" + HotUpdateConfig.hotUpdateVersionFileName);
+                    localVersionContent = ReadStreamingAssetFileByPlatform(HotUpdateSetting.localVersionRootPath + "/" + HotUpdateSetting.hotUpdateVersionFileName);
                     break;
                 default:
                     break;
@@ -58,7 +58,7 @@ namespace MFramework
         public static void SetLocalVersion(ResHotUpdateData resHotUpdateData)
         {
             string versionJson = JsonUtility.ToJson(resHotUpdateData);
-            new FileIOTxt(HotUpdateConfig.hotUpdatedLocalVersionRootPath, HotUpdateConfig.hotUpdateVersionFileName).Write(versionJson);
+            new FileIOTxt(HotUpdateSetting.hotUpdatedLocalVersionRootPath, HotUpdateSetting.hotUpdateVersionFileName).Write(versionJson);
         }
 
         /// <summary>

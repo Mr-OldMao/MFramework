@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -16,7 +17,7 @@ namespace MFramework
 
         }
     }
-#if UNITY_EDITOR
+
     [CustomPropertyDrawer(typeof(EnumLabelAttribute))]
     public class EnumLabelDrawer : PropertyDrawer
     {
@@ -42,5 +43,6 @@ namespace MFramework
             }
         }
     }
-#endif 
+
 }
+#endif 
