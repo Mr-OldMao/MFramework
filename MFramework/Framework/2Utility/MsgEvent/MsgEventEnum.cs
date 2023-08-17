@@ -19,5 +19,9 @@ public enum MsgEventName
     /// HTTP请求失败
     /// </summary>
     HttpRequestFail,
+    /// <summary>
+    /// MQTT消息发出
+    /// </summary>
+    MqttPublicsh,
 }
 

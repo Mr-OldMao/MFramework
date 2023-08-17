@@ -264,6 +264,38 @@ Json序列化、反序列化插件LitJson源代码
 
 ### Network
 
+MQTT网络通信
+
+脚本：NetworkMqtt.cs(对外接口)，AbNetworkMqtt.cs(具体实现)，INetworkMqtt.cs(接口)，TestNetworkMqtt.cs(测试脚本)
+
+标题：Mqtt网络通信协议
+
+功能：初始化，与代理连接、断开，发布消息，订阅主题，收发消息事件回调
+
+核心API
+
+```c#
+            //初始化并订阅主题
+            NetworkMqtt.GetInstance.Init(new MqttConfig()).Subscribe(MqttTopicName.TopicTest);
+            //监听消息回调
+            NetworkMqtt.GetInstance.AddListener((object sender, MqttMsgPublishEventArgs e) =>
+            {
+                Debug.Log($"通过代理收到消息：{Encoding.UTF8.GetString(e.Message)}");
+            });
+            NetworkMqtt.GetInstance.AddListener((object sender, MqttMsgSubscribedEventArgs e) =>
+            {
+                Debug.Log($"客户端订阅消息成功回调 ，sender：{sender}");
+            });
+            //订阅多个主题
+            NetworkMqtt.GetInstance.Subscribe("TopicTest1", "TopicTest2");
+ 			//发送消息
+			NetworkMqtt.GetInstance.Publish(MqttTopicName.TopicTest, "Unity Send Msg:" + System.DateTime.Now.ToString());
+			//断开代理连接
+			NetworkMqtt.GetInstance.DisConnect();
+```
+
+
+
 网络通信
 
 脚本：NetworkHttp.cs
@@ -274,7 +306,7 @@ Json序列化、反序列化插件LitJson源代码
 
 核心API
 
-```
+```c#
 NetworkHttp.GetInstance.SendRequest(RequestType.Get, "URL接口地址", new Dictionary<string, string>()
             {
             	{ "参数key","参数value"},
@@ -299,6 +331,10 @@ todo
 脚本：SocketServer.cs
 
 todo
+
+
+
+
 
 
 
