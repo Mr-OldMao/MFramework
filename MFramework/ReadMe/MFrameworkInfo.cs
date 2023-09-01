@@ -3,14 +3,14 @@ namespace MFramework
     public class MFrameworkInfo
     {
         public const string Version = "v0.0.8";
-        public const string LastModityDate = "20230817";
+        public const string LastModityDate = "20230901";
         public const string Author = "Mr_OldMao";
         public const string Github = "https://github.com/Mr-OldMao";
         public const string Email = "929764654@qq.com";
 
         public static void GetAllInfo()
         {
-            UnityEngine.Debug.Log($"Version£º{Version}£¬LastModityDate£º{LastModityDate}£¬Author£º{Author}£¬Github£º{Github}£¬Email£º{Email}");
+            UnityEngine.Debug.Log($"Versionï¼š{Version}ï¼ŒLastModityDateï¼š{LastModityDate}ï¼ŒAuthorï¼š{Author}ï¼ŒGithubï¼š{Github}ï¼ŒEmailï¼š{Email}");
         }
     }
 }
