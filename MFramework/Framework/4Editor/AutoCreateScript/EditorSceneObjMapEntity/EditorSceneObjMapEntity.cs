@@ -169,7 +169,8 @@ namespace MFramework.Editor
             {
                 fieldContent = string.Empty;
                 propertyContent = string.Empty;
-                fieldMapContent = "public void InitMapField()\n\t{\n\t";
+                fieldMapContent = "protected override void RegisterUIEvnet()\n\t{\n\t\n\t}";
+                fieldMapContent += "protected override void InitMapField()\n\t{\n\t";
             }
 
             [MenuItem("生成/根据字符串生成枚举类型")]

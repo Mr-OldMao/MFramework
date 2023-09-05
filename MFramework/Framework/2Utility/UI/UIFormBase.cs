@@ -1,12 +1,10 @@
 using MFramework;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
 /// 标题：UI窗体基类
 /// 功能：
 /// 作者：毛俊峰
-/// 时间：2022.12.29
+/// 时间：2022.12.29，2023.09.04
 /// </summary>
 public abstract class UIFormBase : MonoBehaviour, IUIFormBase
 {
@@ -41,13 +39,25 @@ public abstract class UIFormBase : MonoBehaviour, IUIFormBase
         gameObject.SetActive(false);
         IsShow = false;
     }
+
+    /// <summary>
+    /// 初始化字段映射
+    /// </summary>
+    protected abstract void InitMapField();
+
+    /// <summary>
+    /// 注册UI事件
+    /// </summary>
+    protected abstract void RegisterUIEvnet();
+
     protected virtual void OnEnable()
     {
 
     }
     protected virtual void Awake()
     {
-
+        InitMapField();
+        RegisterUIEvnet();
     }
     protected virtual void Start()
     {
@@ -76,5 +86,6 @@ public abstract class UIFormBase : MonoBehaviour, IUIFormBase
     {
 
     }
+
 
 }

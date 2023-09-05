@@ -23,4 +23,13 @@ public class UIFormTest : UIFormBase
         base.Show();
         Debug.Log("UIFormTest Show()");
     }
+
+    public override void InitMapField()
+    {
+
+    }
+    protected override void RegisterUIEvnet()
+    {
+
+    }
 }
