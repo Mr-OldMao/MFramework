@@ -4,7 +4,7 @@ using UnityEngine;
 /// 标题：UI窗体基类
 /// 功能：
 /// 作者：毛俊峰
-/// 时间：2022.12.29，2023.09.04
+/// 时间：2022.12.29、2023.09.04
 /// </summary>
 public abstract class UIFormBase : MonoBehaviour, IUIFormBase
 {

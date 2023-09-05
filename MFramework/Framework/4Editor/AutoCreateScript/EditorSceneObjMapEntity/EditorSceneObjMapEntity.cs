@@ -6,6 +6,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+
 namespace MFramework.Editor
 {
     /// <summary>
@@ -15,7 +16,7 @@ namespace MFramework.Editor
     /// 调用：选中菜单MFramework/脚本自动化工具，拖入根节点，设置脚本路径，点击生成，可自动获取根节点其下字段、属性、映射并生成脚本到指定路径 
     /// 规则：场景游戏对象会被直接引用成为字段名，所以命名要规范，并且不要使用创建场景对象时引擎默认的名称会被屏蔽
     /// 作者：毛俊峰
-    /// 时间：2022.08.01
+    /// 时间：2022.08.01、2023.09.05
     /// 版本：1.0
     /// </summary>
     public class EditorSceneObjMapEntity : ScriptableWizard
@@ -164,13 +165,17 @@ namespace MFramework.Editor
             static string propertyContent;
             //拼接字段映射
             static string fieldMapContent;
+            //拼接UI事件
+            static string uiEventContent;
 
             private static void ResetContent()
             {
                 fieldContent = string.Empty;
                 propertyContent = string.Empty;
-                fieldMapContent = "protected override void RegisterUIEvnet()\n\t{\n\t\n\t}";
-                fieldMapContent += "protected override void InitMapField()\n\t{\n\t";
+                fieldMapContent = string.Empty;
+                propertyContent += "public override UILayerType GetUIFormLayer { get => UILayerType.Common; protected set => _ = UILayerType.Common; }";
+                propertyContent += "\n\tpublic override string AssetPath { get => AssetPathRootDir + \"/xxx.prefab\"; protected set => _ = AssetPathRootDir + \"/xxx.prefab\"; }\n\t";
+                fieldMapContent += "protected override void InitMapField()\n\t{\n";
             }
 
             [MenuItem("生成/根据字符串生成枚举类型")]
@@ -310,11 +315,13 @@ namespace MFramework.Editor
                         continue;
                     }
                 }
-                fieldMapContent += "}";
+                fieldMapContent += "}\n\t";
+                fieldMapContent += "\n\t";
+                fieldMapContent += "protected override void RegisterUIEvnet()\n\t{\n " + uiEventContent + "\t}\n\t";
 
                 string classInfo = AutoCreateScriptTemplate.classTemplate;
                 classInfo = classInfo.Replace("{命名空间}", useTMProNamespace ? "using TMPro;\n" : string.Empty);
-                classInfo = classInfo.Replace("{头注释}", "以下代码都是通过脚本自动生成的\n/// 时间:" + System.DateTime.Now.ToString("yyyy.MM.dd"));
+                classInfo = classInfo.Replace("{头注释}", "标题：UI窗体视图层(当前代码都是通过脚本自动生成的)\n/// 功能：\n/// 作者：毛俊峰\n/// 时间：" + System.DateTime.Now.ToString("yyyy.MM.dd"));
                 classInfo = classInfo.Replace("{类名}", scriptName);
                 classInfo = classInfo.Replace("{: 基类}", string.IsNullOrEmpty(autoCreateScriptStructInfo.baseClassName) ? "" : ": " + autoCreateScriptStructInfo.baseClassName);
                 classInfo = classInfo.Replace("{字段}", fieldContent);
@@ -368,6 +375,7 @@ namespace MFramework.Editor
                 fieldContent += AutoCreateScriptTemplate.FieldTemplate(fieldName, fieldType);
                 propertyContent += AutoCreateScriptTemplate.PropertyTemplate(fieldType, propertyName, fieldName);
                 fieldMapContent += AutoCreateScriptTemplate.FieldMapTemplate(fieldName, fieldType);
+                uiEventContent += AutoCreateScriptTemplate.RegisterUIEvent(fieldName, fieldType);
             }
         }
 
@@ -405,14 +413,12 @@ public class {类名} {: 基类}
     {
         base.Awake();
         InitMapField();
-    }
-";
+    }";
             public static string awakeMethodTemplate =
   @"private void Awake()
     {
         InitMapField();
-    }
-";
+    }";
 
 
             /// <summary>
@@ -447,7 +453,28 @@ public class {类名} {: 基类}
             /// <returns></returns>
             public static string FieldMapTemplate(string fieldName, string fieldType)
             {
-                return "\t" + @fieldName + @" = transform.Find<" + fieldType + ">(\"" + fieldName + "\");\n\t";
+                return "\t\t" + @fieldName + @" = transform.Find<" + fieldType + ">(\"" + fieldName + "\");\n";
+            }
+
+            public static string RegisterUIEvent(string fieldName, string fieldType)
+            {
+                string res = string.Empty;
+                switch (fieldType)
+                {
+                    case "Button":
+                        res = "\t\t" + fieldName + ".onClick.AddListenerCustom(() =>\r\n\t\t{\r\n\t\t\t" +
+                            "Debug.Log(\"button click " + fieldName + "\");" +
+                            "\r\n\t\t});\n";
+                        break;
+                    case "Toggle":
+                        res = "\t\t" + fieldName + ".onValueChanged.AddListenerCustom((ison) =>\r\n\t\t{\r\n\t\t\t" +
+                            "Debug.Log(\"toggle change " + fieldName + "，Ison：\"+ ison);" +
+                            "\r\n\t\t});\n";
+                        break;
+                    default:
+                        break;
+                }
+                return res;
             }
         }
     }
