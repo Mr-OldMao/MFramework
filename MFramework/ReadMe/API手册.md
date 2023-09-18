@@ -275,17 +275,41 @@ MQTT网络通信
 核心API
 
 ```c#
-            //初始化并订阅主题
-            NetworkMqtt.GetInstance.Init(new MqttConfig()).Subscribe(MqttTopicName.TopicTest);
-            //监听消息回调
-            NetworkMqtt.GetInstance.AddListener((object sender, MqttMsgPublishEventArgs e) =>
+            //选择MQTT协议通信的平台
+#if !UNITY_EDITOR && UNITY_WEBGL
+    		NetworkMqtt.GetInstance.IsWebgl = true;
+#else
+    		NetworkMqtt.GetInstance.IsWebgl = false;
+#endif
+     		//创建[UnityObjectForWebglMsg]游戏对象，绑定脚本MqttWebglCenter.cs，用于h5向unity通信
+            GameObject UnityObjectForWebglMsg = GameObject.Find("[UnityObjectForWebglMsg]");
+            if (UnityObjectForWebglMsg == null)
             {
-                Debug.Log($"通过代理收到消息：{Encoding.UTF8.GetString(e.Message)}");
-            });
-            NetworkMqtt.GetInstance.AddListener((object sender, MqttMsgSubscribedEventArgs e) =>
+                UnityObjectForWebglMsg = new GameObject("[UnityObjectForWebglMsg]");
+            }
+            if (UnityObjectForWebglMsg.GetComponent<MqttWebglCenter>() == null)
             {
-                Debug.Log($"客户端订阅消息成功回调 ，sender：{sender}");
+                UnityObjectForWebglMsg.AddComponent<MqttWebglCenter>();
+            }
+            UnityObjectForWebglMsg.SetActive(NetworkMqtt.GetInstance.IsWebgl);
+
+    		//注册MQTT登录成功回调函数
+            NetworkMqtt.GetInstance.AddConnectedSucEvent(() =>
+            {
+                //订阅多个主题
+                NetworkMqtt.GetInstance.Subscribe(MqttTopicName.TopicTest);
+                NetworkMqtt.GetInstance.Subscribe("Test");
+                NetworkMqtt.GetInstance.Subscribe("TopicTest1", "TopicTest2");
             });
+			//初始化MQTT
+            NetworkMqtt.GetInstance.Init(new MqttConfig());
+           //监听消息回调
+            NetworkMqtt.GetInstance.AddListenerSubscribe((string topic, string msg) =>
+            {
+                Debug.Log($"[Unity] Recv Msg , topic:" + topic + ",msg:" + msg);
+            });
+			
+			//需要等待MQTT登录成功才可调用以下api
             //订阅多个主题
             NetworkMqtt.GetInstance.Subscribe("TopicTest1", "TopicTest2");
  			//发送消息
