@@ -4,19 +4,22 @@ namespace MFramework
 {
     /// <summary>
     /// 标题：日志系统
-    /// 功能：对指定标签打印，控制台日志的显示样式
+    /// 功能：
+    /// 1.打印控制台指定标签
+    /// 2.控制台日志的显示样式
+    /// 3.编辑器运行状态下，开关日志打印
+    /// 4.各个标签的打印状态本地数据持久化
     /// 作者：毛俊峰
-    /// 时间：2022.10.19
-    /// 版本：1.0
+    /// 时间：2022.10.19   2023.10.27
+    /// 版本：1.1
     /// </summary>
-    public class Debugger : MonoBehaviour
+    public class Debugger : SingletonByMono<Debugger>
     {
         /// <summary>
         /// 日志回调(1日志index 2日志内容 3日志类型 4日志标签 5日志堆栈信息)
         /// </summary>
         public static Action<int, object, LogType, LogTag, string> logCallback;
         private static int m_CurLogIndex = 1;
-
 
         #region 对外接口
         public static void Log(object message, LogTag logTag = LogTag.Temp)
@@ -29,9 +32,9 @@ namespace MFramework
             LogHandle(message, logTag, LogType.Warning);
         }
 
-        public static void LogError(object message, LogTag logTag = LogTag.Temp)
+        public static void LogError(object message)
         {
-            LogHandle(message, logTag, LogType.Error);
+            LogHandle(message, LogTag.Forever, LogType.Error);
         }
 
         #endregion
@@ -44,22 +47,33 @@ namespace MFramework
         /// <param name="logType"></param>
         private static void LogHandle(object logMsg, LogTag logTag, LogType logType)
         {
-            if (Debug.unityLogger.logEnabled)
+            bool canPrint = false;
+            if (logTag == LogTag.Forever)
             {
-                if (DebuggerConfig.canPrintLogTagList == null || DebuggerConfig.canPrintLogTagList.Count == 0)
+                canPrint = true;
+            }
+            else if (DebuggerConfig.CanPrintLogTagList != null && DebuggerConfig.CanPrintLogTagList.Contains(logTag))
+            {
+                switch (logType)
                 {
-                    Debug.unityLogger.logEnabled = false;
-                    return;
+                    case LogType.Log:
+                    case LogType.Assert:
+                    case LogType.Warning:
+                        canPrint = DebuggerConfig.CanPrintConsoleLog && DebuggerConfig.CanPrintLogTagList.Contains(logTag);
+                        break;
+                    case LogType.Error:
+                    case LogType.Exception:
+                        canPrint = DebuggerConfig.CanPrintConsoleLogError && DebuggerConfig.CanPrintLogTagList.Contains(logTag);
+                        break;
                 }
-                if (!DebuggerConfig.canPrintLogTagList.Contains(logTag))
-                {
-                    return;
-                }
-                if (DebuggerConfig.canSaveLogDataFile && !SaveLogData.IsListeneringWriteLog)
+            }
+            if (canPrint)
+            {
+                if (DebuggerConfig.CanSaveLogDataFile && !SaveLogData.IsListeneringWriteLog)
                 {
                     SaveLogData.GetInstance.ListenerWriteLog();
                 }
-                if (DebuggerConfig.canChangeConsolePrintStyle)
+                if (DebuggerConfig.CanChangeConsolePrintStyle)
                 {
                     ChangeStyle(ref logMsg, logTag, logType);
                 }
@@ -129,15 +143,15 @@ namespace MFramework
     public enum LogTag
     {
         /// <summary>
-        /// 临时日志
+        /// 临时标签
         /// </summary>
         Temp,
         /// <summary>
-        /// 关键节点测试调试日志
+        /// 关键节点调试标签
         /// </summary>
         Test,
         /// <summary>
-        /// 常驻日志
+        /// 常驻日志标签，不受外部打印开启与否的限制
         /// </summary>
         Forever
     }

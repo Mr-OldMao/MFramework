@@ -41,7 +41,17 @@ namespace MFramework
         }
         private void InitFramework()
         {
-
+            #region Init Log
+            //日志打印
+            DebuggerConfig.MaxCountCacheLogFile = 10;
+            DebuggerConfig.CanWriteDeviceHardwareData = true;
+            //实时缓存日志到本地
+            DebuggerConfig.CanChangeConsolePrintStyle = true;
+            DebuggerConfig.CanPrintLogTagList = m_LaunchModel == LaunchModel.EditorModel ?
+                new List<LogTag> { LogTag.Temp, LogTag.Test, LogTag.Forever } : new List<LogTag> { LogTag.Forever };
+            DebuggerConfig.CanPrintConsoleLog = m_LaunchModel == LaunchModel.EditorModel;
+            DebuggerConfig.CanPrintConsoleLogError = m_LaunchModel == LaunchModel.BuilderModel;     
+            #endregion
         }
         private void InitGameLogic()
         {

@@ -54,7 +54,7 @@ namespace MFramework
             MFramework.Debugger.Log("开始监听日志信息写入 logFilePath：" + logFilePath);
 
             DirectoryConfig();
-            if (DebuggerConfig.canWriteDeviceHardwareData)
+            if (DebuggerConfig.CanWriteDeviceHardwareData)
             {
                 PhoneSystemInfo(logFilePath);
             }
@@ -75,11 +75,11 @@ namespace MFramework
                 Directory.CreateDirectory(logRootPath);
             }
             string[] logFilePathArr = Directory.GetFiles(logRootPath);
-            if (logFilePathArr.Length >= DebuggerConfig.logFileMaxCount)
+            if (logFilePathArr.Length >= DebuggerConfig.MaxCountCacheLogFile)
             {
-                MFramework.Debugger.LogError("当前历史日志文件数量已超过限制(" + DebuggerConfig.logFileMaxCount + ")，即将删除超出的历史日志文件");
+                MFramework.Debugger.LogError("当前历史日志文件数量已超过限制(" + DebuggerConfig.MaxCountCacheLogFile + ")，即将删除超出的历史日志文件");
                 //删除历史文件
-                int delectCount = logFilePathArr.Length - (int)DebuggerConfig.logFileMaxCount + 1;
+                int delectCount = logFilePathArr.Length - (int)DebuggerConfig.MaxCountCacheLogFile + 1;
                 for (int i = 0; i < delectCount; i++)
                 {
                     File.Delete(logFilePathArr[i]);

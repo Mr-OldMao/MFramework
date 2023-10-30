@@ -7,12 +7,19 @@ namespace MFramework
     /// 标题：测试日志系统
     /// 功能：
     /// 作者：毛俊峰
-    /// 时间：2022.
+    /// 时间：2023.10.30
     /// 版本：1.0
     /// </summary>
     public class TestDebugger : MonoBehaviour
     {
         private void Start()
+        {
+            Debug.Log("可自由控制多种环境下的日志打印 编辑器菜单位置：MFamework/Log/...");
+            DebuggerConfig.GetDebuggerConfigState();
+            Print();
+        }
+
+        private void Print()
         {
             GameObject go = new GameObject();
             Debugger.Log("001temp" + go);
@@ -26,16 +33,16 @@ namespace MFramework
             Debugger.LogWarning("008test", LogTag.Forever);
 
             Debugger.LogError("111temp" + go);
-            Debugger.LogError("222temp", LogTag.Temp);
-            Debugger.LogError("333test", LogTag.Test);
-            Debugger.LogError("444test", LogTag.Forever);
+            Debugger.LogError("222temp");
+            Debugger.LogError("333test");
+            Debugger.LogError("444test");
         }
 
         public void Update()
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                Debugger.Log("xxxxx");
+                Print();
             }
         }
     }
