@@ -45,8 +45,6 @@ namespace MFramework
             NetworkMqtt.GetInstance.Init(new MqttConfig()
             {
                 clientIP = "10.5.24.28",
-                clientPort = 1883,
-                clientID = "testClientID1"
             });
 
             //监听消息回调

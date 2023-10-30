@@ -12,11 +12,16 @@ namespace MFramework
     /// </summary>
     public class MqttConfig
     {
-        public string clientID = "ClientIDTest";
+        public string clientID = "ClientIDTest_"+System.DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
         public string userName = "UserName";
         public string password = "PassWord";
         public string clientIP = "127.0.0.1";
-        public int clientPort = 1883;
+        public int clientPort =
+#if !UNITY_EDITOR && UNITY_WEBGL
+            8083;
+#else
+            1883;
+#endif
         /*
         1883 MQTT 协议端口
         8883 MQTT/SSL 端口
