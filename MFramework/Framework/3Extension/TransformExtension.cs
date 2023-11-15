@@ -7,8 +7,8 @@ namespace MFramework
     /// 标题：Transform静态扩展
     /// 功能：
     /// 作者：毛俊峰
-    /// 时间：2022.08.01
-    /// 版本：1.0
+    /// 创建日期：2022.08.01
+    /// 更新日期：2023.11.15
     /// </summary>
     public static class TransformExtension
     {
@@ -34,6 +34,36 @@ namespace MFramework
                 {
                     res = targetArr[i];
                     break;
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// 批量查找游戏对象(Transform静态扩展) 2023-11-15
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="transform"></param>
+        /// <param name="targetName">查找的对象名</param>
+        /// <param name="includeInactive">查找范围是否包含未激活的游戏对象</param>
+        /// <returns></returns>
+        public static List<T> Finds<T>(this Transform transform, string targetName, bool includeInactive = true) where T : Component
+        {
+            List<T> res = default;
+            if (transform == null || string.IsNullOrEmpty(targetName))
+            {
+                res = null;
+            }
+            var targetArr = transform.GetComponentsInChildren<T>(includeInactive);
+            for (int i = 0; i < targetArr.Length; i++)
+            {
+                if (targetArr[i].name == targetName)
+                {
+                    if (res == null)
+                    {
+                        res = new List<T>();
+                    }
+                    res.Add(targetArr[i]);
                 }
             }
             return res;
