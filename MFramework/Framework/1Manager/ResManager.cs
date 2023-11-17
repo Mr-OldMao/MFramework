@@ -11,6 +11,7 @@ namespace MFramework
     /// 时间：2022.
     /// 版本：1.0
     /// </summary>
+    [Obsolete("自定义资源加载管理，已过时不再维护，改用LoadResManager.cs")]
     public class ResManager : SingletonByMono<ResManager>
     {
         /// <summary>

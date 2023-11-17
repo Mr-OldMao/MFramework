@@ -111,12 +111,11 @@ namespace MFramework
             T UIFormLogicScript = GetUIFormLogicScript<T>();
             if (UIFormLogicScript == null)
             {
-                //根据当前项目运行模式 获取UI窗体资源实体
-                LoadMode resType = GameLaunch.GetInstance.LaunchModel == LaunchModel.EditorModel ? LoadMode.ResEditor : LoadMode.ResAssetBundleAsset;
-                GameObject UIForm = ResManager.LoadSync<GameObject>(uiFormName, resType);
-                //修改UI窗体名称
                 string[] UIFormNameArr = uiFormName.Split('/', '.');
                 string name = UIFormNameArr[UIFormNameArr.Length - 2];
+                //获取UI窗体资源实体
+                GameObject UIForm = LoadResManager.GetInstance.GetRes<GameObject>(name);
+                //修改UI窗体名称
                 UIForm.name = name;
                 //设置UI窗体位置
                 RectTransform cloneRect = UIForm.GetComponent<RectTransform>();

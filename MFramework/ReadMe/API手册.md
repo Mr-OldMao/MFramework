@@ -48,9 +48,11 @@ API手册、开发文档、版本记录
 
 ### MainManager.cs
 
-### ResManager
+### ResManager(已过时)
 
 ### ResManager
+
+### LoadResManager
 
 资源加载管理器，对ResLoader进行封装
 
