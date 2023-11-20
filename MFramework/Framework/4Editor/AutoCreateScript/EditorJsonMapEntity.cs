@@ -137,6 +137,7 @@ namespace MFramework.Editor
             /// </summary>
             private static Dictionary<string, ClassInfo> dicClassContent = new Dictionary<string, ClassInfo>();
 
+            private static bool m_IsExistListData = false;
             private class ClassInfo
             {
                 public string classHead;
@@ -156,6 +157,10 @@ namespace MFramework.Editor
                     //Debug.Log("k: " + item.Key + "，v：" + subContent);
                 }
                 scriptContent = AutoCreateScripttestTemplate.classtestTemplateHead(jsonMapClassStruct.scriptName, scriptContent);
+                if (m_IsExistListData)
+                {
+                    scriptContent = AutoCreateScripttestTemplate.AddListUsing() + scriptContent;
+                }
                 WriteFile(jsonMapClassStruct, scriptContent);
             }
 
@@ -184,6 +189,7 @@ namespace MFramework.Editor
                     }
                     else if (obj.Value.Type == JTokenType.Array)
                     {
+                        m_IsExistListData = true;
                         //testTemp++;
                         //Debug.Log("testTemp:" + testTemp + ",type:" + obj.Value.Type + ",k:" + obj.Key + ",v:" + obj.Value + ",subArrJson：" + obj.Value.ToString());
                         //遍历数组
@@ -193,7 +199,7 @@ namespace MFramework.Editor
                             //Debug.Log("testTemp:" + testTemp + "，ArrElemType:" + arrItem.Type + "，ArrElemValue" + arrItem);
                             if (arrItem.Type == JTokenType.Object || arrItem.Type == JTokenType.Array)
                             {
-                                string fieldType = curClassName + "_" + obj.Key + "[]";
+                                string fieldType = "List<" + curClassName + "_" + obj.Key + ">";
                                 string nextJson = arrItem.ToString();
                                 string nextClassName = curClassName + "_" + obj.Key;
                                 //testTemp++;
@@ -203,7 +209,7 @@ namespace MFramework.Editor
                             }
                             else
                             {
-                                string fieldType = GetFieldTypeByJTokenType(fieldName, arrItem.Type) + "[]";
+                                string fieldType = "List<" + GetFieldTypeByJTokenType(fieldName, arrItem.Type) + ">";
                                 //Debug.Log("testTemp:" + testTemp + "，fieldName：" + fieldName + "，fieldContent：" + obj.Value + "，type：" + obj.Value.Type + "，fieldType：" + fieldType);
                                 SpliceStr(curClassName, fieldName, fieldType);
                             }
@@ -213,7 +219,7 @@ namespace MFramework.Editor
                     else
                     {
                         string fieldName = obj.Key;
-                        string fieldType = GetFieldTypeByJTokenType(fieldName, obj.Value.Type); 
+                        string fieldType = GetFieldTypeByJTokenType(fieldName, obj.Value.Type);
                         //Debug.Log("testTemp:" + testTemp +  "，fieldName：" + fieldName + "，fieldContent：" + obj.Value+"，type：" + obj.Value.Type + "，fieldType："+ fieldType);
                         SpliceStr(curClassName, fieldName, fieldType);
                     }
@@ -383,6 +389,16 @@ public class " + className + "\n{  " + content + "\n}";
                     res += format + "/// </summary>";
                 }
                 res += format + "public " + fieldType + " " + fieldName + ";";
+                return res;
+            }
+
+            /// <summary>
+            /// 新增数组集合命名空间
+            /// </summary>
+            /// <returns></returns>
+            public static string AddListUsing()
+            {
+                string res = "using System.Collections.Generic;\n";
                 return res;
             }
         }
