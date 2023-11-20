@@ -131,6 +131,9 @@ namespace MFramework
                         case LogTag.Forever:
                             logMsg = "<B><color=#00FFFF>" + logMsg + "</color></B>";
                             break;
+                        case LogTag.MF:
+                            logMsg = "<color=#FFFFFF>" + logMsg + "</color>";
+                            break;
                     }
                     break;
             }
@@ -150,6 +153,10 @@ namespace MFramework
         /// 关键节点调试标签
         /// </summary>
         Test,
+        /// <summary>
+        /// MFramework框架内部日志
+        /// </summary>
+        MF,
         /// <summary>
         /// 常驻日志标签，不受外部打印开启与否的限制
         /// </summary>

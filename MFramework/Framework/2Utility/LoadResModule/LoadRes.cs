@@ -212,7 +212,6 @@ namespace MFramework
                 ResInfo resInfo = dicCacheAssets[key];
                 if (resInfo != null)
                 {
-                    Debugger.Log("GetRes " + typeof(T));
                     if (resInfo.res is T)
                     {
                         res = resInfo.res as T;

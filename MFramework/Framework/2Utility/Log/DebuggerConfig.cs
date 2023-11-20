@@ -26,6 +26,7 @@ namespace MFramework
         {
             LogTag.Temp,
             LogTag.Test,
+            LogTag.MF, 
             LogTag.Forever //当前标签不受约束，必然显示，可加可不加
         };
 

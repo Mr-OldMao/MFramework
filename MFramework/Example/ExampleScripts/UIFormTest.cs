@@ -15,13 +15,13 @@ public class UIFormTest : UIFormBase
 
     public void Test()
     {
-        Debug.Log("UIFormTest Test()");
+        Debugger.Log("UIFormTest Test()", LogTag.MF);
     }
 
     public override void Show()
     {
         base.Show();
-        Debug.Log("UIFormTest Show()");
+        Debugger.Log("UIFormTest Show()", LogTag.MF);
     }
     protected override void InitMapField()
     {

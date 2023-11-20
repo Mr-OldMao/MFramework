@@ -20,7 +20,7 @@ namespace MFramework
         /// 缓存加载后的面板  key-面板名称（唯一标识） value-UI窗体数据
         /// </summary>
         private Dictionary<string, UIFormInfo> m_DicUIPanelInfoContainer = new Dictionary<string, UIFormInfo>();
-       
+
 
         class UIFormInfo
         {
@@ -105,7 +105,7 @@ namespace MFramework
             }
             if (!uiFormName.EndsWith(".prefab"))
             {
-                Debugger.LogError("UIFormName Not Exist .prefab ，Path：" +  uiFormName);
+                Debugger.LogError("UIFormName Not Exist .prefab ，Path：" + uiFormName);
                 return default;
             }
             T UIFormLogicScript = GetUIFormLogicScript<T>();
@@ -194,7 +194,7 @@ namespace MFramework
             }
             else
             {
-                Debug.Log("GetPanelLogic Fail，name：" + typeof(T).Name);
+                Debugger.Log("GetPanelLogic Fail，name：" + typeof(T).Name, LogTag.MF);
                 return null;
             }
         }

@@ -48,9 +48,9 @@ namespace MFramework
             //实时缓存日志到本地
             DebuggerConfig.CanChangeConsolePrintStyle = true;
             DebuggerConfig.CanPrintLogTagList = m_LaunchModel == LaunchModel.EditorModel ?
-                new List<LogTag> { LogTag.Temp, LogTag.Test, LogTag.Forever } : new List<LogTag> { LogTag.Forever };
+                new List<LogTag> { LogTag.Temp, LogTag.MF, LogTag.Test, LogTag.Forever } : new List<LogTag> { LogTag.Forever };
             DebuggerConfig.CanPrintConsoleLog = m_LaunchModel == LaunchModel.EditorModel;
-            DebuggerConfig.CanPrintConsoleLogError = m_LaunchModel == LaunchModel.BuilderModel;     
+            DebuggerConfig.CanPrintConsoleLogError = m_LaunchModel == LaunchModel.BuilderModel;
             #endregion
         }
         private void InitGameLogic()
