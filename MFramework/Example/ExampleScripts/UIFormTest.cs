@@ -7,10 +7,10 @@ public class UIFormTest : UIFormBase
         get => UILayerType.Common;
         protected set => _ = UILayerType.Common;
     }
-    public override string AssetPath
+    public override string UIFormEntitySubPath
     {
-        get => AssetPathRootDir + "/Main/UIFormTest.prefab";
-        protected set => _ = AssetPathRootDir + "/Main/UIFormTest.prefab";
+        get => UIFormRootDir + "/Main/UIFormTest.prefab";
+        protected set => _ = UIFormRootDir + "/Main/UIFormTest.prefab";
     }
 
     public void Test()

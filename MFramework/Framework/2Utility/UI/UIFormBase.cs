@@ -17,12 +17,12 @@ public abstract class UIFormBase : MonoBehaviour, IUIFormBase
     /// </summary>
     public abstract UILayerType GetUIFormLayer { get; protected set; }
 
-    protected string AssetPathRootDir = UIFormConfig.UIFormRootDir;
+    protected string UIFormRootDir = UIFormConfig.UIFormRootDir;
 
     /// <summary>
-    /// UI窗体预制体实体位置
+    /// UI窗体预制体实体位置相对路径
     /// </summary>
-    public abstract string AssetPath
+    public abstract string UIFormEntitySubPath
     {
         get;
         protected set;

@@ -1,7 +1,4 @@
-
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +18,6 @@ namespace MFramework
         /// </summary>
         private Dictionary<string, UIFormInfo> m_DicUIPanelInfoContainer = new Dictionary<string, UIFormInfo>();
 
-
         class UIFormInfo
         {
             /// <summary>
@@ -39,7 +35,6 @@ namespace MFramework
             }
         }
 
-        private UIFormConfig m_UIFormConfig;
         private static GameObject m_UIRoot;
         public static GameObject UIRoot
         {
@@ -60,16 +55,6 @@ namespace MFramework
             }
         }
 
-        private void Awake()
-        {
-            Init();
-        }
-
-        public void Init()
-        {
-            m_UIFormConfig = new UIFormConfig();
-        }
-
         /// <summary>
         /// 显示UI窗体
         /// </summary>
@@ -77,7 +62,7 @@ namespace MFramework
         /// <returns></returns>
         public T Show<T>() where T : UIFormBase
         {
-            UIFormConfig.UIEntityConfigInfo uiEntityConfigInfo = m_UIFormConfig.GetUIFormConfigData<T>();
+            UIFormConfig.UIEntityConfigInfo uiEntityConfigInfo = UIFormConfig.GetInstance.GetUIFormConfigData<T>();
             if (uiEntityConfigInfo != null)
             {
                 return Show<T>(uiEntityConfigInfo.uiFormEntityName, uiEntityConfigInfo.uiLayerType);
@@ -86,8 +71,8 @@ namespace MFramework
             else
             {
                 Debugger.LogError("UIForm Show Fail ，uiFormEntity is Null， Type：" + typeof(T).Name);
+                return null;
             }
-            return default;
         }
 
         /// <summary>
@@ -98,6 +83,11 @@ namespace MFramework
         /// <returns></returns>
         public T Show<T>(string uiFormName, UILayerType uILayerType = UILayerType.Common) where T : UIFormBase
         {
+            if (!UIFormConfig.GetInstance.IsBindComplete)
+            {
+                Debugger.LogError("UIForm show fail，need init bind UIFormInfo ，UIFormConfig.GetInstance.Bind(...)");
+                return default;
+            }
             if (string.IsNullOrEmpty(uiFormName))
             {
                 Debugger.LogError("UIFormName is null");
@@ -114,7 +104,7 @@ namespace MFramework
                 string[] UIFormNameArr = uiFormName.Split('/', '.');
                 string name = UIFormNameArr[UIFormNameArr.Length - 2];
                 //获取UI窗体资源实体
-                GameObject UIForm = LoadResManager.GetInstance.GetRes<GameObject>(name);
+                GameObject UIForm = LoadResManager.GetInstance.GetRes<GameObject>(name, true);
                 //修改UI窗体名称
                 UIForm.name = name;
                 //设置UI窗体位置

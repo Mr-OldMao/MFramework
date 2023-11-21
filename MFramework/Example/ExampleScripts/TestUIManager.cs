@@ -5,14 +5,19 @@ using UnityEngine;
 /// 标题：测试UIManager
 /// 功能：UI窗体的显示、隐藏、获取UI窗体实体、获取UI窗体上所挂载的脚本
 /// 作者：毛俊峰
-/// 时间：2023.04.20
-/// 版本：1.0
+/// 日期：2023.04.20、2023.11.21
 /// </summary>
 public class TestUIManager : MonoBehaviour
 {
     private void Start()
     {
         Debugger.Log("演示UIMananger案例 1.需要导入Unity资源包后  2.导入Addressable插件 3.标记UIFormTest.prefab的Addresable标签 4.再取消注释后续代码    资源包位置:Assets/MFramework/Example/AssetsUnityPackage/ExampleAssetsUIManager.unitypackage", LogTag.MF);
+
+
+        //若GameLaunch中调用了绑定方法则无需再次绑定Bind(...)
+        //UIFormConfig.GetInstance.Bind(UIFormConfig.BindType.Auto);
+        //UIFormConfig.GetInstance.Bind(UIFormConfig.BindType.Json);
+        //UIFormConfig.GetInstance.Bind(UIFormConfig.BindType.Manual);
 
         LoadResManager.GetInstance.LoadResAsyncByAssetPath<GameObject>("Assets/GameMain/UI/UIForms/Main/UIFormTest.prefab", (p) =>
         {
@@ -33,6 +38,22 @@ public class TestUIManager : MonoBehaviour
 
             //获取UI窗体实体
             UIManager.GetInstance.GetUIFormEntity<UIFormTest>().name = "UIForm123";
-        });
+
+        }, false);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (UIManager.GetInstance.IsShow<UIFormTest>())
+            {
+                UIManager.GetInstance.Hide<UIFormTest>();
+            }
+            else
+            {
+                UIManager.GetInstance.Show<UIFormTest>();
+            }
+        }
     }
 }

@@ -234,6 +234,18 @@ namespace MFramework.Editor
             EditorAutoBuildUnityPackage.ExportUnityPactage(packageName, exportPathName);
         }
         #endregion
+
+        [MenuItem("Assets/Create/创建绑定UI窗体的默认配置文件(.json)", priority = 1)]
+        private static void AssetsCreateUIFormConfigFile()
+        {
+            UIFormConfig.CreateBindUIFormJsonConfigFile();
+        }
+
+        [MenuItem("Assets/Create/创建.asset资源文件", priority = 2)]
+        private static void AssetsCreateAssetsFile()
+        {
+            AutoCreateAssetFile.Create();
+        }
     }
 }
 

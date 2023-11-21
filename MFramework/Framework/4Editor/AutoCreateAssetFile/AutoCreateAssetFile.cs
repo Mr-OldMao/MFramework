@@ -19,7 +19,7 @@ namespace MFramework
     static class AutoCreateAssetFile
     {
         static List<ScriptableObject> list = new List<ScriptableObject>();
-        [MenuItem("Assets/Create/创建.asset资源文件", priority = 1)]
+        //[MenuItem("Assets/Create/创建.asset资源文件", priority = 1)]
         public static void Create()
         {
             list.Clear();
