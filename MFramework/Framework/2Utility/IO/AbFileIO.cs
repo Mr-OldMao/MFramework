@@ -53,7 +53,7 @@ namespace MFramework
                     if (filePathNoExistAutoCreate)
                     {
                         using FileStream fileStream = File.Create(filePath);
-                        Debug.Log("filePath is Null Auto Create，rootPath：" + filePath);
+                        Debugger.Log("filePath is Null Auto Create，rootPath：" + filePath, LogTag.MF);
                     }
                     else
                     {
@@ -67,11 +67,11 @@ namespace MFramework
                 {
                     Directory.CreateDirectory(rootPath);
                     using FileStream fileStream = File.Create(filePath);
-                    Debug.Log("filePath is Null Auto Create，rootPath：" + filePath);
+                    Debugger.Log("filePath is Null Auto Create，rootPath：" + filePath, LogTag.MF);
                 }
                 else
                 {
-                    Debug.LogError("rootPath is Null，rootPath：" + rootPath);
+                    Debugger.LogError("rootPath is Null，rootPath：" + rootPath);
                 }
             }
             return isExist;

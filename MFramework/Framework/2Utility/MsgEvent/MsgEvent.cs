@@ -398,7 +398,7 @@ namespace MFramework
             }
             if (!isExist)
             {
-                Debug.LogError("消息注销失败 请检查消息名下是否有消息 msgName：" + msgName);
+                Debugger.LogError("消息注销失败 请检查消息名下是否有消息 msgName：" + msgName);
             }
         }
         /// <summary>
@@ -425,11 +425,11 @@ namespace MFramework
                     if (targetMsg != null)
                     {
                         msgEventInfos.Remove(targetMsg);
-                        Debug.Log("消息注销成功");
+                        Debugger.Log("消息注销成功", LogTag.MF);
                     }
                     else
                     {
-                        Debug.LogError("消息注销失败 未查询到该消息Action事件 msgName:" + msgName);
+                        Debugger.LogError("消息注销失败 未查询到该消息Action事件 msgName:" + msgName);
                     }
                 }
                 else
@@ -439,7 +439,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息注销失败 请检查消息名下是否有，不带参、不带返回值消息 msgName：" + msgName);
+                Debugger.LogError("消息注销失败 请检查消息名下是否有，不带参、不带返回值消息 msgName：" + msgName);
             }
         }
 
@@ -467,11 +467,11 @@ namespace MFramework
                     if (targetMsg != null)
                     {
                         msgEventParamInfos.Remove(targetMsg);
-                        Debug.Log("消息注销成功");
+                        Debugger.Log("消息注销成功", LogTag.MF);
                     }
                     else
                     {
-                        Debug.LogError("消息注销失败 未查询到该消息Action<object>事件 msgName:" + msgName);
+                        Debugger.LogError("消息注销失败 未查询到该消息Action<object>事件 msgName:" + msgName);
                     }
                 }
                 else
@@ -481,7 +481,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息注销失败 请检查消息名下是否有，带参、不带返回值 msgName：" + msgName);
+                Debugger.LogError("消息注销失败 请检查消息名下是否有，带参、不带返回值 msgName：" + msgName);
             }
         }
 
@@ -509,11 +509,11 @@ namespace MFramework
                     if (targetMsg != null)
                     {
                         msgEventInfos.Remove(targetMsg);
-                        Debug.Log("消息注销成功");
+                        Debugger.Log("消息注销成功", LogTag.MF);
                     }
                     else
                     {
-                        Debug.LogError("消息注销失败 未查询到该消息Func<object>事件 msgName:" + msgName);
+                        Debugger.LogError("消息注销失败 未查询到该消息Func<object>事件 msgName:" + msgName);
                     }
                 }
                 else
@@ -523,7 +523,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息注销失败 请检查消息名下是否有，带参、不带返回值 msgName：" + msgName);
+                Debugger.LogError("消息注销失败 请检查消息名下是否有，带参、不带返回值 msgName：" + msgName);
             }
         }
 
@@ -565,7 +565,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息注销失败 请检查消息名 msgName：" + msgName);
+                Debugger.LogError("消息注销失败 请检查消息名 msgName：" + msgName);
             }
         }
         #endregion
@@ -588,7 +588,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息系统-发送消息失败 检查消息名称 msgName：" + msgName);
+                Debugger.LogWarning("消息系统-当前消息还未被注册过，检查消息名称 msgName：" + msgName, LogTag.MF);
             }
         }
         /// <summary>
@@ -608,7 +608,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息系统-发送消息失败 检查消息名称 msgName：" + msgName);
+                Debugger.LogWarning("消息系统-当前消息还未被注册过 检查消息名称 msgName：" + msgName, LogTag.MF);
             }
         }
         /// <summary>
@@ -629,7 +629,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息系统-发送消息失败 检查消息名称 msgName：" + msgName);
+                Debugger.LogWarning("消息系统-当前消息还未被注册过 检查消息名称 msgName：" + msgName, LogTag.MF);
             }
         }
         /// <summary>
@@ -650,7 +650,7 @@ namespace MFramework
             }
             else
             {
-                Debug.LogError("消息系统-发送消息失败 检查消息名称 msgName：" + msgName);
+                Debugger.LogWarning("消息系统-当前消息还未被注册过 检查消息名称 msgName：" + msgName, LogTag.MF);
             }
         }
         #endregion 

@@ -7,7 +7,7 @@ namespace  MFramework
     /// 时间：2022.01.04
     public enum UILayerType
     {
-        Bg,
+        Bg = 0,
         Common,
         Top
     } 

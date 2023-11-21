@@ -119,7 +119,7 @@ namespace MFramework
 
         /// <summary>
         /// 异步加载批量资源根据Addressable标签。
-        /// 注意：需要对资源文件进行Addressable标记
+        /// 注意：需要对资源文件进行Addressable标记，并配置Lable标签
         /// </summary>
         /// <param name="lables"></param>
         /// <param name="callbackLoadedComplete"></param>
