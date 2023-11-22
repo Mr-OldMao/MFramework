@@ -101,45 +101,69 @@ public static void UnLoadAssets(string resPath, LoadMode loadMode = (LoadMode)(-
 
 UI管理器
 
-功能：UI资源的加载、卸载、面板层级配置、屏幕适配
+功能： UI窗体的显示与隐藏，内置有淡入淡出动画，根据脚本类型可获取指定UI窗体的状态、所在层级、UI窗体实体
 
 核心API
 
 ```c#
-    /// <summary>
-    /// 显示UI窗体
-    /// </summary>
-    /// <typeparam name="T">UIFormBase的派生类</typeparam>
-    /// <returns></returns>
-    public T Show<T>() where T : UIFormBase
+		/// <summary>
+        /// 显示UI窗体,
+        /// UI窗体预制体资源事前已加载完毕
+        /// </summary>
+        /// <typeparam name="T">UIFormBase的派生类</typeparam>
+        /// <returns></returns>
+        public T Show<T>() where T : UIFormBase
 
-    /// <summary>
-    /// 显示UI窗体
-    /// </summary>
-    /// <typeparam name="T">UIFormBase的派生类</typeparam>
-    /// <param name="uiFormName">UI窗体路径："Assets/xxx/xx.prefab"</param>
-    /// <returns></returns>
-    public T Show<T>(string uiFormName, UILayerType uILayerType = UILayerType.Common) where T : UIFormBase
+		/// <summary>
+        /// 显示UI窗体(带淡入动画),
+        /// UI窗体预制体资源事前已加载完毕
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uIFormAnimConfig">ui窗体动画配置</param>
+        /// <param name="callbackAnimComplete">动画播放完毕回调</param>
+        public void Show<T>(UIFormAnimConfig uIFormAnimConfig, Action<T> callbackAnimComplete = null) where T : UIFormBase
     
-    /// <summary>
-    /// 隐藏UI窗体
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public void Hide<T>() where T : UIFormBase
+		/// <summary>
+        /// 隐藏UI窗体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void Hide<T>() where T : UIFormBase
 
-    /// <summary>
-    /// 获取UI窗体实体
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public GameObject GetUIFormEntity<T>() where T : UIFormBase
+        /// <summary>
+        /// 隐藏UI窗体(带淡出动画),
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uIFormAnimConfig"></param>
+        /// <param name="callbackAnimComplete"></param>
+        public void Hide<T>(UIFormAnimConfig uIFormAnimConfig, Action<T> callbackAnimComplete = null) where T : UIFormBase
         
-    /// <summary>
-    /// 获取UI窗体的逻辑脚本
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T GetUIFormLogicScript<T>() where T : UIFormBase
+    	/// <summary>
+        /// 获取UI窗体当前状态
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public UIFormState GetUIFormState<T>() where T : UIFormBase
+            
+        /// <summary>
+        /// 获取UI窗体所在层级
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public UILayerType GetUIFromLayer<T>() where T : UIFormBase
+            
+        /// <summary>
+        /// 获取UI窗体实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public GameObject GetUIFormEntity<T>() where T : UIFormBase
+            
+        /// <summary>
+        /// 获取UI窗体的逻辑脚本
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetUIFormLogicScript<T>() where T : UIFormBase
 ```
 
 
