@@ -16,9 +16,17 @@ API手册、开发文档、版本记录
 
 范例
 
-### AssetsUnityPackage
+## AssetsUnityPackage
 
 测试某些案例所需要的资源，如资源加载、音频播放
+
+## ExampleScripts
+
+测试场景中所用到的所有测试脚本
+
+## Resource
+
+存放测试所需要的资源，包括但不限于GUISkin
 
 ## ExampleTest.unity
 
