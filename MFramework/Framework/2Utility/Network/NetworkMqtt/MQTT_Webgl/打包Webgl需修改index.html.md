@@ -65,11 +65,19 @@
           gameUnityInstance.SendMessage('[UnityObjectForWebglMsg]', 'ConnSuc')
         }
       })
+      
+	  //监听消息
+      client.on('message', function (_topic, message) {
+        //二进制ArrayBuffer消息转字符串
+        var msgStr = ab2str(message)
+        log("接收到消息,msg:" + msgStr);
+        gameUnityInstance.SendMessage('[UnityObjectForWebglMsg]', 'RecvMsg', _topic + "|" + message)
+      })
     }
 
-    //订阅监听消息
+    //订阅消息
     function mqttSubscribe(topic) {
-      log("尝试订阅监听消息 topic:" + topic);
+      log("尝试订阅消息 topic:" + topic);
 
       //topic: 可传入一个字符串，或者一个字符串数组，也可以是一个 topic 对象，{'test1': {qos: 0}, 'test2': {qos: 1}}
       //options: 可选值，订阅 Topic 时的配置信息，主要是填写订阅的 Topic 的 QoS 等级的
@@ -85,13 +93,6 @@
             error("订阅监听消息失败,当前标题已订阅 topic:" + topic)
           }
         }
-      })
-
-      client.on('message', function (_topic, message) {
-        //二进制ArrayBuffer消息转字符串
-        var msgStr = ab2str(message)
-        log("接收到消息,msg:" + msgStr);
-        gameUnityInstance.SendMessage('[UnityObjectForWebglMsg]', 'RecvMsg', _topic + "|" + message)
       })
     }
 
@@ -261,11 +262,19 @@ index.html
           gameUnityInstance.SendMessage('[UnityObjectForWebglMsg]', 'ConnSuc')
         }
       })
+        
+	  //监听消息
+      client.on('message', function (_topic, message) {
+        //二进制ArrayBuffer消息转字符串
+        var msgStr = ab2str(message)
+        log("接收到消息,msg:" + msgStr);
+        gameUnityInstance.SendMessage('[UnityObjectForWebglMsg]', 'RecvMsg', _topic + "|" + message)
+      })
     }
 
-    //订阅监听消息
+    //订阅消息
     function mqttSubscribe(topic) {
-      log("尝试订阅监听消息 topic:" + topic);
+      log("尝试订阅消息 topic:" + topic);
 
       //topic: 可传入一个字符串，或者一个字符串数组，也可以是一个 topic 对象，{'test1': {qos: 0}, 'test2': {qos: 1}}
       //options: 可选值，订阅 Topic 时的配置信息，主要是填写订阅的 Topic 的 QoS 等级的
@@ -281,13 +290,6 @@ index.html
             error("订阅监听消息失败,当前标题已订阅 topic:" + topic)
           }
         }
-      })
-
-      client.on('message', function (_topic, message) {
-        //二进制ArrayBuffer消息转字符串
-        var msgStr = ab2str(message)
-        log("接收到消息,msg:" + msgStr);
-        gameUnityInstance.SendMessage('[UnityObjectForWebglMsg]', 'RecvMsg', _topic + "|" + message)
       })
     }
 
